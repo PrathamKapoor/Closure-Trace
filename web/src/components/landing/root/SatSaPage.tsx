@@ -28,7 +28,7 @@ import {
 import { walkthroughSectionContent } from "./content/walkthrough";
 
 /**
- * SAT-SA landing page: real content from github.com/PrathamKapoor/SAT-SA-with-PQC, reusing the
+ * SAT-SA landing page: real content from github.com/PrathamKapoor/Closure-Trace, reusing the
  * contentarchitecture.dev shared design system (spacing, type scale, palette, primitives) with the
  * product's own signal-purple (#7c3aed, hardcoded per use; redeclaring the shared --color-accent
  * theme variable outside @theme gets silently dropped by Tailwind's build) instead of CA's orange.

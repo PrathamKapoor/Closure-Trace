@@ -1,30 +1,12 @@
-# Agent inventory — 32 components, precisely categorized
+# Agent Inventory
 
-This exists to answer one question honestly: the agent count is a
-real consequence of responsibility separation
-(`satsa/supervisor/agents.py`'s own docstring), not a number inflated
-for the pitch. This table distinguishes what each agent actually is
-at runtime, so nobody has to take the count on faith.
+The registry contains 32 components: 9 MLOps components and 23 supervisory
+components. The tables identify each component's runtime role, implementation,
+and supporting tests. A registry entry alone does not imply a running agent.
 
-**The count grew from 26 to 31 in phase P25**, not by decree but by
-adding genuinely new, distinct analytical responsibility: an
-entity/asset cross-period resolver, a workflow/event-sequence
-reconstructor, an evidence-assembly consolidation layer, a
-database-wide meta-audit sweep, and the formal registration of the
-report generator (real code that existed but had never been added to
-the roster).
-
-**The count grew again, from 31 to 32, in phase P26**, splitting
-Correlation & Signal Fusion out from Entity Risk Scoring as its own
-distinct agent: `satsa/analysis/correlation.py` clusters signal
-findings that share a scoped subject and flags cross-detector-family
-corroboration, as a structural, deterministic step that runs ahead of
-and independently from `compute_entity_risk()`'s per-dimension
-weighting. The former "Fusion Agent" is renamed "Entity Risk Scoring
-Agent" to match; its `agent_id` (`satsa.fusion`) is unchanged so
-nothing that already referenced it breaks. Per this project's own
-stated principle, the number is a consequence, not a target — it goes
-up when real capability is added and stays put otherwise.
+Correlation and signal fusion are distinct from entity risk scoring: the
+former groups corroborating findings, while the latter computes risk dimensions.
+The existing `satsa.fusion` identifier remains stable for compatibility.
 
 Categories used below:
 
@@ -48,34 +30,34 @@ Every one of these is invoked by `satsa.analysis.run.RunService` (the
 16-worker default set), directly by `satsa.analysis.risk.compute_entity_risk`
 (the correlation step), or by `satsa.supervisor.engine.SupervisorEngine`,
 backed by real, tested code — not specs standing in for unimplemented
-logic. Five are new as of phase P25, one more as of phase P26 (marked
+logic. Five are new at the time of the recorded verification, one more at the time of the recorded verification (marked
 below).
 
 | Agent | Runtime | Implementation | Representative tests |
 |---|---|---|---|
-| Entity & Asset Resolution *(P25)* | orchestrated | `satsa/analysis/workers/entity_asset_resolution.py` | `test_phase71_satsa_entity_asset_resolution.py` (7) |
-| Ingestion | orchestrated | `satsa/ingest/service.py` | `test_phase3_satsa_ingestion.py` (32), `test_phase65_satsa_partial_ref_resolution.py` (4) |
-| Normalization | orchestrated | `satsa/ingest/normalize.py` | `test_phase3_satsa_ingestion.py`, `test_phase65_...` |
-| Execution Gap | orchestrated | `satsa/analysis/workers/` (6 detector modules) | `test_phase5_satsa_execution_gaps.py` |
-| Negative Space | orchestrated | `satsa/analysis/workers/negative_space.py` | `test_phase6_satsa_negative_space.py` (23, incl. the P25 escalation-logic fix) |
-| Workflow Reconstruction *(P25)* | orchestrated | `satsa/analysis/workers/workflow_reconstruction.py` | `test_phase70_satsa_workflow_reconstruction.py` (12) |
-| Anomaly | orchestrated | `satsa/analysis/workers/anomaly.py` | `test_phase7_satsa_anomaly.py` |
-| Peer Benchmark | orchestrated | `satsa/analysis/workers/peer_benchmark.py` | `test_phase8_satsa_peer_benchmark.py`, `test_phase30_...`, `test_phase47_...` |
-| Coverage Gap | orchestrated | `satsa/analysis/workers/coverage_gap.py` | `test_phase57_satsa_new_workers.py` |
-| Drift | orchestrated | `satsa/analysis/workers/drift.py` | `test_phase37_satsa_drift.py`, `test_phase60_...` |
-| Cross-Entity Insights | orchestrated | `satsa/analysis/workers/cross_entity_insights.py` | `test_phase38_satsa_insights.py`, `test_phase60_...` |
-| Case Similarity | orchestrated | `satsa/analysis/case_similarity.py` | `test_phase36_satsa_case_similarity.py` |
-| Evidence Completeness | orchestrated | `satsa/analysis/workers/evidence_completeness.py` | `test_phase57_satsa_new_workers.py` |
-| Correlation & Signal Fusion *(P26)* | orchestrated (runs inside `compute_entity_risk`, ahead of dimension scoring) | `satsa/analysis/correlation.py` | `test_phase74_satsa_correlation_fusion.py` (12) |
-| Entity Risk Scoring (formerly "Fusion") | orchestrated | `satsa/analysis/risk.py` | `test_phase9_satsa_entity_risk.py` |
-| Prioritization | orchestrated | `satsa/analysis/prioritize.py` | `test_phase10_satsa_prioritize.py`, `test_phase10_adaptive_supervisor.py` |
-| Recommendation | orchestrated | `satsa/analysis/recommend.py` | exercised across `test_phase63_...`, `test_phase64_...`, `test_phase66_...` |
-| Review Workflow | orchestrated | `satsa/analysis/review.py` | `test_phase12_satsa_review.py`, `test_phase35_...`, `test_phase63_...`, `test_phase66_...` |
-| Trust-Provenance | orchestrated | `satsa/analysis/trust.py` | `test_phase11_satsa_trust.py`, `test_phase27_...`, `test_phase44_...`, `test_phase66_...` |
-| Evidence & Explainability Assembly *(P25)* | orchestrated (called by the UI's `/findings/{id}` route, not a parallel unused module) | `satsa/analysis/evidence_assembly.py` | `test_phase73_satsa_evidence_assembly.py` (9) |
-| Supervisory Audit & Compliance / Meta-Audit *(P25)* | orchestrated (database-wide sweep, `sat-sa audit` CLI) | `satsa/analysis/meta_audit.py` | `test_phase72_satsa_meta_audit.py` (6) |
-| Supervisory Report Generation *(P25 — newly registered)* | orchestrated | `satsa/analysis/report.py` | `test_phase13_satsa_e2e_vertical_slice.py` and others (real code that predates P25; only the registry entry is new) |
-| Validation | orchestrated | `satsa/analysis/validate.py`, `compval.py` | `test_phase28_satsa_synth.py`, `test_phase61_...`, `test_phase62_...` |
+| Entity & Asset Resolution ** | orchestrated | `satsa/analysis/workers/entity_asset_resolution.py` | `test_satsa_entity_asset_resolution.py` (7) |
+| Ingestion | orchestrated | `satsa/ingest/service.py` | `test_satsa_ingestion.py` (32), `test_satsa_partial_ref_resolution.py` (4) |
+| Normalization | orchestrated | `satsa/ingest/normalize.py` | `test_satsa_ingestion.py`, `test_satsa_partial_ref_resolution.py` |
+| Execution Gap | orchestrated | `satsa/analysis/workers/` (6 detector modules) | `test_satsa_execution_gaps.py` |
+| Negative Space | orchestrated | `satsa/analysis/workers/negative_space.py` | `test_satsa_negative_space.py` (23, incl. the existing escalation-logic fix) |
+| Workflow Reconstruction ** | orchestrated | `satsa/analysis/workers/workflow_reconstruction.py` | `test_satsa_workflow_reconstruction.py` (12) |
+| Anomaly | orchestrated | `satsa/analysis/workers/anomaly.py` | `test_satsa_anomaly.py` |
+| Peer Benchmark | orchestrated | `satsa/analysis/workers/peer_benchmark.py` | `test_satsa_peer_benchmark.py`, `test_satsa_peer_robust.py`, `test_satsa_peer_robustness.py` |
+| Coverage Gap | orchestrated | `satsa/analysis/workers/coverage_gap.py` | `test_satsa_new_workers.py` |
+| Drift | orchestrated | `satsa/analysis/workers/drift.py` | `test_satsa_drift.py`, `test_cross_period_cross_entity_wiring.py` |
+| Cross-Entity Insights | orchestrated | `satsa/analysis/workers/cross_entity_insights.py` | `test_satsa_insights.py`, `test_cross_period_cross_entity_wiring.py` |
+| Case Similarity | orchestrated | `satsa/analysis/case_similarity.py` | `test_satsa_case_similarity.py` |
+| Evidence Completeness | orchestrated | `satsa/analysis/workers/evidence_completeness.py` | `test_satsa_new_workers.py` |
+| Correlation & Signal Fusion ** | orchestrated (runs inside `compute_entity_risk`, ahead of dimension scoring) | `satsa/analysis/correlation.py` | `test_satsa_correlation_fusion.py` (12) |
+| Entity Risk Scoring (formerly "Fusion") | orchestrated | `satsa/analysis/risk.py` | `test_satsa_entity_risk.py` |
+| Prioritization | orchestrated | `satsa/analysis/prioritize.py` | `test_satsa_prioritize.py`, `test_adaptive_supervisor.py` |
+| Recommendation | orchestrated | `satsa/analysis/recommend.py` | exercised across `test_satsa_auth_rbac.py`, `test_satsa_fresh_database_e2e.py`, `test_satsa_tamper_matrix.py` |
+| Review Workflow | orchestrated | `satsa/analysis/review.py` | `test_satsa_review.py`, `test_satsa_review_analytics.py`, `test_satsa_auth_rbac.py`, `test_satsa_tamper_matrix.py` |
+| Trust-Provenance | orchestrated | `satsa/analysis/trust.py` | `test_satsa_trust.py`, `test_satsa_trust_determinism.py, test_satsa_trust_adversarial.py`, `test_satsa_trust_stress.py`, `test_satsa_tamper_matrix.py` |
+| Evidence & Explainability Assembly ** | orchestrated (called by the UI's `/findings/{id}` route, not a parallel unused module) | `satsa/analysis/evidence_assembly.py` | `test_satsa_evidence_assembly.py` (9) |
+| Supervisory Audit & Compliance / Meta-Audit ** | orchestrated (database-wide sweep, `sat-sa audit` CLI) | `satsa/analysis/meta_audit.py` | `test_satsa_meta_audit.py` (6) |
+| Supervisory Report Generation *(the implementation — newly registered)* | orchestrated | `satsa/analysis/report.py` | `test_satsa_e2e_vertical_slice.py` and others (real code that predates the implementation; only the registry entry is new) |
+| Validation | orchestrated | `satsa/analysis/validate.py`, `compval.py` | `test_satsa_synth.py`, `test_satsa_composition_validation.py`, `test_satsa_expert_validation.py` |
 
 ## 9 retained MLOps agents — runtime (standalone), not SAT-SA-orchestrated
 
@@ -106,7 +88,7 @@ their `observe()` method.
 ## Summary
 
 - 32 total (9 + 23), matching the roadmap's stated architecture as of
-  phase P26.
+  This revision.
 - **All 32 have real, executable, tested implementation code** — none
   is a bare placeholder or documentation-only entry.
 - The honest nuance the "32 agents" framing needs stated plainly: the

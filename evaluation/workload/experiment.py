@@ -11,7 +11,7 @@ data: compare SAT-SA's actual, already-computed entity prioritization
 where "genuinely problematic entity" is an independently-generated
 label — not something read back out of what SAT-SA itself decided.
 
-Independence (SIH prompt section 22 / this repo's P19 precedent): a
+Independence (SIH prompt section 22 / this repo's the implementation precedent): a
 population entity is labeled "pathological" or "clean" by the
 *generator configuration* used to build its synthetic submission
 (``satsa.analysis.synth.GenConfig`` — fast-closure rate, missing-
@@ -41,8 +41,8 @@ PATHOLOGICAL_CONFIG = {
     "disposition_rate": 0.5,
 }
 # A genuinely clean operational profile — the same deterministic
-# "healthy" configuration validated in P19's negative-control test
-# (tests/test_phase64_satsa_fresh_database_e2e.py): every critical/
+# "healthy" configuration validated in this implementation's negative-control test
+# (tests/test_satsa_fresh_database_e2e.py): every critical/
 # high alert escalated, every alert dispositioned, no fast closure,
 # no missing investigation, no remediation gaps.
 CLEAN_CONFIG = {

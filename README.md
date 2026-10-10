@@ -4,10 +4,7 @@
 
 Built on the SAT-SA / TRUST-SAT foundation, this repository preserves its implementation and history. Internal packages, commands, and trust components retain their existing names. The original system targeted Smart India Hackathon (SIH) 26157 / NCIIPC; that background is retained in historical documentation.
 
-A periodic, offline,
-evidence-driven supervisory analytics system supporting human examiners in
-identifying entities, controls, processes, investigations, and alert samples
-requiring supervisory attention.
+The system supports periodic, evidence-driven assessment of security operations. It helps human reviewers identify entities, controls, investigations, and alert samples that need attention.
 
 SAT-SA turns structured CSE (Constituent Security Entity) submissions
 into evidence-backed supervisory intelligence: who needs attention, why,
@@ -53,7 +50,7 @@ Validation: `python -m pytest tests/ -q`; from `web/`, run `npm run check` for l
 ## System identity and practical use
 
 - **Repository:** [Closure-Trace](https://github.com/PrathamKapoor/Closure-Trace)
-- **Packages:** `satsa` `0.16.0-phase52-ui` and `qsmlops` `0.1.0`
+- **Packages:** `satsa` `0.16.0` and `qsmlops` `0.1.0`
 - **Deployment model:** local, offline-first Python application with SQLite
   evidence storage; it does not require a cloud account, SaaS connection, or
   live SOC feed to run the committed demo.
@@ -120,10 +117,7 @@ for component boundaries and the evidence flow.
 
 ## The 32-agent model
 
-32 agents is a consequence of responsibility separation, not a target
-(grown from 26 in phase P25, then 31 to 32 in phase P26 — see
-`docs/AGENT_INVENTORY.md` for the full roster and why each addition
-was real, not decorative):
+The system separates responsibilities across 9 MLOps components and 23 supervisory components. See the [agent inventory](docs/AGENT_INVENTORY.md) for each component's implementation, runtime role, and tests.
 
 - **9 retained MLOps agents** (`qsmlops/`): Data, Performance, Security,
   QuantumSecurity, RedTeam, Governance, IncidentResponse, Optimization,
@@ -212,7 +206,7 @@ python -m pytest tests/ -q
 ```
 
 Python ≥ 3.10. No network calls anywhere in the pipeline (verified by
-`tests/test_phase18_satsa_offline_hardening.py`, which blocks DNS/TCP
+`tests/test_satsa_offline_hardening.py`, which blocks DNS/TCP
 and runs the demo + every UI page). No CDN, remote fonts, telemetry.
 
 ## Usage
@@ -383,7 +377,7 @@ tests/                 # per-layer, e2e, offline, trust stress, auth/RBAC,
                        # tests/ -q` for the current count (see Testing)
 scripts/               # demo dataset builder, scaling benchmark, SoftHSM2
                        # bootstrap, serve_ui.py (real UI launcher)
-docs/                  # phase docs, roadmap status, deployment, demo runbook,
+docs/                  # architecture, component guides, deployment, demo runbook,
                        # claims table, requirements traceability, trust model
 demo.py                # SAT-SA end-to-end demonstration
 .github/workflows/     # CI (dependency install, full suite, offline/trust/

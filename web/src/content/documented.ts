@@ -4,11 +4,11 @@
  * not computed by the UI and not live data. Update only when the report
  * is regenerated (python scripts/run_controlled_benchmark.py --out <dir>).
  *
- * Source: reports/CONTROLLED_BENCHMARK_P33.md (synthetic, controlled
+ * Source: reports/CONTROLLED_BENCHMARK_RESULTS.md (synthetic, controlled
  * scenarios; not real SOC/CSE/NCIIPC validation).
  */
 export const CONTROLLED_BENCHMARK = {
-  source: "reports/CONTROLLED_BENCHMARK_P33.md",
+  source: "reports/CONTROLLED_BENCHMARK_RESULTS.md",
   name: "satsa-controlled-supervisory-benchmark v1.0.0",
   scope: "Synthetic controlled scenarios through the real pipeline. Five of ten catalog scenarios executed; five cannot be reproduced in a single-entity fixture.",
   scenarioCorpus: { tp: 5, fp: 7, fn: 0, precision: 0.4167, recall: 1.0, f1: 0.5882, actionAlignment: { correct: 4, total: 5 } },

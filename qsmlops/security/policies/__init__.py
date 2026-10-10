@@ -1,6 +1,6 @@
 """Security policies module.
 
-Phase 1 keeps the declarative policy-engine extension point here. The
+keeps the declarative policy-engine extension point here. The
 supervisor's governance rules (observation -> evidence -> evaluation ->
 policy validation -> approved action -> execution -> verification) live in
 ``qsmlops.supervisor.policy``; organization-level policy sets bind to this

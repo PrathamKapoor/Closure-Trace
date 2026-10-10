@@ -1,4 +1,4 @@
-"""Phase 1 tenant schema is available in both database modes."""
+"""tenant schema is available in both database modes."""
 from __future__ import annotations
 
 import pytest

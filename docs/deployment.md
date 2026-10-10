@@ -7,7 +7,7 @@
 | Hosting model | A single Linux host running `deploy/compose.production.yml` (Caddy HTTPS, web, API, worker) with a database and object-storage overlay. AWS (the chosen target): [`deploy/aws/README.md`](../deploy/aws/README.md) (EC2 + RDS PostgreSQL 17 + S3, one CloudFormation stack, ap-south-1). Any other single host: [`deploy/README.md`](../deploy/README.md) with `deploy/compose.database.yml`. Render is not used. |
 | Production topology | CI-tested end to end with production settings in the `production-stack` job (run 36444188066 at `5fe192b`): HTTPS entry point, deployment smoke, worker restart recovery, browser workflow through HTTPS, API restart. |
 | Local execution | Supported without Docker: `scripts/local_stack.py` (SQLite, separate API and worker). |
-| Hosted deployment | **Deployed on AWS (Phase 22, 2026-09-30):** stack `satsa-prod`, ap-south-1, public URL `https://16-4-5-15.sslip.io` (interim hostname until a domain is chosen). Verified from inside AWS: valid Let's Encrypt HTTPS, security headers, RDS over TLS `verify-full`, S3 via the instance role, the public browser end-to-end (11/11), and persistence across a service restart and an instance reboot. |
+| Hosted deployment | **Deployed on AWS (the implementation, 2026-09-30):** stack `satsa-prod`, ap-south-1, public URL `https://16-4-5-15.sslip.io` (interim hostname until a domain is chosen). Verified from inside AWS: valid Let's Encrypt HTTPS, security headers, RDS over TLS `verify-full`, S3 via the instance role, the public browser end-to-end (11/11), and persistence across a service restart and an instance reboot. |
 
 A replacement host must provide the following. Nothing here names or assumes a
 provider.
@@ -41,7 +41,7 @@ the hosted API and worker, and record the result separately from local results.
 
 The production topology with all five parts (frontend, API, worker,
 PostgreSQL, object storage) behind an HTTPS reverse proxy is
-`deploy/compose.production.yml` (Phase 19; PostgreSQL 17). `docker-compose.saas.yml`
+`deploy/compose.production.yml` (the implementation; PostgreSQL 17). `docker-compose.saas.yml`
 remains the development-mode backend topology used by the `saas-topology-smoke`
 job (PostgreSQL 16).
 
@@ -49,14 +49,14 @@ job (PostgreSQL 16).
 
 | Configuration | Status | Evidence |
 |---|---|---|
-| API + separate worker processes over HTTP, SQLite, local storage | locally verified; regression-tested | `tests/test_phase17_http_topology.py` (runs in every suite run) |
-| API + separate worker processes over HTTP, PostgreSQL 18, local storage | PostgreSQL verified locally | same test with `SATSA_TEST_POSTGRES_DSN`; Phase 16 manual run 20/20 smoke checks |
+| API + separate worker processes over HTTP, SQLite, local storage | locally verified; regression-tested | `tests/test_http_topology.py` (runs in every suite run) |
+| API + separate worker processes over HTTP, PostgreSQL 18, local storage | PostgreSQL verified locally | same test with `SATSA_TEST_POSTGRES_DSN`; the implementation manual run 20/20 smoke checks |
 | Compose topology: PostgreSQL + SeaweedFS + migrate + key-init + API + worker | CI-tested (run 36444188066 at `5fe192b`) | `saas-topology-smoke` job |
 | Production topology: Caddy (HTTPS) + web + API + worker + PostgreSQL 17 + S3 over TLS, `SATSA_ENVIRONMENT=production` | CI-tested (run 36444188066 at `5fe192b`) | `production-stack` job: `deploy/smoke.sh`, worker restart recovery, browser E2E through HTTPS (9 tests), API restart |
-| Container build locally | executed since Phase 22 | Docker Desktop builds the release images (`deploy/aws/publish.sh`) |
-| Hosted deployment | deployed (Phase 22/23) | AWS stack `satsa-prod`, https://trustsat.mpst.me; public browser suite via `deploy.sh public-e2e` |
+| Container build locally | executed after this change | Docker Desktop builds the release images (`deploy/aws/publish.sh`) |
+| Hosted deployment | deployed | AWS stack `satsa-prod`, https://trustsat.mpst.me; public browser suite via `deploy.sh public-e2e` |
 
-## Phase 7 production deployment
+## production deployment
 
 ### Service topology
 
@@ -193,9 +193,9 @@ Docker/Compose availability and target provider credentials vary by environment.
 Record local container and hosted deployment results separately. A successful
 build or unit suite alone is not deployment verification.
 
-### Current status (Phase 23, 2026-09-30)
+### Current status (, 2026-09-30)
 
-This supersedes the Phase 9 and 10 records below, which are kept as history.
+This supersedes the existing and 10 records below, which are kept as history.
 Docker, live PostgreSQL and S3 are all exercised now: CI builds the images and
 runs the production Compose stack (HTTPS, web, API, worker, PostgreSQL,
 SeaweedFS S3) with the browser end-to-end suite on every push, and the hosted
@@ -206,7 +206,7 @@ PostgreSQL 17 over verified TLS, S3 through the instance role, and an EBS
 `deploy.sh status`, `GET /health/live` and **Admin > System**. Render is not
 used.
 
-### Verification record (Phase 9, 2026-09-27)
+### Verification record (, 2026-09-27)
 
 Each layer is classified separately; nothing here is inferred from another.
 
@@ -218,9 +218,9 @@ Each layer is classified separately; nothing here is inferred from another.
 | PostgreSQL (live) | **Pending** — a PostgreSQL 18 server is available locally; live tests need `SATSA_TEST_POSTGRES_DSN` for a scratch database. | `tests/test_postgres_*.py` (skipped without DSN) |
 | S3-compatible storage (live) | **Not verified.** Only mocked/emulated S3 tests exist; SeaweedFS runs only inside the compose topology. | — |
 | HTTP smoke against the compose topology | **Not executed** locally (blocked by Docker); defined in CI. | — |
-| Hosted deployment | **Not verified** in Phase 9. The Render site hosts the separate web UI, not this API/worker topology. | — |
+| Hosted deployment | **Not verified** in this implementation. The Render site hosts the separate web UI, not this API/worker topology. | — |
 
-Phase 10 re-check (2026-09-27): Docker is still not installed (Windows and
+This revision re-check (2026-09-27): Docker is still not installed (Windows and
 WSL) and `SATSA_TEST_POSTGRES_DSN` is still unset at process, user and machine
 level, so container, compose, SeaweedFS, live-PostgreSQL and
 PostgreSQL-vs-SQLite measurements remain **blocked**; no result is claimed.
@@ -232,13 +232,13 @@ upstream Dockerfile and documentation, not by execution. To unblock:
    `SATSA_TEST_POSTGRES_DSN=postgresql://<user>:<password>@localhost:5432/<db>`,
    then run `python -m pytest tests/test_postgres_engine.py
    tests/test_postgres_migrations.py tests/test_tenant_schema.py
-   tests/test_tenant_boundary.py tests/test_phase2_submission_platform.py
-   tests/test_phase3_analysis_execution.py tests/test_phase4_langgraph.py
-   tests/test_phase7_runtime.py -ra`.
+   tests/test_tenant_boundary.py tests/test_submission_platform.py
+   tests/test_analysis_execution.py tests/test_langgraph.py
+   tests/test_runtime.py -ra`.
 2. Containers: install Docker, or push the branch so the `saas-topology-smoke`
    CI job runs the compose topology and uploads `smoke-report.json`.
 
-Phase 11 status (2026-09-27, re-checked: Docker absent, DSN unset):
+This revision status (2026-09-27, re-checked: Docker absent, DSN unset):
 
 | Capability | CONFIGURED | BUILD VERIFIED | LOCAL DEPLOYMENT VERIFIED | INTEGRATION VERIFIED | HOSTED DEPLOYMENT VERIFIED |
 | --- | --- | --- | --- | --- | --- |
@@ -272,7 +272,7 @@ multipart form/file-upload parsing, used by `/ingest`), `click`,
 `scikit-learn`, `pydantic`, `python-pkcs11` (optional, HSM only). Dev
 (mirrors `[project.optional-dependencies].dev`): `pytest`, `httpx`,
 `setuptools` (required to run the test suite — Python 3.12+ environments
-no longer bundle it; see `tests/test_phase86_packaging_discovery.py`).
+no longer bundle it; see `tests/test_packaging_discovery.py`).
 
 ## 2. Verify the tree
 
@@ -304,7 +304,7 @@ Rotate by replacing the key file; old receipts remain verifiable
 ## 4. Database initialization
 
 ```bash
-# The CLI migrates automatically on every invocation:
+# The CLI migrates automatically on every invocation
 sat-sa --db ./satsa.db --trust-key-dir ./keys agents
 ```
 
@@ -360,7 +360,7 @@ python scripts/benchmark_scaling.py  # 5/10/25/50 CSE scaling numbers
 5. `python demo.py` (must print DEMO COMPLETED SUCCESSFULLY).
 6. Serve the UI on loopback; walk the judge path.
 
-## 9a. Authentication bootstrap (TRUST-SAT identity, P18)
+## 9a. Authentication bootstrap (TRUST-SAT identity, )
 
 Recording a review decision (UI `/findings/{id}/review` or CLI
 `sat-sa review`) requires an authenticated identity holding the
@@ -400,7 +400,7 @@ Additional roles: `satsa_viewer` (read-only), `satsa_analyst` (runs
 analytics/validation), `satsa_auditor` (read + platform audit log),
 `satsa_admin` (full control). See
 `qsmlops/security/permissions/model.py` for the exact permission
-grants per role, and `tests/test_phase63_satsa_auth_rbac.py` for the
+grants per role, and `tests/test_satsa_auth_rbac.py` for the
 adversarial test suite (unauthenticated, wrong-role, forged token,
 revoked credential — each proven to fail closed).
 

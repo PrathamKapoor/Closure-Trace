@@ -1,4 +1,4 @@
-# SAT-SA MLOps lifecycle (Phase 21)
+# SAT-SA MLOps lifecycle
 
 This is product documentation for the hosted system. It does not change any
 research claim; the frozen paper and its evidence are unaffected.
@@ -7,7 +7,7 @@ research claim; the frozen paper and its evidence are unaffected.
 
 SAT-SA's analytical workers are deterministic by design (documented risk
 weights, median/MAD anomaly statistics, edit-distance case similarity,
-delta-based drift). They are unchanged. Phase 21 adds **one** model where
+delta-based drift). They are unchanged. the implementation adds **one** model where
 learning has a justified function:
 
 **Review-outcome model.** For a completed analysis run it estimates the
@@ -19,7 +19,7 @@ recommendations or the decision, and a human supervisor makes every decision.
 
 Candidates considered and not chosen:
 
-| Candidate | Why not in this phase |
+| Candidate | Why not in this component |
 |---|---|
 | Replace anomaly / peer / drift workers with learned models | They are explainable, deterministic and part of the frozen research claims; a learned replacement would remove examiner-verifiable reasoning |
 | Unsupervised anomaly model (e.g. isolation forest) | Duplicates the deterministic anomaly worker and has no ground truth to evaluate against |
@@ -68,7 +68,7 @@ dataset -> validation -> features -> training -> evaluation -> passport
 ```
 
 Every stage is executable and tested end to end
-(`tests/test_phase21_mlops_lifecycle.py`).
+(`tests/test_mlops_lifecycle.py`).
 
 ### Dataset registry
 
@@ -190,7 +190,7 @@ feature version, status, abstention reason, score and the record's content
 digest. The record digest is recomputed from its fields at verification, so an
 altered score or model identity makes verification report `inconsistent`.
 Runs without an inference record produce exactly the document they did before
-Phase 21. The provenance therefore distinguishes deterministic findings (worker
+This revision. The provenance therefore distinguishes deterministic findings (worker
 rows), the ML-derived advisory score (the inference block, with model identity)
 and the human decision (the decision block).
 
@@ -279,7 +279,7 @@ leaves a training run `running` or a dataset `validating`.
 
 ## Offline SQLite
 
-The full lifecycle runs on SQLite with local artifact storage (all Phase 21
+The full lifecycle runs on SQLite with local artifact storage (all the implementation
 tests run on SQLite and PostgreSQL). The five-CSE offline demo is unaffected:
 offline runs are not supervised through the hosted worker and produce no
 inference records.

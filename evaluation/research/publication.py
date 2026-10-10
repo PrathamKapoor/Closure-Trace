@@ -34,7 +34,7 @@ INCLUDE = (
     "figures",
     "data",
     "supplementary",
-    # Phase 13: pre-rendered Figure 1, venue build, literature search, audits.
+    # pre-rendered Figure 1, venue build, literature search, audits.
     "figures-static",
     "figures-src",
     "literature-review",

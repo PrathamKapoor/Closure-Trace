@@ -2,7 +2,7 @@
 
 No plots are drawn. Each candidate figure gets a CSV of source values and an
 entry in ``figures-index.json`` giving the figure id, experiment, axes,
-units, aggregation, sample size and source bundle, so a later phase can draw
+units, aggregation, sample size and source bundle, so a future work can draw
 figures without reading the code. Bundles are verified before use.
 """
 

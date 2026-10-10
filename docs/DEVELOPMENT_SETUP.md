@@ -13,7 +13,7 @@
 ```bash
 python -m venv .venv
 .venv\Scripts\activate            # Windows
-# source .venv/bin/activate       # POSIX
+# source .venv/bin/activate # POSIX
 
 pip install -e ".[dev]"
 ```
@@ -82,8 +82,8 @@ python -m pytest tests/ -q                 # everything
 python -m pytest tests/test_foundation.py  # Part-1 foundation suite
 ```
 
-Note: `tests/test_phase2_platform.py` contains pre-written Phase 2 tests for
-not-yet-implemented features; failures there are expected until Phase 2.
+Note: `tests/test_platform.py` contains pre-written the implementation tests for
+not-yet-implemented features; failures there are expected until the implementation.
 
 ## Logging
 

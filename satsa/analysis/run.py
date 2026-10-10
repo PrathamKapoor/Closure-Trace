@@ -4,7 +4,7 @@ every registered worker through the existing Orchestrator contract,
 and persist the resulting observations/findings/jobs in a single
 transaction.
 
-The orchestrator is unchanged from Phase 2's contract; this service
+The orchestrator is unchanged from the component's contract; this service
 is the thin glue that supplies the dataset, persists the run, and
 translates a list of ``Job``s into the run's overall status.
 """
@@ -347,7 +347,7 @@ class RunService:
                     (new_seed, run.id))
 
         # Sign the run + every persisted finding with a PQC keypair
-        # (Phase 11). This is best-effort: if the key directory is
+        #. This is best-effort: if the key directory is
         # not provided, or signing fails, the run is still valid —
         # the supervisor just won't have a trust receipt to verify.
         if trust_key_dir is not None:
@@ -478,7 +478,7 @@ class RunService:
         PQC keypair stored under ``trust_key_dir`` and return the
         trust summary (algorithm id, public key, counts).
 
-        Useful when the run was completed before this phase shipped,
+        Useful when the run was completed before this component shipped,
         or when an operator wants to re-sign after a key rotation."""
         from satsa.analysis.trust import attest_run_outputs
         run_row = self.runs.get(run_id)
@@ -522,7 +522,7 @@ class RunService:
                 "rule": f.get("rule_or_category", ""),
                 "ok": ok, "reason": reason,
             })
-            # Human-decision binding (P20): if this finding has any
+            # Human-decision binding: if this finding has any
             # recorded review decisions, check each decision's captured
             # finding_content_digest against the finding's *current*
             # live digest — this is a separate integrity claim from the

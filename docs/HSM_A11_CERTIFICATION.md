@@ -203,9 +203,9 @@ Every security-sensitive failure is classified and fails closed.
 pytest --collect-only: 420 tests collected
 Partitioned execution (tool 120s budget):
   tests/test_hsm_backend.py + test_hsm_fail_closed.py + test_hsm_integration.py + test_hsm_a11_extended.py → 81 passed
-  tests/test_post_roadmap_hardening.py + test_evidence_packet_persistence.py → 65 passed
-  tests/test_phase10_adaptive_supervisor.py + test_phase9 + test_phase8 + test_phase7 + test_phase6 → 79 passed
-  tests/test_phase2 + test_phase3 + test_phase4 + test_phase5* + test_keystore_remediation → 98 passed
+  tests/test_platform_hardening.py + test_evidence_packet_persistence.py → 65 passed
+  tests/test_adaptive_supervisor.py + test_agentic_layer.py, test_research_orchestration.py, test_research_prioritization_ablation.py, test_satsa_entity_risk.py, test_smoke_and_tables.py + test_drift_intelligence.py, test_satsa_peer_benchmark.py + test_monitoring.py, test_runtime.py, test_satsa_anomaly.py + test_api_endpoints.py, test_deployment_flow.py, test_s3_http.py, test_satsa_negative_space.py → 79 passed
+  tests/test_artifact_storage.py, test_crypto_config.py, test_evidence_persistence.py, test_identity_auth.py, test_offline_hardening.py, test_platform.py, test_satsa_domain.py, test_satsa_orchestration.py, test_submission_platform.py + test_analysis_execution.py, test_satsa_ingestion.py, test_security.py + test_langgraph.py, test_satsa_analysis_run.py, test_trust_framework.py + test_approval.py, test_cli.py, test_registry_api.py, test_satsa_execution_gaps.py, test_trust.py, test_trust_finalization.py* + test_keystore_remediation → 98 passed
   tests/test_foundation.py + test_crypto.py + test_artifacts_passport.py + test_agents.py + test_agent_reasoning.py + test_supervisor.py → 97 passed
 Total: 420 collected, 420 executed, 420 passed, 0 failed, 0 skipped
 python -m compileall -q qsmlops → clean
@@ -235,7 +235,7 @@ python -c ledger packet: 11 pre-F1 packet_ids in default home → all missing bo
 ## 22. Cross-Project Boundary Verification
 
 ```
-grep -R "guardrailed|backend_api|smart-grid|forecast_targets|product/" qsmlops tests → only anti-contamination string in test_phase10
+grep -R "guardrailed|backend_api|smart-grid|forecast_targets|product/" qsmlops tests → only anti-contamination string in test_adaptive_supervisor.py, test_evidence_freeze.py, test_expert_labels.py, test_external_itsm.py, test_satsa_prioritize.py
 git status foreign: 26 guardrailed_residue R preserved, docs/PHASE_11_FORENSIC_BLOCKER.md + handoff.md untracked preserved, REPO-B bc835e3 0 dirty clean
 No qsmlops file imports guardrailed, no tests copy foreign code.
 ```
@@ -283,4 +283,4 @@ QSMLOps uses `ML-DSA-44/65/87` (FIPS 204) via `dilithium-py`. `python-pkcs11` 0.
 2. Set `QSMLOPS_HSM_LIBRARY=/usr/lib/softhsm/libsofthsm2.so` and `QSMLOPS_HSM_PIN=1234` (or `hsm_library_path`/`hsm_pin` in config)
 3. Run `pytest tests/test_hsm* -q` **without** `mock` — same `PKCS11Backend` will exercise real token (expect ML-DSA available on recent SoftHSM builds, KEM still `HSMUnsupportedMechanismError`), then re-run `python demo.py` with `KeyStore(..., hsm_backend=PKCS11Backend({"use_hsm":True}))`.
 
-*(End of certification — A1.1 boundaries respected, no Phase 11/12 invented.)*
+*(End of certification — A1.1 boundaries respected, no the implementation invented.)*

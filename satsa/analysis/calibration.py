@@ -4,7 +4,7 @@ supervisor approval -> versioned deployment.
 This is the N17 extension the user's proposed agent taxonomy asked
 for: today ``satsa.analysis.validate`` (the Validation Agent) can only
 *measure* precision/recall for whatever thresholds a worker already
-has; nothing in the codebase before this phase let anyone change a
+has; nothing in the codebase before this component let anyone change a
 worker's detection thresholds through a governed process. This module
 adds that process without inventing a new detector engine — every
 "test" reuses the existing worker contract

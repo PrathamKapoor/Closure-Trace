@@ -12,7 +12,7 @@ synthetic ground-truth catalog, independent closure-time baselines,
 seeded synthetic population prioritization, and one-worker-at-a-time
 ablations. Public-data adapters exist but the actual CIC-IDS2017 and BOTS data
 files have not been run. Expert-label files are templates, not collected
-labels. This phase reuses those components.
+labels. this component reuses those components.
 
 The evaluation command uses an isolated temporary SQLite database and local
 test signing keys. It does not read the configured SaaS database, production
@@ -59,9 +59,9 @@ requests.
    2-MAD threshold. These are controlled mechanism observations, not evidence
    about real population distributions.
 
-Phase 9 added seed-replicated prioritization with matched data-only
+This revision added seed-replicated prioritization with matched data-only
 baselines (EXP-PR01), scenario- and population-level ablation (EXP-A01), a
-factorial peer sweep (EXP-P01), an expanded TRUST-SAT mutation matrix with a
+factorial peer sweep (EXP-the implementation), an expanded TRUST-SAT mutation matrix with a
 negative control (EXP-T01), and direct-vs-LangGraph overhead and recovery
 experiments (EXP-O01/O02). Paired comparisons use
 `evaluation/research/statistics.py`: medians, p95 only when n ≥ 20, and a
@@ -153,6 +153,6 @@ verification latency per mutation. The orchestration experiments (EXP-O01,
 EXP-O02) measure LangGraph overhead, TRUST-SAT finalization/verification cost
 and in-process recovery on local SQLite. None of these measures multi-service
 hosted performance: production API latency, PostgreSQL pool behavior, worker
-throughput and S3 transfer remain unmeasured. Docker and live services were unavailable during Phase 7
-verification; Phase 8 does not claim deployment or production performance
+throughput and S3 transfer remain unmeasured. Docker and live services were unavailable during the implementation
+verification; the implementation does not claim deployment or production performance
 evidence.

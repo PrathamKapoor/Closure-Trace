@@ -1,4 +1,4 @@
-"""Governance Agent (Phase 9).
+"""Governance Agent.
 
 Consumes existing governance evidence — passport signature vs trust anchors,
 QML-BOM entry verifiability, declared security metadata, registry state, and

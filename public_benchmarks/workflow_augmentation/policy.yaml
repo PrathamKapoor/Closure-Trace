@@ -21,7 +21,7 @@
 # case can legitimately also draw a negative_space finding). Only the
 # healthy_control negative control is asserted exhaustively clean of
 # every execution_gap/negative_space family — see
-# tests/test_phase84_public_benchmarks_workflow_augmentation.py.
+# tests/test_public_benchmarks_workflow_augmentation.py.
 
 policy_version: workflow-policy-v1
 

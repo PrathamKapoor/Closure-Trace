@@ -176,7 +176,7 @@ class AdaptiveSupervisor:
                 obs.findings.append(
                     Finding("agent_executed", False, "HIGH", str(exc))
                 )
-            # Phase 10 evidence-validation engine (fail-safe sanitisation).
+            # evidence-validation engine (fail-safe sanitisation).
             clean, report = None, None
             # T1: even the validator itself must not be able to crash the
             # supervisor loop or silently drop evidence. If validation raises,

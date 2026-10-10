@@ -380,7 +380,7 @@ class DriftDetectionEngine:
         }
 
 # ----------------------------------------------------------------------
-# Phase 8: feature attribution + drift intelligence
+# feature attribution + drift intelligence
 # ----------------------------------------------------------------------
 
 _SEVERITY_ORDER = {"LOW": 0, "MEDIUM": 1, "HIGH": 2, "CRITICAL": 3}

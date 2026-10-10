@@ -479,7 +479,7 @@ def supervisory_document(engine, organization_id: str, run_id: str) -> dict:
         "canonical_records": commitment(record_refs),
         "artifacts": commitment(artifact_refs),
     }
-    # Phase 21: when the advisory review-outcome model produced a record for
+    # when the advisory review-outcome model produced a record for
     # this run, commit to it. The key is absent for runs without one, so
     # documents of earlier runs are unchanged. The record's digest is
     # recomputed from its fields, so an altered score or model identity
@@ -504,7 +504,7 @@ def supervisory_document(engine, organization_id: str, run_id: str) -> dict:
             **{key: inference[key] for key in fields},
             "content_digest": inference["content_digest"],
         }
-    # Phase 22: the model-assisted reviewer briefing (provider, model,
+    # the model-assisted reviewer briefing (provider, model,
     # fallback level, digest of its content), when the run has one.
     briefing = engine.query_one(
         "SELECT * FROM satsa_llm_outputs WHERE organization_id=? AND run_id=? AND capability=?",

@@ -1,12 +1,12 @@
 # Frontend and backend convergence audit
 
 Scope: the Next.js application in `web/` and the SAT-SA API in `satsa/api`.
-Audited on branch `phase16/product-convergence` (based on GitHub `main`
+Audited on branch the original product-convergence branch (based on GitHub `main`
 `c0c99cc`). Status words follow the claim classes in `docs/CLAIMS.md`:
 implemented, tested, CI-tested, locally verified, hosted verified, unverified.
 
-> **Status (Phase 18): resolved.** The web workbench is now a client of the
-> SAT-SA API. Sections 2 to 7 record the Phase 16 audit that led there;
+> **Status: resolved.** The web workbench is now a client of the
+> SAT-SA API. Sections 2 to 7 record the existing audit that led there;
 > section 8 records how each gap was closed.
 
 ## 1. What exists
@@ -46,7 +46,7 @@ The backend is the complete product path. The web workbench is not yet on it.
   `POST /findings/{id}/reviews`).
 * Sign-in calls the right routes (`POST /api/v1/session`, `GET /api/v1/session`)
   but stores the raw credential in the web's cookie and discards the backend
-  session that login creates (Phase 17 audit). It works, but the handoff asks
+  session that login creates (the implementation audit). It works, but the handoff asks
   for the session token instead: a raw credential used for
   `DELETE /api/v1/session` would revoke the credential itself.
 
@@ -66,13 +66,13 @@ verification for most workbench pages.
 | `listObservations(runId)` | none | not exposed; findings carry `observation_id` |
 | `listFindings(query)` | `GET /runs/{id}/findings`, `GET /findings/{id}` | available per run; no organization-wide finding list |
 | `getRiskProfile(entityId)` | `GET /runs/{id}/risk` (entity's latest run from `/priorities`) | available per run |
-| `listEntityPriorities` | `GET /priorities` | **added in this phase** |
+| `listEntityPriorities` | `GET /priorities` | **added in this component** |
 | `getRiskWeights` | inside every risk profile (`profile.weights`) | available |
 | `listReviewDecisions(findingId)` | `GET /runs/{id}/decision` | semantic difference: one decision per run, not per finding |
 | `listTrustReceipts(subjectId)` | `GET /runs/{id}/receipt` | available per run |
 | `getRunVerification(runId)` | `POST /runs/{id}/verify` | available (verification is an action that rebuilds state) |
-| `listSourceRecords(ids)` | `GET /runs/{id}/evidence` plus `GET /versions/{id}/records` | **records route added in this phase** |
-| `getSecurityData(entityId)` | `GET /versions/{id}/records?category=` | **added in this phase** (per submission version) |
+| `listSourceRecords(ids)` | `GET /runs/{id}/evidence` plus `GET /versions/{id}/records` | **records route added in this component** |
+| `getSecurityData(entityId)` | `GET /versions/{id}/records?category=` | **added in this component** (per submission version) |
 | `getMetaAudit` | none | offline pipeline feature; not in the hosted API |
 | `getValidation` (benchmark validation report) | none | offline/research feature; not in the hosted API |
 | `getSupervisorDecision(runId)` | none | offline supervisor-engine output; not in the hosted API |
@@ -96,7 +96,7 @@ verification for most workbench pages.
 No production-path static data was found: the workbench has no hard-coded
 findings or scores outside the generated, labelled fixture.
 
-## 5. Changes made in this phase (backend)
+## 5. Changes made in this component (backend)
 
 * Render hosting configuration removed; deployment documentation is
   provider-neutral (`docs/deployment.md`).
@@ -108,20 +108,20 @@ findings or scores outside the generated, labelled fixture.
 * `scripts/deployment_smoke.py` checks both, and was run against a local
   PostgreSQL topology with separate API and worker processes (20/20 checks).
 
-### Phase 17 (backend contract closure)
+### (backend contract closure)
 
 * `docs/API_CONTRACT.md` rewritten from the live application (46 routes) and
-  kept in step by `tests/test_phase17_api_contract.py` (route index,
+  kept in step by `tests/test_api_contract.py` (route index,
   pagination, idempotency, schema fields).
 * Frontend-facing behaviour tested on SQLite and PostgreSQL
-  (`tests/test_phase17_api_behaviour.py`): multi-entity priorities with
+  (`tests/test_api_behaviour.py`): multi-entity priorities with
   pagination, record ordering, decisions by organization administrators,
   receipts without private material, the error shape, session logout.
 * Real API and worker processes over HTTP are a regression test
-  (`tests/test_phase17_http_topology.py`).
+  (`tests/test_http_topology.py`).
 * The frozen paper's code facts are pinned to the freeze's code commit, so
   API additions no longer change paper values
-  (`evaluation/research/paper.py`, `tests/test_phase17_paper_code_facts.py`).
+  (`evaluation/research/paper.py`, `tests/test_paper_code_facts.py`).
 
 ## 6. Remaining work for the frontend owner
 
@@ -130,7 +130,7 @@ adapter and the two server actions against `docs/API_CONTRACT.md`, add
 organization selection, map per-run decisions and records, and hide or
 label the offline-only panels (meta-audit, benchmark validation, supervisor
 engine, observations) in API mode. No React component or visual change was
-made in this phase.
+made in this component.
 
 ## 7. Not done, and why
 
@@ -143,9 +143,9 @@ made in this phase.
   one supervisory decision per run, which TRUST-SAT binds. Changing that is
   a product decision, not an integration fix.
 
-## 8. Phase 18: how the gaps were closed
+## 8. : how the gaps were closed
 
-| Phase 16 gap | Resolution |
+| the implementation gap | Resolution |
 |---|---|
 | `api` adapter calling about fifteen routes that do not exist | Replaced by `web/src/lib/api/client.ts`, one function per contract route, with wire types in `web/src/lib/api/types.ts`. The fixture adapter, the fixture file and its exporter were removed; there is no mock data path. |
 | No `X-Organization-ID` | Organization context (`web/src/lib/api/context.ts`): memberships from `GET /api/v1/organizations`, automatic with one membership, `/organization` otherwise; every tenant call carries the header. |
@@ -160,7 +160,7 @@ A backend defect was found by the browser test and fixed: a finding whose
 worker produced an integer statistic was digested as `1` but read back from
 its REAL column as `1.0`, so finalization of a decided run failed with
 "finding digest mismatch" (`satsa/domain/evidence.py`,
-`tests/test_phase18_finding_numeric_digest.py`).
+`tests/test_finding_numeric_digest.py`).
 
 Verification: `web/e2e/workbench.spec.ts` drives the whole workflow in a
 browser against a real API and worker (6 tests), and CI runs it in the

@@ -589,7 +589,7 @@ def cmd_doctor(args) -> int:
         _warn("hsm-provider", str(exc))
 
     # 8. Offline posture (best-effort signal, not a full guarantee —
-    # see tests/test_phase18_satsa_offline_hardening.py for the real proof)
+    # see tests/test_satsa_offline_hardening.py for the real proof)
     net_modules = [m for m in ("requests", "httpx", "urllib3")
                   if m in _sys.modules]
     if net_modules:

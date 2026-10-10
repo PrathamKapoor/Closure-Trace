@@ -20,7 +20,7 @@ What this module does NOT do
 
 * It does not invent an enterprise authentication system. The
   ``principal_identity_id`` is whatever the platform's identity
-  layer hands in (Phase 2's API-key auth, or whatever the
+  layer hands in (the component's API-key auth, or whatever the
   operator integrates). The audit row records the id
   faithfully — it does not verify the caller is who they claim.
 * It does not edit the original finding. A decision never
@@ -35,15 +35,15 @@ What this module does NOT do
   no longer matches the live digest and the verifier will
   notice.
 
-Deletion / reordering (Phase P26 addendum, checklist item 8)
+Deletion / reordering (engineering notes, checklist item 8)
 --------------------------------------------------------------
 
 ``verify_binding`` (below) has always caught a decision row whose
-*content* was edited in place. Until this phase it could not catch a
+*content* was edited in place. Until this component it could not catch a
 decision row being deleted outright, or a forged row being inserted
 directly via SQL (bypassing ``record()``) — ``docs/TRUST_MODEL.md``
 disclosed this honestly as "⚠️ not detected... genuine gap for future
-work." This phase closes it by optionally mirroring every recorded
+work." this component closes it by optionally mirroring every recorded
 decision into an independent, append-only, hash-chained
 ``qsmlops.evidence.ledger.EvidenceLedger`` (the exact same class
 already used for the identity/credential audit trail — reused, not

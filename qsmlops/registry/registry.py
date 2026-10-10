@@ -104,7 +104,7 @@ class ModelRegistry:
             );
             """
         )
-        # Phase 5: persist the latest trust evaluation per version. History
+        # persist the latest trust evaluation per version. History
         # remains in the evidence ledger; the row holds the newest result.
         cols = {row[1] for row in self._conn.execute("PRAGMA table_info(model_versions)")}
         for column, decl in (
@@ -217,7 +217,7 @@ class ModelRegistry:
         except (ValueError, UnicodeDecodeError):
             return None
 
-    # ---------------- Phase 5: trust evaluation ----------------
+    # ---------------- the implementation: trust evaluation ----------------
     def trust_evaluation(
         self,
         version_id: str,
@@ -349,7 +349,7 @@ class ModelRegistry:
         all_checks.append(("artifact_integrity", art_ok))
         artifact_match = passport.identity.get("artifact_digest") == rec["artifact_digest"]
         all_checks.append(("artifact_matches_passport", artifact_match))
-        # Phase 4: record the cryptographic evidence backing this verification
+        # record the cryptographic evidence backing this verification
         # so every packet proves WHICH suite/key/hash bound the artifact.
         crypto_proofs: dict = {"hash_algorithm": HASH_ALGORITHM}
         if passport.signature is not None:
@@ -392,7 +392,7 @@ class ModelRegistry:
     def approve_deployment(
         self, version_id: str, approver: str, packet: VerificationPacket
     ) -> dict:
-        """Governed promotion gate (Phase 5).
+        """Governed promotion gate.
 
         Approval requires ALL of:
           - version in VERIFIED state,

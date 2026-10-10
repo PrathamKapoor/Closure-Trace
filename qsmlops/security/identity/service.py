@@ -60,7 +60,7 @@ class IdentityService:
         self._audit = audit
         self._keystore = keystore
         self._signature_service = signature_service
-        # Phase 2: accept an already-configured AgilityEngine (e.g. the
+        # accept an already-configured AgilityEngine (e.g. the
         # pipeline's) so identity key issuance uses the same suite as
         # evidence/passport signing, instead of independently constructing
         # an unconfigured engine that may auto-select a different default.
@@ -108,7 +108,7 @@ class IdentityService:
                 self._keystore.generate_keypair(
                     "SIGNER", suite.signature_algorithm, owner=identity.display
                 )
-            except Exception as exc:  # key issuance is best-effort in Phase 1
+            except Exception as exc:  # key issuance is best-effort in this implementation
                 log.warning("identity key issuance failed for %s: %s", identity.display, exc)
         try:
             self._repo.insert(identity)
@@ -209,7 +209,7 @@ class IdentityService:
         )
         return identity
 
-    # -------------------- authentication (Phase 2) --------------------
+    # -------------------- authentication --------------------
     def issue_credential(self, identity_id: str, *, actor: str = "system") -> str:
         """Mint a new API-key credential for an identity, returned once as the
         raw token. Re-issuing replaces (rotates) any prior credential for the

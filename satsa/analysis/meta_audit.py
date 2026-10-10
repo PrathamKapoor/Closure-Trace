@@ -37,7 +37,7 @@ class MetaAuditReport:
     runs_checked: int = 0
     runs_ok: int = 0
     runs_failed: list = field(default_factory=list)  # [{run_id, reason}]
-    # Phase P26 addendum: cross-checks satsa_review_decisions against
+    # cross-checks satsa_review_decisions against
     # its independent hash-chained ledger for deletion/reordering —
     # distinct from reviews_failed above, which catches in-place
     # content tampering via verify_binding. See

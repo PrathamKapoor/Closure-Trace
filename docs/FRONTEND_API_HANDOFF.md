@@ -45,7 +45,7 @@ Recommended flow (contract section 1):
 Never call `DELETE /api/v1/session` with a raw credential as bearer: that
 revokes the credential itself and the user can no longer sign in.
 
-Implemented in Phase 18 (`web/src/lib/auth/actions.ts`,
+Implemented in this implementation (`web/src/lib/auth/actions.ts`,
 `web/src/lib/api/client.ts`): the web keeps only the session token, and
 sign-out revokes it.
 
@@ -244,5 +244,5 @@ evidence, start a run, watch its persisted status, inspect findings, evidence
 records, risk, priorities and recommendations, record the run decision, verify
 TRUST-SAT and read the audit trail, with every value coming from the calls
 above. `scripts/deployment_smoke.py` performs the same sequence over HTTP and
-is the reference implementation; `tests/test_phase17_http_topology.py` runs it
+is the reference implementation; `tests/test_http_topology.py` runs it
 against real API and worker processes.

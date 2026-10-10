@@ -18,7 +18,7 @@ Every scenario is a deterministic hand-built single-entity fixture
 (`satsa/analysis/compval.py::SCENARIO_MAP`) or a seeded synthetic
 generator population (`evaluation/workload/experiment.py`). Nothing in
 this benchmark processes real CIC-IDS2017, Splunk BOTS, CSE, SOC, or
-NCIIPC data. A Phase 8 immutable bundle records the benchmark version,
+NCIIPC data. A the implementation immutable bundle records the benchmark version,
 code revision/dirty state, configuration and scenario-manifest digests,
 seed, relevant package versions, and hashes of bundle files. Raw
 per-scenario output includes hashes of generated CSV inputs. The legacy
@@ -101,14 +101,14 @@ not a confidence interval. Runtime measurements are kept outside
 deterministic domain metrics and scoped to local synchronous SQLite
 execution, not the hosted multi-service topology. Determinism is enforced
 by fixed seeds and verified by
-`tests/test_phase88_controlled_benchmark.py::test_runner_is_deterministic_for_fixed_seed`
+`tests/test_controlled_benchmark.py::test_runner_is_deterministic_for_fixed_seed`
 (two full runs must produce identical `metrics`).
 
 ## Allowed conclusions
 
-The following is a historical measured report from the prior P33 controlled
-run, retained for provenance. It is not the Phase 8 pilot result; cite the
-immutable Phase 8 bundle for any new run and its recorded seed/configuration.
+The following is a historical measured report from the prior the implementation controlled
+run, retained for provenance. It is not the existing pilot result; cite the
+immutable the implementation bundle for any new run and its recorded seed/configuration.
 
 - On the controlled synthetic corpus (versioned v1.0.0, declared
   seeds), the real SAT-SA pipeline detected 5/5 declared signal

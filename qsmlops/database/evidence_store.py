@@ -1,7 +1,7 @@
 """EvidenceStore: durable persistence for agent Observations, Findings,
 supervisor DecisionReports and the provenance edges linking them.
 
-Phase 2 (SAT-SA foundation hardening) closes a gap found in Phase 1's audit
+(SAT-SA foundation hardening) closes a gap found in this implementation's audit
 and re-confirmed here: ``observations``, ``findings``, ``supervisor_decisions``
 and ``provenance_edges`` were migrated tables with no repository/insert path
 anywhere in the codebase. This module is that path.
@@ -12,10 +12,10 @@ pipeline already produces, unchanged. It does not add new analytical content,
 does not compute new risk models, and is not wired into every pipeline call
 site automatically — a caller (pipeline code, a future SAT-SA analytics
 worker, a test) opts in by calling ``persist_observation``/``persist_decision``
-explicitly. See docs/phase2/evidence-persistence.md for what "integrity"
+explicitly. See docs/foundation/evidence-persistence.md for what "integrity"
 means here and what it deliberately does not yet claim (content-digest
 checkable rows, not signed/ledger-committed provenance — that remains later
-work per docs/phase1/quantum-trust-audit.md's proposed lifecycle).
+work per docs/design/quantum-trust-audit.md's proposed lifecycle).
 """
 from __future__ import annotations
 
@@ -142,7 +142,7 @@ class EvidenceStore:
         compare against content_digest. This detects a row edited outside
         this module; it does NOT prove the row was never edited by someone
         with direct database access before this check runs, and it is not a
-        cryptographic signature — see docs/phase2/evidence-persistence.md."""
+        cryptographic signature — see docs/foundation/evidence-persistence.md."""
         row = self._observations.get(observation_id)
         if row is None:
             return False, f"observation {observation_id} not found"

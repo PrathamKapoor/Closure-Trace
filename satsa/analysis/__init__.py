@@ -1,7 +1,7 @@
 """satsa.analysis — the analysis-run engine, observation/finding/job
 persistence, and the registry of analytical workers (satsa.analysis.workers).
 
-Phase 4 scope: a ``RunService`` that turns a (entity, assessment) into
+scope: a ``RunService`` that turns a (entity, assessment) into
 an ``AnalysisRun`` record by loading the frozen ``CanonicalDataset``,
 invoking every registered worker through the existing ``Orchestrator``
 contract, and persisting the resulting observations/findings/jobs in a

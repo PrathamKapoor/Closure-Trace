@@ -1,8 +1,8 @@
-"""Local credential authentication (Phase 2 identity-security foundation).
+"""Local credential authentication (the implementation identity-security foundation).
 
 Scope, deliberately: this is a local API-key credential store suitable for a
 single-installation, air-gapped deployment — not enterprise SSO, not OAuth,
-not a session/cookie system. Phase 1's audit found API routes accepted
+not a session/cookie system. the component's audit found API routes accepted
 ``actor``/``approver`` as arbitrary unauthenticated request-body strings; this
 module is the piece that lets a caller be resolved to a real, persisted
 ``Identity`` record instead, so a route can require "who does the platform

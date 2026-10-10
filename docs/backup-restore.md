@@ -1,7 +1,7 @@
 # SAT-SA backup / restore
 
 This procedure is proven, not just described: it is exactly what
-`tests/test_phase68_satsa_doctor_and_backup_restore.py::test_backup_restore_preserves_full_trust_chain`
+`tests/test_satsa_doctor_and_backup_restore.py::test_backup_restore_preserves_full_trust_chain`
 performs and asserts. If this doc and that test ever diverge, trust
 the test and fix this file.
 
@@ -22,7 +22,7 @@ Two things, together — one without the other is not a valid backup:
 ## Procedure
 
 ```bash
-# 1. Backup (the platform must not be actively writing during copy —
+# 1. Backup (the platform must not be actively writing during copy
 #    SQLite is single-writer; stop the CLI/UI process first, or use a
 #    filesystem-consistent snapshot if the platform never stops)
 mkdir -p ./backup
@@ -34,12 +34,12 @@ cp ./backup/satsa.db ./satsa.db
 cp -r ./backup/keys ./keys
 
 # 3. Verify the restore actually preserved the trust chain — do not
-#    assume; check:
+#    assume; check
 sat-sa --db ./satsa.db --trust-key-dir ./keys doctor
 sat-sa --db ./satsa.db --trust-key-dir ./keys verify <run_id>
 ```
 
-`sat-sa doctor` (added this phase) confirms the restored database
+`sat-sa doctor` (added this component) confirms the restored database
 connects, has the expected `satsa_*` tables, and that the restored
 keystore can still perform a live ML-DSA sign+verify roundtrip.
 `sat-sa verify <run_id>` re-derives each finding's digest from the
@@ -70,7 +70,7 @@ unsupported and untested. If a rollback is needed, restore the
 pre-upgrade backup (see above) rather than attempting to run an older
 binary against an already-migrated database.
 
-## AWS restore drill (Phase 23, 2026-10-01)
+## AWS restore drill (, 2026-10-01)
 
 Exercised on the live stack with temporary resources only; production was not
 modified.

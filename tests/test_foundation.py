@@ -378,14 +378,14 @@ class TestFoundationAPI:
         assert r.json()["audit"]["chain_ok"] is True
 
     def test_identity_endpoint_lifecycle(self, api_client):
-        # Phase 2 identity-security hardening: the very first identity on a
+        # identity-security hardening: the very first identity on a
         # fresh installation is a bootstrap exception (no credential exists
         # yet to authenticate against) and is created with role="admin" here
         # specifically so the rest of this test — which exercises the
         # identity *service's* duplicate/kind/role validation, not auth — can
         # authenticate as a fully-privileged principal for every subsequent
         # call, exactly as it did before auth existed. See
-        # test_phase2_identity_auth.py for the auth behaviour itself
+        # test_identity_auth.py for the auth behaviour itself
         # (missing/invalid credential, unauthorized action, ownership).
         r = api_client.get("/identity")
         assert r.status_code == 200 and r.json()["identities"] == []

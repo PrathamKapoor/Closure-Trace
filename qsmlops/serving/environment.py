@@ -1,4 +1,4 @@
-"""Deployment environment validation (Phase 6).
+"""Deployment environment validation.
 
 Compares what a model DECLARED about its runtime (passport environment,
 QML-BOM dependency/hardware entries) against what the target host actually

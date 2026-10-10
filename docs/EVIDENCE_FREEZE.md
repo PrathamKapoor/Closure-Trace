@@ -19,7 +19,7 @@ dataset suitability matrix, and exporting the statistical audit.
 | EXP-O01-orchestration-overhead | canonical | 698b507 | `d758a2801f158cc26cc0c9342062bf6656dc05359b9944b5a9ed278a601f2b84` |
 | EXP-O02-orchestration-recovery | canonical | 698b507 | `ddd3bef48fb22f110d4c5f85534dd5bc2eea0cb975444f1ba9dee2aa309b064c` |
 | EXP-T01-trust-mutation-matrix | canonical | 9325fdd | `f20a5c59cb4604919174e28d46ad52e060b67820953e7baccf4d86c1f722e0fc` |
-| EXP-P01-peer-sweep | canonical | 9325fdd | `7aa85508062b2b28519f157a64dcf2692b43dcf50b9264bf308888bcbefe5e54` |
+| EXP-the implementation-peer-sweep | canonical | 9325fdd | `7aa85508062b2b28519f157a64dcf2692b43dcf50b9264bf308888bcbefe5e54` |
 | EXP-A01-component-ablation | canonical | 9325fdd | `03632678da62b27940702b8ec11cfbee726d62f199762f7093e0b5d93a445ff4` |
 | EXP-PR01-prioritization-replicated | canonical | 9325fdd | `2d83cefce4326afc7549b9386567fd803ebf6dcde97d03b189ae13d7d9222c75` |
 | EXP-X02b-external-itsm | canonical | c1206dd | `036652ed89089874a31689354c0ddac26e4140e0f4e7b774f4341408a4d9b9d0` |
@@ -47,8 +47,8 @@ dataset suitability matrix, and exporting the statistical audit.
 | edit `config.json` | verify exit 1: "config.json hash mismatch", "config.json does not match configuration_sha256"; export skipped |
 | restore file | intact again |
 
-Also enforced by `tests/test_phase10_evidence_freeze.py` and
-`tests/test_phase11_publication.py`.
+Also enforced by `tests/test_evidence_freeze.py` and
+`tests/test_publication.py`.
 
 ---
 
@@ -61,7 +61,7 @@ experiment IDs and a new freeze version; freeze v1 is never edited.
 
 Verify: `python scripts/verify_evidence_freeze.py research/evidence/freeze-v1`
 (14 items, intact at creation and in a fresh clone; also enforced by
-`tests/test_phase10_evidence_freeze.py`). Regenerate tables and figure data:
+`tests/test_evidence_freeze.py`). Regenerate tables and figure data:
 `python scripts/export_paper_tables.py --freeze research/evidence/freeze-v1 --out <dir>`
 (uses canonical bundles only; rejects any bundle whose manifest or artifacts
 differ from the freeze).
@@ -77,7 +77,7 @@ Hash columns show the first 16 hex digits; full values are in `freeze.json`.
 | EXP-O01-orchestration-overhead | canonical | satsa-orchestration-overhead-v1 | controlled-orchestration-mixed 1.0, synthetic | 0 | 698b507 | no | d758a2801f158cc2 | 4d6f556cac639da6 |
 | EXP-O02-orchestration-recovery | canonical | satsa-orchestration-recovery-v1 | controlled-orchestration-mixed 1.0, synthetic | 0 | 698b507 | no | ddd3bef48fb22f11 | 02fe625343d48ece |
 | EXP-T01-trust-mutation-matrix | canonical | trust-sat-controlled-mutation-v1 | controlled-trust-synthetic-submission 1.0, synthetic | — | 9325fdd | no | f20a5c59cb460491 | 6f7bb986edd064b2 |
-| EXP-P01-peer-sweep | canonical | peer-cohort-sweep-v1 | controlled-peer-cohort-sweep 1.0, synthetic | — | 9325fdd | no | 7aa85508062b2b28 | 82f29af3808f33a3 |
+| EXP-the implementation-peer-sweep | canonical | peer-cohort-sweep-v1 | controlled-peer-cohort-sweep 1.0, synthetic | — | 9325fdd | no | 7aa85508062b2b28 | 82f29af3808f33a3 |
 | EXP-A01-component-ablation | canonical | satsa-component-ablation-v1 | catalog + generated populations 1.0, synthetic | 300 | 9325fdd | no | 03632678da62b279 | d89c148120a4ec5f |
 | EXP-PR01-prioritization-replicated | canonical | satsa-prioritization-replicated-v1 | generated workload populations 1.0, synthetic | 100 | 9325fdd | no | 2d83cefce4326afc | 360ee0062d218bf1 |
 | EXP-X02-external-itsm | canonical | satsa-external-itsm-v1 | UCI-498 (2018 release), external benchmark | 0 | 8f63aeb | no | 576e50ea1c67eaf1 | 9707e96afa8b7bf8 |
@@ -134,9 +134,9 @@ results preserved in this freeze: stale and contradictory records accepted
 silently (R01b); closure-speed heuristic comparable to SAT-SA on synthetic
 populations (PR01) and baselines tied on the closure corpus (C01); detector
 saturation and no association with SLA-miss rate on real external data (X02);
-peer behaviour strongly dependent on cohort composition (P01).
+peer behaviour strongly dependent on cohort composition.
 
-## Publication snapshot v1 (Phase 12)
+## Publication snapshot v1
 
 `research/evidence/publication-v1/` is a write-once copy of the paper package
 (51 files: manuscript, sections, generated data, tables, figures,

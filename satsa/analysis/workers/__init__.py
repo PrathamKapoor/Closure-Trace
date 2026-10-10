@@ -3,26 +3,26 @@ supervisory analytics run. Each worker is an ``AnalyticalWorker`` that
 reads the frozen ``CanonicalDataset`` and emits ``ObservationBatch``-es
 of typed ``Finding``-s; the rest of the run pipeline is shared.
 
-Phase 4 ships ``fast_closure`` (the first execution-gap detector).
+ships ``fast_closure`` (the first execution-gap detector).
 Subsequent phases add the rest of the execution-gap, negative-space,
 anomaly, peer and prioritisation catalogue here, each as its own
 module so failures are isolated and reruns only re-execute the changed
 worker (not the whole run).
 
-Phases P12–P13 add the eight remaining SAT-SA supervisory agents
+add the eight remaining SAT-SA supervisory agents
 (coverage_gap, drift, cross_entity_insights, case_similarity,
 evidence_completeness) so the platform exposes all 17 original SAT-SA
 supervisory workers — combined with the 9 retained MLOps agents
 they reached the 26-agent target the roadmap required at the time.
 
-Phase P25 adds two more workers to the default pipeline
+adds two more workers to the default pipeline
 (``workflow_reconstruction``, ``entity_asset_resolution``, taking the
 default worker set from 14 to 16) plus three more SAT-SA agents
 registered outside the default worker set (evidence_assembly,
 meta_audit, and the newly-registered report generator), bringing the
 roster to 31 total (9 + 22).
 
-Phase P26 adds one further SAT-SA agent (correlation_fusion, in
+adds one further SAT-SA agent (correlation_fusion, in
 ``satsa.analysis.correlation`` — not a ``workers/`` module, since it
 runs as a pre-scoring step inside ``compute_entity_risk`` rather than
 as its own ``AnalyticalWorker`` in the default pipeline), bringing the

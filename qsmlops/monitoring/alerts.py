@@ -1,4 +1,4 @@
-"""Alert evaluation for the monitoring foundation (Phase 7).
+"""Alert evaluation for the monitoring foundation.
 
 Deterministic rule evaluation over evidence the platform already produces:
 recorded model metrics (against the deployment thresholds used everywhere
@@ -91,7 +91,7 @@ def evaluate(
         alerts.append(Alert(level, code, model_id,
                             detail=f"trust decision {trust_decision}"))
 
-    # Phase 8: feature-level and sustained-degradation distinctions.
+    # feature-level and sustained-degradation distinctions.
     for row in feature_attributions or []:
         if row.get("severity") == "CRITICAL":
             alerts.append(Alert(

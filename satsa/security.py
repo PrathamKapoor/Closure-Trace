@@ -4,7 +4,7 @@ This module does not invent an authentication system — it wires the
 UI and CLI to the *existing* qsmlops identity/credential system
 (``qsmlops.security.identity``), which already has salted API-key
 credentials, role/permission checks, and an audited lifecycle, with
-14 passing tests (``tests/test_phase2_identity_auth.py``). Before
+14 passing tests (``tests/test_identity_auth.py``). Before
 this module existed, the SAT-SA UI's review-decision endpoint read
 ``request.headers.get("x-satsa-principal", "ui-anonymous")`` — any
 caller could set that header to any string and it would be recorded

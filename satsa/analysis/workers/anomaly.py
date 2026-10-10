@@ -2,7 +2,7 @@
 patterns, surfaced via explainable statistics (median / MAD / IQR /
 percentiles) over the entity's own assessment data.
 
-Phase 7 scope: an in-scope (entity, assessment) baseline. We compute
+scope: an in-scope (entity, assessment) baseline. We compute
 the distribution of each of the eight supervisory metrics over the
 records actually present in the dataset and flag values that fall
 in the tail of the distribution. A future phase (peer benchmarking)
@@ -15,7 +15,7 @@ p90), the deviation, and the *metric definition* in plain text. An
 examiner can verify the math and challenge the rule without having
 to read a model.
 
-The eight metrics (per docs/phase1/analytics-architecture.md):
+The eight metrics (per docs/design/analytics-architecture.md):
 
 * closure_time — per closed alert (closed_at − created_at)
 * investigation_duration — per case (closed_at − opened_at)
@@ -46,7 +46,7 @@ from satsa.domain.evidence import ConfidenceVector, Finding
 @dataclass(frozen=True)
 class AnomalyThresholds:
     """How many MADs away from the median counts as an outlier
-    (Phase 7 default is conservative: 3.0 — well above what a
+    (the implementation default is conservative: 3.0 — well above what a
     parametric z=2 would catch, to keep the false-positive rate
     sensible on a small in-scope distribution)."""
     mad_k: float = 3.0

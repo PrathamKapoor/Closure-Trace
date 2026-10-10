@@ -1,6 +1,6 @@
 # SAT-SA security and deployment boundary
 
-Phase 20 security review of the hosted system (threat model, authorization
+This revision security review of the hosted system (threat model, authorization
 matrix, secrets and logging, failure model, and the tests and CI checks that
 back them): [`docs/security/`](security/THREAT_MODEL.md).
 
@@ -70,7 +70,7 @@ Production does not create signing keys at API/worker startup. Provision the
 ML-DSA-65 key into the protected `SATSA_TRUST_KEY_DIR` before starting services.
 The private key is not stored in PostgreSQL or returned through the API. The
 key file must be backed up and access-restricted by the deployment environment.
-Key rotation is not managed by a KMS/HSM integration in this phase; coordinate
+Key rotation is not managed by a KMS/HSM integration in this component; coordinate
 key replacement and public verification material operationally. An invalid or
 missing key prevents production startup/finalization.
 

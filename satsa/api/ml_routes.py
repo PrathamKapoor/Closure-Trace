@@ -1,4 +1,4 @@
-"""MLOps routes of the hosted API (Phase 21).
+"""MLOps routes of the hosted API.
 
 Same conventions as every other route: /api/v1, session or bearer auth,
 X-Organization-ID tenancy, server-side role checks (in MLOpsService),

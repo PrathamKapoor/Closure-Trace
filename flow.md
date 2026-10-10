@@ -114,7 +114,7 @@ POST /api/v1/runs {submission_version_id, execution_mode}   start()
 `get_graph_progress` reads the latest LangGraph checkpoint and refuses (403)
 when its scope (run, organization, version) does not match the run; a
 checkpoint with no scope yet (the graph is just starting) reads as
-`"starting"` (Phase 23 fix, see decisions.md D-020).
+`"starting"` (the implementation fix, see decisions.md D-020).
 
 ## 6. Worker: execution order
 
@@ -311,7 +311,7 @@ old admin credential (Secrets Manager satsa/prod/admin-credential)
 Why the credential revoke: a membership revoke is per organization, while a
 credential authenticates in every organization the identity belongs to.
 
-## 12. Changes in this session (Phase 23)
+## 12. Changes in this session
 
 What changed in the flow above, and where:
 
@@ -327,12 +327,12 @@ What changed in the flow above, and where:
 | Graph | early-checkpoint scope fix in `get_graph_progress` (section 5) | `cc8f0e6` |
 | Brand | TRUST-SAT icon, favicon, brand mark, nav/hero/titles | `a41e4f8`, `83bb687` |
 | UI text | abstention counts `"40 × no deployed model"` | `b60a051` |
-| Tests | `test_phase23_release.py`, `test_phase23_indexes.py`, two graph tests; E2E resilience and organization picker | several |
+| Tests | `test_release_identifier.py`, `test_indexes.py`, two graph tests; E2E resilience and organization picker | several |
 | Docs | AWS runbook, deployment status, restore drill record, discovery doc marked historical | `f19ea36`, `ecf8d30` |
 
 Rationale for each change is in `decisions.md` (D-013 to D-022).
 
-## 13. Changes in this session (Phase 23 operations: credential rotation)
+## 13. Changes in this session (the implementation operations: credential rotation)
 
 | Area | Change | Files | Commit | Decision |
 |---|---|---|---|---|

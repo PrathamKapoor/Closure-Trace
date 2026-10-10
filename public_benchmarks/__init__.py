@@ -11,7 +11,7 @@ contain network/log telemetry, not analyst workflows (tickets,
 investigation steps, escalations, dispositions). No public dataset
 this package uses claims to be, or is treated as, a substitute for
 real NCIIPC/SOC supervisory data. That validation remains explicitly
-deferred (see docs/roadmap-status.md and docs/CLAIMS.md) pending real
+deferred (see docs/IMPLEMENTATION_NOTES.md and docs/CLAIMS.md) pending real
 data this project does not have access to.
 
 What public datasets CAN validate, honestly, is the layer beneath

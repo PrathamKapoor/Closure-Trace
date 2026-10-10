@@ -17,7 +17,7 @@ The baseline is passed through the worker contract as a
 ``PeerBaseline`` data alongside the digest reference so workers
 do not need a second contract).
 
-Phase 7 anomaly metrics covered (re-using the same definitions
+anomaly metrics covered (re-using the same definitions
 so a single source of truth serves both workers):
 * median critical closure time
 * critical closure rate (closed / total)

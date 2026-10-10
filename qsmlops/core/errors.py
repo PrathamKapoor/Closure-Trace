@@ -56,7 +56,7 @@ class PermissionDeniedError(QSMLOPSError):
 
 
 class AuthenticationError(QSMLOPSError):
-    """Missing, malformed, revoked or invalid credential (Phase 2 identity
+    """Missing, malformed, revoked or invalid credential (the implementation identity
     auth). Distinct from PermissionDeniedError: this means "we don't know
     who you are," not "we know who you are and you can't do this."""
 

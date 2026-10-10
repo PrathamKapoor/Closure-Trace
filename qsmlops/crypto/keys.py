@@ -5,12 +5,12 @@ Trust anchors are stored as public keys with metadata. Secret keys are kept
 separately (never in the trust anchor table) and are only used by local
 operations such as signing passports.
 
-Phase 2: keys carry an optional expiry timestamp; expired keys cannot verify
+keys carry an optional expiry timestamp; expired keys cannot verify
 signatures or sign new material, and `rotate_due_keys` automates rotation.
 For at-rest protection of secret keys use EncryptedKeyStore
 (qsmlops.crypto.secure_keystore).
 
-Phase 3 (Workstream A1): HSM backend integration for hardware-backed keys.
+(Workstream A1): HSM backend integration for hardware-backed keys.
 """
 from __future__ import annotations
 

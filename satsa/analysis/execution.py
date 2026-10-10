@@ -983,7 +983,7 @@ class AnalysisExecutionWorker:
         storage=None,
     ) -> None:
         self.db = engine
-        # Artifact storage for the advisory model (Phase 21). Without it an
+        # Artifact storage for the advisory model. Without it an
         # active model cannot be loaded and inference abstains.
         self.storage = storage
         self.worker_id = (

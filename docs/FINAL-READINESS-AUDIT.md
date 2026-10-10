@@ -1,8 +1,8 @@
 # SAT-SA — Final Readiness Audit
 
-> **Current-state addendum (P32, September 2026).** The scorecard and
+> **Current-state addendum (the implementation, September 2026).** The scorecard and
 > checklist below are a **dated historical record** of the session that
-> ended around phase P24 — they deliberately reflect that session's
+> ended around the implementation — they deliberately reflect that session's
 > evidence, not the current release state. Since it was written, the
 > release-engineering gaps it lists have been closed on the evidence
 > below; everything under "still missing external validation" remains
@@ -10,7 +10,7 @@
 > claims discipline:
 >
 > **(a) Internally verified release engineering** — GitHub Actions
-> release gate fully green at commit `a72f079` (P31, run
+> release gate fully green at commit `a72f079` (the implementation, run
 > [34667939977](https://github.com/PrathamKapoor/SAT-SA-with-PQC/actions/runs/34667939977)):
 > Python 3.11 full suite, Python 3.13 full suite (the setuptools gap
 > was root-caused locally and fixed in `a72f079`), package/import
@@ -19,8 +19,8 @@
 >
 > **(b) Offline-install evidence** — `pip install -r requirements.txt`
 > is the documented offline path; requirements↔pyproject manifest
-> equality is locked by `tests/test_phase87_dependency_manifest_consistency.py`;
-> the P29 wheelhouse exercise (commit `6cdbe97`) was performed on the
+> equality is locked by `tests/test_dependency_manifest_consistency.py`;
+> the existing wheelhouse exercise (commit `6cdbe97`) was performed on the
 > development host only — **not** on an independent air-gapped target
 > machine.
 >
@@ -36,10 +36,10 @@
 > performed. SAT-SA must not be described as "fully production
 > deployed," "NCIIPC-approved," or "validated on real SOC operations."
 >
-> What follows is the original, unmodified P18–P24-era audit.
+> What follows is the original, unmodified the implementation-era audit.
 
-Written at the end of a single extended session (phases P18–P24
-partial, P23) that started from a baseline of 887 passing tests and
+Written at the end of a single extended session (the implementation
+partial, the implementation) that started from a baseline of 887 passing tests and
 ended at 926. This audit is not independent — the same session that
 did the work is scoring it — so treat every number below as a
 starting point for someone else's skepticism, not a verdict. Per this
@@ -61,7 +61,7 @@ below 10 lists exactly what is missing.**
 every check it reports (a real ML-DSA roundtrip, a real DB
 connect+migrate, a real write-permission probe) rather than checking
 imports. Backup/restore is proven end-to-end
-(`tests/test_phase68_...`), not just documented. 926 tests pass, 0
+(`tests/test_satsa_doctor_and_backup_restore.py`), not just documented. 926 tests pass, 0
 failed, 17 skipped — up from 887 at session start, with the delta
 being adversarial/integration tests (auth attacks, tamper matrix,
 fresh-database reality tests), not padding.
@@ -69,8 +69,8 @@ fresh-database reality tests), not padding.
 **What still caps it below 10:** CI (`.github/workflows/ci.yml`) and
 the `Dockerfile` are both written but **unverified** — no GitHub
 Actions run, no `docker build`, both explicitly disclosed as such
-rather than claimed working. The rest of P22 (peer-benchmark
-hardening, baselines, ablations) and P25 (a planned pitch/landing
+rather than claimed working. The rest of the implementation (peer-benchmark
+hardening, baselines, ablations) and the implementation (a planned pitch/landing
 page rebuild) were never started this session. `git status` still
 shows an uncommitted working tree (by design — no commits without
 explicit instruction), so "shippable" here means "the code is real
@@ -83,7 +83,7 @@ earlier audit in this same conversation flagged as the single biggest
 reason this wasn't deployable —
 `request.headers.get("x-satsa-principal", "ui-anonymous")` — is gone.
 Every state-changing action now requires a real, server-verified
-identity (`tests/test_phase63_satsa_auth_rbac.py`, 13 adversarial
+identity (`tests/test_satsa_auth_rbac.py`, 13 adversarial
 tests: unauthenticated, wrong-role, forged token, revoked credential,
 malformed token, all fail closed). This was not invented from
 scratch — it reuses a mature, already-tested qsmlops identity system
@@ -127,7 +127,7 @@ methodological discipline. The `evaluate_layer()` YES/NO/UNLABELED fix
 means precision/recall no longer conflates "never reviewed" with
 "confirmed wrong," which is directly the kind of statistical honesty
 a reviewer would otherwise flag immediately. The fresh-database E2E
-test enforces the generator/detector independence principle (P19)
+test enforces the generator/detector independence principle
 that circular validation critiques target first.
 
 **What still blocks a real score jump:** no baselines (z-score, MAD,
@@ -138,7 +138,7 @@ the shipped sample file is explicitly a template. No independent
 evaluation dataset beyond synthetic generators exists. These four are
 the actual blockers to a meaningfully higher research score, and none
 of them were addressed this session; they remain in
-`docs/roadmap-status.md` P22's limitations as open work.
+`docs/IMPLEMENTATION_NOTES.md` the component's limitations as open work.
 
 ## The final-gate checklist (mega-prompt section 134 format)
 
@@ -148,7 +148,7 @@ it in this session's history — not where it merely sounds plausible.
 - [x] Fresh installation works — `docs/deployment.md`, native path
       live-verified this conversation (UI server actually started,
       pages actually returned 200)
-- [x] Fresh database works — `tests/test_phase64_satsa_fresh_database_e2e.py`
+- [x] Fresh database works — `tests/test_satsa_fresh_database_e2e.py`
 - [x] Fresh dataset works — same file, independent synthetic generator,
       not the committed demo
 - [x] CLI works — `sat-sa doctor`, `sat-sa demo`, `sat-sa validate`, etc., all live-run
@@ -156,37 +156,37 @@ it in this session's history — not where it merely sounds plausible.
 - [ ] API works (as a general claim beyond what's tested) — the
       review endpoint is thoroughly tested; the 16 read-only routes
       are not individually auth/attack-tested
-- [x] Authentication is real — `tests/test_phase63_satsa_auth_rbac.py`
+- [x] Authentication is real — `tests/test_satsa_auth_rbac.py`
 - [x] RBAC is real — same file; roles are real permission sets, not
       cosmetic labels
 - [x] Human decisions are real — separate from recommendations,
       proven non-overwriting
 - [x] Evidence is real — every finding cites `evidence_refs`, checked
-      in `test_phase64_...`
+      in `test_satsa_fresh_database_e2e.py`
 - [x] Findings are computed — proven from a fresh, non-demo dataset
 - [x] Risk is computed — same
 - [x] Prioritization is computed — same, plus the workload experiment
       exercises it independently
 - [x] Recommendations are computed — same
 - [x] TRUST-SAT verification is real — live-state proof in
-      `test_phase66_...` (tamper → fail → restore exact value → pass again)
+      `test_satsa_tamper_matrix.py` (tamper → fail → restore exact value → pass again)
 - [x] Tampering is detected according to the defined trust model —
       `docs/TRUST_MODEL.md`'s explicit matrix, with honest ⚠️ rows for
       what is NOT detected (deletion/reordering of review decisions,
       whole-DB replacement)
-- [x] Offline operation is proven — `test_phase18_satsa_offline_hardening.py`
+- [x] Offline operation is proven — `test_satsa_offline_hardening.py`
 - [ ] Deployment is reproducible — native path yes; CI/Docker
       unverified this session
-- [x] Backup/restore works — `test_phase68_...`
+- [x] Backup/restore works — `test_satsa_doctor_and_backup_restore.py`
 - [ ] Failure recovery works — not directly tested this session
       (interrupted-run / crash-recovery states are not covered)
 - [ ] Large-data tests have actual measurements — 5–50 CSE yes
       (`scripts/benchmark_scaling.py`); 100/1000 CSE not attempted
-- [x] Multi-period analysis works — `test_phase37_satsa_drift.py` and
+- [x] Multi-period analysis works — `test_satsa_drift.py` and
       prior-session work
 - [ ] Peer benchmarking is statistically defensible — the gate exists
       (`min_peers=3`) but broader sensitivity/robustness work is
-      still open (P22)
+      still open
 - [x] Negative-space detection is adversarially tested (to the extent
       this session went) — the fresh-database negative control caught
       a real bug; a fuller adversarial-evasion suite (section 86 of
@@ -212,9 +212,9 @@ it in this session's history — not where it merely sounds plausible.
 - [x] Documentation matches implementation — this audit + `docs/CLAIMS.md`
       are the cross-check
 - [x] Security model is explicit — `docs/TRUST_MODEL.md`
-- [x] Limitations are explicit — every phase entry in
-      `docs/roadmap-status.md` has a limitations section; none were
-      skipped to make a phase look more complete than it is
+- [x] Limitations are explicit — every component entry in
+      `docs/IMPLEMENTATION_NOTES.md` has a limitations section; none were
+      skipped to make a component look more complete than it is
 
 **11 unchecked items remain.** That is the honest gap between where
 this session leaves the project and a genuine, evidence-backed 10/10

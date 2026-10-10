@@ -74,7 +74,7 @@ def observation_risk(observation: Observation) -> float:
     return min(100.0, total)
 
 
-# Phase 10 adaptive-risk constants (documented, deterministic).
+# adaptive-risk constants (documented, deterministic).
 ADAPTIVE_CONFIDENCE_FLOOR = 0.6   # a finding can never shed >40% of its weight
                                   # by claiming low confidence
 ADAPTIVE_HIGH_SEVERITIES = {"HIGH", "CRITICAL"}
@@ -114,7 +114,7 @@ def aggregate_risk(observations: list[Observation],
 
     Global score is the max of category scores blended with the mean, so a
     single catastrophic signal dominates while many moderate signals still
-    accumulate. With ``adaptive=True`` (Phase 10) per-agent category scores use
+    accumulate. With ``adaptive=True`` per-agent category scores use
     the confidence-aware :func:`observation_risk_adaptive`.
     """
     scorer = observation_risk_adaptive if adaptive else observation_risk

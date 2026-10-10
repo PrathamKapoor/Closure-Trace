@@ -44,7 +44,7 @@ def test_postgres_failed_migration_does_not_mark_version(postgres_dsn, monkeypat
     try:
         MigrationRunner(engine).migrate()
         bad = Migration(max(m.version for m in MIGRATIONS) + 1, "deliberately_invalid", (
-            "CREATE TABLE phase1_rollback_probe (id INTEGER PRIMARY KEY)",
+            "CREATE TABLE rollback_probe (id INTEGER PRIMARY KEY)",
             "INVALID SQL",
         ))
         monkeypatch.setattr(migrations, "MIGRATIONS", MIGRATIONS + (bad,))
@@ -52,7 +52,7 @@ def test_postgres_failed_migration_does_not_mark_version(postgres_dsn, monkeypat
             MigrationRunner(engine).migrate()
         assert MigrationRunner(engine).applied_versions() == [m.version for m in MIGRATIONS]
         assert engine.query_one(
-            "SELECT to_regclass('phase1_rollback_probe') AS name"
+            "SELECT to_regclass('rollback_probe') AS name"
         ) == {"name": None}
     finally:
         engine.close()

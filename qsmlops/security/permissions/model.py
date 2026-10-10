@@ -51,7 +51,7 @@ ANALYSIS_RUN = "analysis.run"
 VALIDATION_RUN = "validation.run"
 TRUST_VERIFY = "trust.verify"
 REPORT_EXPORT = "report.export"
-CALIBRATION_APPROVE = "calibration.approve"  # phase P26: gate the
+CALIBRATION_APPROVE = "calibration.approve"  # gate the
 # propose -> test -> approve -> deploy detector-threshold calibration
 # workflow (satsa.analysis.calibration). Testing a proposal against
 # labeled data only needs VALIDATION_RUN (already granted to analyst
@@ -161,7 +161,7 @@ ROLES: dict[str, frozenset[str]] = {
         {
             FINDING_VIEW, EVIDENCE_VIEW, REVIEW_READ,
             ANALYSIS_RUN, VALIDATION_RUN, TRUST_VERIFY, REPORT_EXPORT,
-            # Phase 21: may build datasets and request training; may not
+            # may build datasets and request training; may not
             # approve, deploy or roll back a model.
             MODEL_READ, MODEL_TRAIN,
         }
@@ -173,7 +173,7 @@ ROLES: dict[str, frozenset[str]] = {
             FINDING_VIEW, EVIDENCE_VIEW, REVIEW_READ, REVIEW_CREATE,
             DECISION_RECORD, ANALYSIS_RUN, VALIDATION_RUN,
             TRUST_VERIFY, REPORT_EXPORT, CALIBRATION_APPROVE,
-            # Phase 21: model governance is a supervisory act.
+            # model governance is a supervisory act.
             MODEL_READ, MODEL_TRAIN, MODEL_APPROVE, MODEL_DEPLOY, MODEL_ROLLBACK,
         }
     ),

@@ -10,7 +10,7 @@ from pathlib import Path
 class PlatformConfig:
     """Runtime configuration. All paths default under a single root directory.
 
-    ``default_signature_algorithm``/``default_kem_algorithm`` (Phase 2): the
+    ``default_signature_algorithm``/``default_kem_algorithm``: the
     configured PQC suite, forwarded to :class:`~qsmlops.crypto.agility.AgilityEngine`
     so the layered ``configs/settings.*.yaml`` value is what actually gets
     selected at runtime, instead of the engine silently auto-selecting its own
@@ -102,7 +102,7 @@ DEFAULT_METRIC_THRESHOLDS: dict[str, float] = {
 # Key rotation policy: maximum age of a signing key before ROTATE_KEYS.
 DEFAULT_KEY_MAX_AGE_DAYS = 90
 
-# Trust decision thresholds (Phase 5). A composite trust score at or above
+# Trust decision thresholds. A composite trust score at or above
 # "trusted" yields TRUSTED; at or above "conditional" (but below trusted)
 # yields CONDITIONALLY_TRUSTED; below yields REVIEW_REQUIRED. Hard
 # cryptographic failures always dominate as BLOCKED regardless of score.
@@ -111,7 +111,7 @@ DEFAULT_TRUST_THRESHOLDS: dict[str, float] = {
     "conditional": 70.0,
 }
 
-# Phase 7/8 monitoring configuration.
+# monitoring configuration.
 MONITORING_ROLLING_WINDOW = 10          # observations per rolling window
 MONITORING_MIN_HISTORY = 3              # minimum history before baselines fire
 DRIFT_BROAD_FEATURE_FRACTION = 0.5      # fraction of features that counts as broad

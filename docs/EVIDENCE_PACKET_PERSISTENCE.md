@@ -154,7 +154,7 @@ All 32 green; partitioned regression 368 green.
 python -m compileall -q qsmlops && echo OK
 python demo.py  # Chain OK: True, packets under ledger/packets/
 python -m pytest tests/test_evidence_packet_persistence.py -q  # 32 passed
-python -m pytest tests/test_post_roadmap_hardening.py tests/test_hsm* -q  # 94 passed
+python -m pytest tests/test_platform_hardening.py tests/test_hsm* -q  # 94 passed
 # API
 pip install httpx && python -c "from fastapi.testclient import TestClient; from qsmlops.api.app import register_dashboard_routes; ..."
 # CLI

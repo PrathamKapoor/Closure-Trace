@@ -1,4 +1,4 @@
-# Submission gate (Phase 14)
+# Submission gate
 
 - **Venue:** IEEE Access.
 - **Article type:** Applied Research (author confirmation required).
@@ -9,7 +9,7 @@
 
 Every item has exactly one class:
 
-- **A. Automatically resolvable:** machine-checkable work, done in Phases 13–14,
+- **A. Automatically resolvable:** machine-checkable work, done in this implementation,
   with its status.
 - **B. Needs author input:** only the author can supply or decide it.
 - **C. Must not be changed:** frozen record; changing it would alter the science.

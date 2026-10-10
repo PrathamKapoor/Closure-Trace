@@ -1,4 +1,4 @@
-"""IngestionService: the Phase 3 entry point — take submission files for one
+"""IngestionService: the existing entry point — take submission files for one
 (entity, assessment), normalize them into canonical domain records, persist
 everything in a single transaction, and return a full IngestionReport.
 
@@ -10,7 +10,7 @@ Guarantees:
 - every accepted record carries a resolvable SourceRecord pointer and a
   content digest (SHA3-256 over its canonical dict);
 - the submission records file digests, counts, format, timing and the
-  frozen snapshot digest — the provenance anchors later phases sign/commit.
+  frozen snapshot digest — the provenance anchors future work sign/commit.
 """
 from __future__ import annotations
 

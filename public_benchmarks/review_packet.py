@@ -20,7 +20,7 @@ SOC practitioners, CTF mentors, or experienced students. None of them
 are NCIIPC examiners, and nothing this module produces claims
 otherwise. Real-world validation against actual NCIIPC/SOC supervisory
 judgment remains a separate, explicitly deferred item (see
-docs/roadmap-status.md and docs/CLAIMS.md) — practitioner review of a
+docs/IMPLEMENTATION_NOTES.md and docs/CLAIMS.md) — practitioner review of a
 public benchmark is evidence about practitioner consensus, not a
 substitute for it.
 """

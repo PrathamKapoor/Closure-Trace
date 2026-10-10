@@ -1,4 +1,4 @@
-"""Phase 46 — large-scale performance benchmark.
+"""large-scale performance benchmark.
 
 Uses the existing deterministic synthetic dataset generator.
 Measures actual timings for ingestion, analytics, risk,

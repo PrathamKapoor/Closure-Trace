@@ -51,14 +51,14 @@ sat-sa-bootstrap-admin = "scripts.bootstrap_satsa_admin:main"
 include = ["qsmlops*", "satsa*", "evaluation*", "public_benchmarks*", "docs*", "scripts*"]
 
 [tool.setuptools.package-data]
-# P28: public_benchmarks/workflow_augmentation/generator.py reads
+# public_benchmarks/workflow_augmentation/generator.py reads
 # policy.yaml relative to its own installed package directory at
 # runtime (POLICY_PATH = Path(__file__).resolve().parent /
 # "policy.yaml") -- without this, a built wheel omits the .yaml/.json
 # files (setuptools only includes .py files by default) and
 # generate_workflow()'s default policy load fails on an installed
 # distribution. Confirmed missing from a real built wheel before this
-# fix (see docs/roadmap-status.md P28). The .json files are not
+# fix (see docs/IMPLEMENTATION_NOTES.md). The .json files are not
 # currently read by production code (only by tests, via a repo-root-
 # relative path) but are shipped alongside policy.yaml for the same
 # reason any package ships its own non-code resource files together.
@@ -79,12 +79,12 @@ skip_covered = false
 
 [tool.mypy]
 ignore_missing_imports = true
-# Gradually-typed codebase (see CHANGELOG.md / docs/roadmap-status.md
-# P26 addendum, checklist item 10): not run as a CI gate yet. Existing
-# type errors are in pre-P26 modules (satsa/analysis/run.py, trust.py,
+# Gradually-typed codebase (see CHANGELOG.md / docs/IMPLEMENTATION_NOTES.md
+# engineering notes, checklist item 10): not run as a CI gate yet. Existing
+# type errors are in legacy modules (satsa/analysis/run.py, trust.py,
 # workers/anomaly.py, workers/peer_benchmark.py,
 # domain/workflow.py — see the measured baseline in
-# docs/roadmap-status.md). Every module added in phase P26
+# docs/IMPLEMENTATION_NOTES.md). Every module implemented
 # (satsa/analysis/calibration.py, correlation.py, satsa/security.py,
 # evaluation/baselines/, evaluation/ablation/) is mypy-clean on its
 # own — verified, not assumed.

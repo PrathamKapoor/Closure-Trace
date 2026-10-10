@@ -58,7 +58,7 @@ without code changes (`qsmlops/security/policies/loader.py`).
 
 The legacy offline TRUST-SAT path is `satsa/analysis/trust.py` (`TrustService`) plus the
 review-decision binding in `satsa/analysis/review.py`
-(`ReviewService.verify_binding`, added phase P20). It is **not** the same
+(`ReviewService.verify_binding`, added the implementation). It is **not** the same
 mechanism as the qsmlops model-passport chain documented above — SAT-SA
 findings and runs are signed independently, with their own receipts in
 `satsa_trust_receipts`.
@@ -87,20 +87,20 @@ named):
 
 | Mutation | Detected? | Proven by |
 |---|---|---|
-| Finding rationale / threshold / confidence / evidence_refs | ✅ digest mismatch → signature fails | `tests/test_phase44_satsa_trust_stress.py` |
-| Finding re-pointed to a different observation_id | ✅ | `tests/test_phase44_satsa_trust_stress.py` |
-| Run's stored `content_digest` column | ✅ stored-vs-live mismatch | `tests/test_phase44_satsa_trust_stress.py` (P0 fix) |
-| Corrupted / zeroed signature bytes | ✅ | `tests/test_phase44_satsa_trust_stress.py` |
-| Deleted trust receipt | ✅ "no trust receipt" | `tests/test_phase44_satsa_trust_stress.py` |
-| Inserted (fabricated) finding, never signed | ✅ no receipt exists for it | `tests/test_phase66_satsa_tamper_matrix.py` |
-| Review decision's `principal_identity_id` (forged/spoofed identity) | ✅ authentication layer rejects before a decision can even be recorded | `tests/test_phase63_satsa_auth_rbac.py` (P18) |
-| Finding tampered **after** a human decision was recorded | ✅ decision's captured digest vs. live digest mismatch | `tests/test_phase66_satsa_tamper_matrix.py` (P20; closes a gap `review.py` documented but nothing checked before this phase) |
-| Verification reflects live DB state, not a cached pass/fail | ✅ tamper → fails; restore exact original value → verifies again | `tests/test_phase66_satsa_tamper_matrix.py` |
+| Finding rationale / threshold / confidence / evidence_refs | ✅ digest mismatch → signature fails | `tests/test_satsa_trust_stress.py` |
+| Finding re-pointed to a different observation_id | ✅ | `tests/test_satsa_trust_stress.py` |
+| Run's stored `content_digest` column | ✅ stored-vs-live mismatch | `tests/test_satsa_trust_stress.py` (the implementation fix) |
+| Corrupted / zeroed signature bytes | ✅ | `tests/test_satsa_trust_stress.py` |
+| Deleted trust receipt | ✅ "no trust receipt" | `tests/test_satsa_trust_stress.py` |
+| Inserted (fabricated) finding, never signed | ✅ no receipt exists for it | `tests/test_satsa_tamper_matrix.py` |
+| Review decision's `principal_identity_id` (forged/spoofed identity) | ✅ authentication layer rejects before a decision can even be recorded | `tests/test_satsa_auth_rbac.py` |
+| Finding tampered **after** a human decision was recorded | ✅ decision's captured digest vs. live digest mismatch | `tests/test_satsa_tamper_matrix.py` (the implementation; closes a gap `review.py` documented but nothing checked before this component) |
+| Verification reflects live DB state, not a cached pass/fail | ✅ tamper → fails; restore exact original value → verifies again | `tests/test_satsa_tamper_matrix.py` |
 | Legacy on-demand recommendation (`satsa/analysis/recommend.py`) | ⚠️ not independently signed | Computed on demand from the finding at read time — it inherits the finding's own trust coverage (if the finding verifies, its inputs are trusted) but has no receipt of its own because it is never persisted as an independent claim. Documented limitation, not a bug. |
-| Record deletion from `satsa_review_decisions` / reordering | ✅ (P26) — deletion and out-of-band insertion both detected | Every decision recorded via `ReviewService.record()` (when constructed with a `decision_ledger`, wired by default from `SatsaService.record_review(trust_key_dir=...)`) is now also mirrored into its own hash-chained `EvidenceLedger` (the same class the qsmlops identity audit trail already used). `ReviewService.verify_ledger_integrity()` cross-checks the DB table against the ledger in both directions. Still bounded by the filesystem-level limitation on the row directly below — an attacker with full filesystem access could edit the DB and the ledger file consistently. `tests/test_phase80_satsa_review_ledger_integrity.py` |
+| Record deletion from `satsa_review_decisions` / reordering | ✅ — deletion and out-of-band insertion both detected | Every decision recorded via `ReviewService.record()` (when constructed with a `decision_ledger`, wired by default from `SatsaService.record_review(trust_key_dir=...)`) is now also mirrored into its own hash-chained `EvidenceLedger` (the same class the qsmlops identity audit trail already used). `ReviewService.verify_ledger_integrity()` cross-checks the DB table against the ledger in both directions. Still bounded by the filesystem-level limitation on the row directly below — an attacker with full filesystem access could edit the DB and the ledger file consistently. `tests/test_satsa_review_ledger_integrity.py` |
 | Whole-database replacement (attacker swaps the `.db` file wholesale, receipts included) | ⚠️ not detected | Requires an external trust root (e.g. the public key anchored outside the SQLite file, which it already is — `<key-dir>/satsa_trust_key.json` — but nothing currently cross-checks "is this database file itself the one this key's history belongs to"). Documented as a residual limitation, not fabricated as solved. |
 
-## Supervisory finalization (Phase 5)
+## Supervisory finalization
 
 ### Exactly what the receipt proves
 
@@ -152,7 +152,7 @@ workers, with mandatory organization context. Finalization identity derives
 from organization, run, immutable decision ID and schema version 1. One
 terminal decision exists per run; different repeat decisions are rejected.
 New decisions atomically capture the full reviewed-context digest; changes
-between review and signing are rejected. Historical Phase 4 decisions retain
+between review and signing are rejected. Historical the implementation decisions retain
 a null review-context field: they still bind their actual recorded decision and
 captured first-finding digest, but cannot prove a full review-time snapshot.
 They are not backfilled with fabricated historical evidence commitments.
@@ -184,7 +184,7 @@ no duplicate receipt or lifecycle events. The stored verified state is history;
 `verify_finalization()` always performs live checks. A crash after verification
 but before queue completion is recovered from the existing lease/checkpoint;
 completed workers and finalization do not duplicate durable side effects.
-Transient trust filesystem errors follow Phase 3 bounded job retries. Integrity
+Transient trust filesystem errors follow the implementation bounded job retries. Integrity
 and configuration errors fail explicitly. Cancellation is cooperative at
 finalization boundaries. A receipt already recorded before cancellation still
 proves the recorded decision; it never claims the cancelled run completed.
@@ -234,7 +234,7 @@ anchored signer authenticity. Existing model-passport anchor policies above do
 not automatically apply to SAT-SA supervisory receipts. Live S3 and hosted
 production deployment remain unverified.
 
-Tests: `tests/test_phase5_trust_finalization.py` exercises both SQLite and real
+Tests: `tests/test_trust_finalization.py` exercises both SQLite and real
 PostgreSQL, graph/non-graph review, concurrent finalizers, live tamper detection,
 repeated finalization, worker retry/checkpoint recovery and six interruption
 boundaries, malformed finding fields, and cancellation during finalization. Run with `SATSA_TEST_POSTGRES_DSN` configured for real PostgreSQL.

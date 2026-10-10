@@ -17,7 +17,7 @@ component is not, by itself, evidence of novelty or effectiveness.
 | Evidence-backed findings and provenance | Implemented engineering capability; research candidate | Evidence references/provenance and retrieval paths exist | Predefined traceability coverage metric and independently assessed reviewability |
 | Human supervisory checkpoint | Implemented workflow capability | Authorized decision persists and resumes/finalizes workflow | Controlled human study; no examiner time/agreement outcome currently available |
 | TRUST-SAT decision binding (ML-DSA-65, SHA3-256, ledger) | Implemented security/engineering contribution; integrity research candidate | Finalization, binding, verification and tamper tests exist | A separately reported controlled mutation protocol and operational cost study |
-| Tenant-aware SaaS persistence and deployment topology | Engineering contribution; deployment evidence incomplete | API/DB/worker/S3-compatible code and deployment artifacts exist | Phase 7 local production-like and hosted deployment were not executed/verified |
+| Tenant-aware SaaS persistence and deployment topology | Engineering contribution; deployment evidence incomplete | API/DB/worker/S3-compatible code and deployment artifacts exist | the implementation local production-like and hosted deployment were not executed/verified |
 | Reproducible evaluation method | Partially implemented; engineering contribution | Versioned synthetic catalog, deterministic runner, baselines and ablation exist | Immutable run manifests, artifact hashes, durable exports and independent datasets |
 
 No aspect is classified as established research novelty. Inherited QSMLOps,
@@ -28,7 +28,7 @@ methods are not claimed as SAT-SA inventions.
 
 | Category | Meaning | What exists |
 | --- | --- | --- |
-| Controlled synthetic | mechanism and robustness validation on authored or generated data | EXP-C01, R01b, O01, O02, T01, P01, A01, PR01 (freeze v1) |
+| Controlled synthetic | mechanism and robustness validation on authored or generated data | EXP-C01, R01b, O01, O02, T01, the implementation, A01, PR01 (freeze v1) |
 | External dataset | independent feasibility validation and negative independent evidence under domain mismatch; **not sufficient for external-effectiveness validation** | EXP-X02b (corrected run of X02) and EXP-X03 (failure analysis): UCI-498 real IT incident log — zero rejected rows, detector saturation, no association with SLA-miss rate, attributed mainly to construct mismatch |
 | Real operational SOC data | effectiveness on the target domain | **not evaluated** |
 
@@ -47,7 +47,7 @@ in [LITERATURE_POSITIONING.md](LITERATURE_POSITIONING.md); limitations in
 | Evidence/provenance allows findings to be traced through an authorized decision and receipt | Makes examiner review auditable | Evidence, provenance, review, TRUST-SAT | Finding-level recommendation coverage, resolvable evidence-reference coverage, decision existence, receipt verification; finding is unit | One complete controlled synthetic workflow | `trust-integrity-*` traceability section | One workflow; limited reference checklist, not a human reviewability result |
 | TRUST-SAT detects controlled changes to the finalized supervisory record | Tests integrity verification, not truth of evidence | Finalization, decision binding, ledger verification | Verified/tampered outcomes by mutation class; receipt is unit | Valid state then one-at-a-time mutation of decision, finding, risk, recommendation, source provenance, canonical payload, receipt signature, ledger chain | `trust-integrity-*` immutable bundle; verification categories and timings | One synthetic SQLite run; not a population detection-rate or resistance-to-coordinated-replacement claim |
 | Evidence incompleteness changes validation and analytical outputs in a measurable way | Tests robustness to partial submissions | Submission validation and negative-space workers | Acceptance/rejection, findings, risk and completeness by perturbation level; submission is unit | Complete control vs controlled missing/duplicate/stale/conflicting/malformed conditions | `EXP-R01b-evidence-robustness` bundle | Measured on five authored fixtures: validation matched its contract in 245/245 conditions; stale and contradictory records are accepted silently (limitation) |
-| Stateful orchestration has acceptable overhead and resumes without repeating committed stages | Quantifies orchestration trade-off | Phase 3 worker + LangGraph | Paired latency, recovery completion, duplicate side effects; analysis run is unit | Direct vs graph on the same fixture, 30 rotated trials; 6 injected interruption points × 2 modes × 3 trials | `EXP-O01` and `EXP-O02` bundles | Measured on one machine with SQLite: median +0.096 s (interval includes 0), +38 DB calls, 36/36 recoveries; not production topology |
+| Stateful orchestration has acceptable overhead and resumes without repeating committed stages | Quantifies orchestration trade-off | the implementation worker + LangGraph | Paired latency, recovery completion, duplicate side effects; analysis run is unit | Direct vs graph on the same fixture, 30 rotated trials; 6 injected interruption points × 2 modes × 3 trials | `EXP-O01` and `EXP-O02` bundles | Measured on one machine with SQLite: median +0.096 s (interval includes 0), +38 DB calls, 36/36 recoveries; not production topology |
 | Peer deviation behavior responds to cohort sufficiency and configured deviation threshold | Tests implemented peer baseline rules in a controlled population | Peer benchmark worker | Peer-baseline count, median/MAD and actual emitted finding; cohort is unit | Synthetic peer counts 2/3/4 and subject closure times 30/400/750s; same worker threshold | `peer-sensitivity-*` immutable bundle | Pilot executed: count 2 and 3 cases did not emit; count 4 emitted; fixed n=4 magnitude sweep flagged 30s only. Small engineered closure-only cohorts; no field-population inference |
 
 ## Research questions
@@ -217,7 +217,7 @@ The controlled benchmark uses synthetic fixture builders, construction-defined
 closure labels, and seeded synthetic populations. Expert-label sample files
 remain templates; no real expert-labeled corpus is available. CIC-IDS2017 and
 BOTS adapters have not been executed against the actual downloaded datasets.
-No human examiner time/agreement study has run. The Phase 7 local multi-service
+No human examiner time/agreement study has run. The existing local multi-service
 deployment, live PostgreSQL, live S3, and hosted deployment were not verified.
 The current benchmark is an isolated scratch SQLite/synchronous evaluation,
 not a performance test of the production API/worker/S3 topology.

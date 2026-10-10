@@ -1,7 +1,7 @@
 # Public benchmark validation — honestly
 
 This document is the authoritative claims boundary for
-`public_benchmarks/` (phase P27). Read it before citing anything about
+`public_benchmarks/`. Read it before citing anything about
 public-dataset validation in a pitch, a report, or a claim elsewhere
 in this repository.
 
@@ -14,7 +14,7 @@ SOC investigated or escalated a case properly, because they contain
 network/log telemetry — not analyst workflows, tickets, dispositions,
 or escalations. That validation requires real NCIIPC/SOC supervisory
 data this project does not have access to, and remains explicitly
-deferred (see `docs/roadmap-status.md`'s P26 addenda and
+deferred (see `docs/IMPLEMENTATION_NOTES.md`'s the implementation addenda and
 `docs/CLAIMS.md`).
 
 ## The three-layer design
@@ -30,7 +30,7 @@ provenance — see `public_benchmarks/provenance.py`. A record either
 carries `provenance_type="derived_from_source"` (real telemetry) or
 `"derived_synthetic_workflow"` (a controlled fixture, never real
 analyst behavior). Nothing in this package produces an untagged
-record; `tests/test_phase81_public_benchmarks_provenance.py` enforces
+record; `tests/test_public_benchmarks_provenance.py` enforces
 the tagging rules themselves.
 
 ## A critical, disclosed limitation
@@ -50,8 +50,8 @@ What this means concretely:
   (CICFlowMeter's CSV column layout for CIC-IDS2017; Splunk
   Enterprise Security's standard notable-event field layout for
   BOTS), using small, explicitly-labeled, hand-built sample rows in
-  `tests/test_phase82_public_benchmarks_cicids2017.py` and
-  `tests/test_phase83_public_benchmarks_bots.py`.
+  `tests/test_public_benchmarks_cicids2017.py` and
+  `tests/test_public_benchmarks_bots.py`.
 - **What IS verified**: the adapters correctly parse data in the
   documented shape, correctly reject malformed/unrecognized rows
   with a surfaced reason (never silently), and hand off to the exact
@@ -68,7 +68,7 @@ What this means concretely:
   scenario mapping should have, but contains no fabricated event
   counts or storyline detail, because none were ever observed. Its
   own `_meta.status` field says `"TEMPLATE -- not filled in against a
-  real dataset"`, and `tests/test_phase83_public_benchmarks_bots.py`
+  real dataset"`, and `tests/test_public_benchmarks_bots.py`
   enforces that this stays true.
 
 No claim anywhere in this package states or implies that these
@@ -83,7 +83,7 @@ each engineered to trigger its declared SAT-SA detector family
 permitted cross-detector side effects are documented, not suppressed
 — e.g. `multi_signal`'s minimal, zero-investigation-step alert also
 legitimately draws a `negative_space` finding onto the same subject;
-see `tests/test_phase84_public_benchmarks_workflow_augmentation.py`'s
+see `tests/test_public_benchmarks_workflow_augmentation.py`'s
 own comments for exactly which scenarios have this property. Only
 `healthy_control` (the negative control) is asserted exhaustively
 clean of every execution-gap/negative-space family — the other 11
@@ -104,7 +104,7 @@ is the only family emitted:
 12. `multi_signal` → both `execution_gap.fast_closure` and `execution_gap.critical_without_escalation` on the *same* alert, corroborated by `satsa.analysis.correlation`
 
 **Every one of these 12 is proven end to end** in
-`tests/test_phase84_public_benchmarks_workflow_augmentation.py`: each
+`tests/test_public_benchmarks_workflow_augmentation.py`: each
 scenario is generated, written as a real submission directory, ingested
 through `satsa.ingest`, analyzed through the real
 `satsa.analysis.run.RunService` and its actual detector workers, and
@@ -125,14 +125,14 @@ only the framework-scoped claims below.
 - "Schema-compatible adapter framework for CIC-IDS2017 and Splunk
   BOTS" — the adapters parse each dataset's publicly documented
   schema correctly and hand off to the real `satsa.ingest` pipeline;
-  citing `tests/test_phase82_public_benchmarks_cicids2017.py` and
-  `tests/test_phase83_public_benchmarks_bots.py`.
+  citing `tests/test_public_benchmarks_cicids2017.py` and
+  `tests/test_public_benchmarks_bots.py`.
 - "Adapters tested against explicitly labelled, hand-built rows
   matching documented schemas" — the precise, accurate description of
   what those two test files actually do.
 - "Twelve provenance-tagged controlled workflow scenarios run end to
   end through the SAT-SA pipeline" — citing
-  `tests/test_phase84_public_benchmarks_workflow_augmentation.py`,
+  `tests/test_public_benchmarks_workflow_augmentation.py`,
   where every scenario is generated, ingested, and analyzed through
   the real `satsa.ingest` → `RunService` → detector pipeline.
 - "Public-source adapters have not yet been executed against

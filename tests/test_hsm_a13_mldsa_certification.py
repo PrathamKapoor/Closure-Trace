@@ -62,7 +62,7 @@ from qsmlops.passport.passport import Passport, new_passport, SignatureBlock
 # ---------------------------------------------------------------------------
 # Sentinel — written to disk for forensic audit
 #
-# P28: this used to write to the TRACKED file
+# this used to write to the TRACKED file
 # tests/_a13_artifacts/mldsa_provider_sentinel.txt on every run. R6/R6.process
 # embed a freshly-generated key_id fragment (KeyStore.generate_keypair()
 # generates a real random key each run, by design — that randomness is part
@@ -126,7 +126,7 @@ def _write_sentinel_at_end(tmp_path_factory: pytest.TempPathFactory):
 
 
 # ---------------------------------------------------------------------------
-# P28 regression: this module must never dirty the tracked sentinel fixture
+# regression: this module must never dirty the tracked sentinel fixture
 # ---------------------------------------------------------------------------
 _TRACKED_SENTINEL_PATH = (
     Path(__file__).resolve().parent / "_a13_artifacts" / "mldsa_provider_sentinel.txt"
@@ -134,7 +134,7 @@ _TRACKED_SENTINEL_PATH = (
 
 
 class TestSentinelDoesNotDirtyTrackedFixture:
-    """Proves the property Part 2 of P28 required: running this module's
+    """Proves the property Part 2 of the implementation required: running this module's
     sentinel-writing machinery must leave the tracked
     tests/_a13_artifacts/mldsa_provider_sentinel.txt fixture byte-for-byte
     unchanged, while still producing fresh, real evidence elsewhere."""

@@ -1,4 +1,4 @@
-"""Incident Response Agent (Phase 9).
+"""Incident Response Agent.
 
 Classifies open/ongoing incidents from evidence the platform already records:
 recent ledger signals (deployment denials, approval denials, escalations,

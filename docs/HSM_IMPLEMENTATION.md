@@ -249,7 +249,7 @@ the declaration truthful. No duplication across extras; `dev` group unchanged.
 * **Unit tests** use `PKCS11Backend({"mock": True})` (`QSMLOPS_HSM_MOCK=1`) —
   an in-memory fixture that performs **real** Dilithium signing/verification via
   `dilithium-py` (cryptographically real signatures) but is explicitly labelled
-  as *mock* in every health `details` string. This satisfies Phase 17: deterministic
+  as *mock* in every health `details` string. This satisfies the implementation: deterministic
   unit testing without a physical token.
 * **Real PKCS#11 integration** requires a SoftHSM2 or vendor token + library path.
   The implementation calls the real `pkcs11.lib` API (`get_token`, `get_slots`,
@@ -264,7 +264,7 @@ tests/test_hsm_backend.py ............ 36 passed
 tests/test_hsm_fail_closed.py ........ 12 passed
 tests/test_hsm_integration.py ........ 13 passed
 tests/test_crypto.py .................. 13 passed
-tests/test_post_roadmap_hardening.py .. 33 passed
+tests/test_platform_hardening.py .. 33 passed
 ... (partitioned runs cover all 368 collected tests; full-suite wall time exceeds
      the CI tool's 120 s single-call budget, hence partitioned verification;
      each partition exits 0)

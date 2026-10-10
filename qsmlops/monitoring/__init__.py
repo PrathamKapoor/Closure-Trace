@@ -1,4 +1,4 @@
-"""Monitoring and observability foundation (Phase 7)."""
+"""Monitoring and observability foundation."""
 from qsmlops.monitoring.alerts import Alert, evaluate, worst_level
 from qsmlops.monitoring.collector import TelemetryCollector
 

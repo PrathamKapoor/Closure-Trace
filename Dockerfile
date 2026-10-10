@@ -7,7 +7,7 @@
 # sat-sa` against a SQLite file on the /data volume. The Next.js web UI has
 # its own image (web/Dockerfile).
 #
-# Verification status (reconciled P32, September 2026): this image's
+# Verification status (reconciled the implementation, September 2026): this image's
 # `docker build` and a `sat-sa ... doctor` smoke run were verified on
 # a GitHub-hosted Ubuntu runner by the repository's CI
 # (`docker-build-smoke` job in .github/workflows/ci.yml; latest green

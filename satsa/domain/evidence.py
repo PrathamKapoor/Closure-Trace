@@ -4,7 +4,7 @@ Finding -> Observation -> SourceRecord -> original submission bytes.
 
 Deliberately distinct from ``qsmlops.agents.base.Observation``/``Finding``:
 those are the MLOps platform's own (simpler, single-confidence-float)
-shapes and stay exactly as they are (Phase 1's target-architecture.md: reuse
+shapes and stay exactly as they are (the component's target-architecture.md: reuse
 the *pattern*, not the implementation). SAT-SA's Finding needs a richer,
 multi-dimensional confidence vector and an explicit abstention state
 (``insufficient_data``/``not_applicable``) that the MLOps Finding has no
@@ -275,11 +275,11 @@ class ReviewDecision:
 @dataclass
 class ProvenanceRecord:
     """A typed subject->predicate->object link in the SAT-SA domain,
-    conceptually the same shape as qsmlops' provenance_edges (Phase 2 Part
+    conceptually the same shape as qsmlops' provenance_edges (the implementation Part
     E) but for satsa's own object types (finding/observation/submission/
     source_record/review_decision, not qsmlops' observation/finding).
     Kept as a plain domain record here (Part H scope); persisting it is a
-    later-phase concern, same distinction Part E drew for qsmlops' tables.
+    future work concern, same distinction Part E drew for qsmlops' tables.
     """
 
     subject_type: str

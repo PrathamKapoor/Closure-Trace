@@ -51,7 +51,7 @@ class MigrationPlan:
 class AgilityEngine:
     """Registry of cipher suites with selection and migration planning.
 
-    Phase 2 hardening: the engine used to *always* self-select the strongest
+    hardening: the engine used to *always* self-select the strongest
     available suite as ``default_suite``, silently ignoring any configured
     ``configs/settings.*.yaml`` value (``crypto.default_signature_algorithm`` /
     ``crypto.default_key_encryption_algorithm``) — those settings loaded and
@@ -59,7 +59,7 @@ class AgilityEngine:
     / ``default_kem_algorithm`` below close that gap: when both are supplied,
     the configured suite is authoritative and construction fails closed if it
     does not resolve to a known, registered suite. When neither is supplied
-    (the default), behaviour is unchanged from before Phase 2 — this keeps
+    (the default), behaviour is unchanged from before this change — this keeps
     every existing ``AgilityEngine()`` call site and test working.
     """
 
@@ -120,7 +120,7 @@ class AgilityEngine:
     def _resolve_suite(self, sig_alg: str, kem_alg: str) -> CryptoSuite:
         """Find the registered suite for an explicitly configured algorithm
         pair. Fails closed (raises) rather than falling back to a different
-        suite, per Phase 2 Part C3: invalid configuration must never silently
+        suite, per the implementation Part C3: invalid configuration must never silently
         resolve to an unintended algorithm."""
         if sig_alg not in SIGNATURE_PROVIDERS:
             raise ProviderError(

@@ -1,6 +1,6 @@
 """Crypto service interfaces + Phase-1 implementations.
 
-Later phases will upgrade these adapters to full PQC (lattice, supersingular
+future work will upgrade these adapters to full PQC (lattice, supersingular
 isogeny, hybrid classical+PQC) without touching call sites — the interfaces
 are the extension point.
 
@@ -62,7 +62,7 @@ class EncryptionService(ABC):
 class AESGCMEncryptionService(EncryptionService):
     """AES-256-GCM. ``associated_data`` is bound as AAD to the blob framing.
 
-    Phase 2 will layer the quantum-safe KEM they key-encapsulate the data
+    will layer the quantum-safe KEM they key-encapsulate the data
     keys on top of this service; the interface stays the same.
     """
 
@@ -123,7 +123,7 @@ class SignatureService(ABC):
 class PQCSignatureService(SignatureService):
     """ML-DSA (Dilithium) signature service wrapping the qsmlops keystore.
 
-    This is the classical post-quantum scheme from Phase 1. Later phases can
+    This is the classical post-quantum scheme from the implementation. future work can
     add specialist schemes (e.g. supersingular isogeny, hybrid) via the same
     interface and reuse the established records.
     """
