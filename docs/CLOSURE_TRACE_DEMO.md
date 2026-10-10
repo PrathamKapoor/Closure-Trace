@@ -164,10 +164,14 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Run browser E2E on the recording machine before submission. Browser binary
-downloads were blocked in the inspection environment; HTTP smoke checks do
-not replace it. SQLite paths passed; optional PostgreSQL/HSM/S3 tests require
-their own services and remain explicitly skipped when unavailable.
+Run browser E2E on the recording machine before submission. All eleven browser
+tests passed in the inspection environment using a locally installed Chromium
+153 binary and a temporary test configuration. The normal browser download was
+blocked here, so the temporary configuration selected that executable, bound
+Next.js to loopback and raised limits only for the isolated test backend. No
+application dependency, production rate limit or committed browser test was
+changed. HTTP smoke checks do not replace browser E2E. Optional PostgreSQL/HSM/S3
+tests require their own services and remain skipped when unavailable.
 
 If analysis fails, inspect `.satsa-local/api.log` and `worker.log`. If a run is
 still awaiting review, use a supervisor to decide; an analyst cannot. If
