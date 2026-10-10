@@ -31,16 +31,21 @@ and `npm ci`; local SQLite database; no model provider; no cloud services.
 
 | Check | Actual result |
 |---|---|
-| Full Python suite after the dependency correction | **1,518 passed, 262 skipped, 0 failed**, 412.48 seconds |
+| Full Python suite on the combined release state | **1,518 passed, 261 skipped, 0 failed** |
 | Focused API contract, authorization, tenancy, adversarial trust, finalization, model fallback/graph and offline checks | **101 passed, 76 skipped** |
 | New demo failure/recovery regression tests | **13 passed** |
 | Post-commit demo, tracked-secret and manifest checks | **20 passed** |
 | Frontend `npm run check` | Lint, type checking and production build all passed |
 | Running-server HTTP UI smoke checks | **4 passed** |
-| Browser E2E, existing real-backend workbench suite | **11 passed**, no skips/failures/flaky results; 39.78 seconds |
+| Browser E2E, existing real-backend workbench suite | **11 passed**, no skips/failures/flaky results; 41.82 seconds |
 | `compileall` | Exit 0 |
 | Bandit, high-severity gate over `satsa`, `qsmlops`, `scripts` | Exit 0, no reported HIGH findings |
 | `pip check`, `git diff --check` | Passed |
+| Fresh local clone, separate virtual environment, dependency installation and real backend rehearsal | Passed; ML-DSA-65 verification, state mutation rejection and restoration |
+
+The verification rerun also caught a README license-label regression; restoring
+the explicit “MIT License” label satisfied the existing assertion. No test was
+changed or weakened.
 
 The original full run exposed seven AWS configuration-test failures caused by
 missing libpq. Installing the bundled driver and updating the dev manifests
@@ -61,6 +66,8 @@ supervisor decision, signing/verification, audit permissions and logout.
 
 `python scripts/rehearse_closure_trace.py --web` ran successfully twice, taking
 8.15 and 6.93 seconds with dependencies installed and the frontend already built.
+The combined release-state rehearsal passed in 6.61 seconds; a fresh-clone backend
+rehearsal passed in 5.81 seconds. These exclude dependency installation and builds.
 Five synthetic entities and runs were created; CSE-EXEC produced nine signal
 findings. Briefing provenance was `deterministic`, not a pretend model response.
 A supervisor confirmation led to a real ML-DSA-65 receipt and API verification.
