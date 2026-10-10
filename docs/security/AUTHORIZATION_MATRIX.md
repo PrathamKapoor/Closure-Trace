@@ -3,7 +3,7 @@
 Derived from the implemented routes (`satsa/api/__init__.py`), the role
 permissions (`qsmlops/security/permissions/model.py`) and the service checks
 (`satsa/tenancy.py`, `satsa/submissions/service.py`,
-`satsa/analysis/execution.py`). `tests/test_phase20_authorization.py` holds
+`satsa/analysis/execution.py`). `tests/test_authorization.py` holds
 the same matrix as data, fails if a route is added without an entry, and
 checks every route for every role on SQLite and PostgreSQL.
 
@@ -49,13 +49,13 @@ Roles: **V** viewer, **An** analyst, **S** supervisor, **Au** auditor, **Ad** ad
 - **Member revocation** was the one inconsistency found: an administrator
   could revoke their own membership (possibly leaving the organization with
   no administrator), and revoked members still listed as `active`. Both are
-  fixed in Phase 20; nothing else needed a permission change.
+  fixed in this implementation; nothing else needed a permission change.
 - **Organization creation** uses the identity-level role, so any identity
   with the administrator role can create organizations. It cannot reach
   existing organizations (it grants membership only in the new one); this is
   recorded as a provisioning choice in the threat model.
 
-## MLOps routes (Phase 21)
+## MLOps routes
 
 All MLOps routes are organization-scoped. Reads (`model.read`) are open to
 every role. Building and validating datasets, starting training and drift
@@ -65,4 +65,4 @@ and accepting or dismissing retraining (`model.approve`, `model.deploy`,
 `model.rollback`) are supervisor and admin only. In addition, the user who
 requested a training run cannot approve the resulting model, whatever their
 role. The full route list and the test that enforces it are in
-`tests/test_phase20_authorization.py` (`MATRIX`); see `docs/MLOPS.md`.
+`tests/test_authorization.py` (`MATRIX`); see `docs/MLOPS.md`.

@@ -19,7 +19,7 @@ Two, and only two, provenance types:
 
 A record with neither tag, or a self-reported tag that doesn't match
 where the record actually came from, is a bug in this package — see
-``tests/test_phase81_public_benchmarks_provenance.py`` for the tests
+``tests/test_public_benchmarks_provenance.py`` for the tests
 that would catch either.
 """
 from __future__ import annotations

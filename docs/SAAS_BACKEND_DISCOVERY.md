@@ -1,4 +1,4 @@
-# SAT-SA SaaS backend: Phase 0 discovery and migration design
+# SAT-SA SaaS backend: discovery and migration design
 
 Date: 2026-09-25. Scope: backend, data, security, orchestration, trust, and deployment. This document describes the checked-out `release-fresh` code and the separately inspected public QSMLOps repository and deployed SAT-SA site. It is a design baseline, not a claim that the SaaS capabilities below already exist.
 
@@ -6,7 +6,7 @@ Date: 2026-09-25. Scope: backend, data, security, orchestration, trust, and depl
 the prototype hosting at the time; Render is no longer used and the hosted
 deployment is AWS (`deploy/aws/README.md`).
 
-**Phase 1 update:** The database and tenant foundation described in [DATABASE.md](DATABASE.md) has been implemented after this discovery snapshot. PostgreSQL migration and tenant/session tests now exist. The hosted API, ingestion lifecycle, queue, LangGraph, and MLOps work remain later phases.
+**the implementation update:** The database and tenant foundation described in [DATABASE.md](DATABASE.md) has been implemented after this discovery snapshot. PostgreSQL migration and tenant/session tests now exist. The hosted API, ingestion lifecycle, queue, LangGraph, and MLOps work remain future work.
 
 ## 1. Current state and repository safety
 
@@ -108,9 +108,7 @@ Reconcile `web/docs/API_CONTRACT.md` with backend-owned `docs/API_CONTRACT.md` b
 
 Portable hosted topology: reverse proxy/TLS -> Next.js public and secure app -> FastAPI API -> PostgreSQL; a separately scaled worker reads the PostgreSQL queue and executes SAT-SA/QSMLOps/LangGraph; artifact store and durable key/ledger storage sit beside them. Local Docker Compose uses PostgreSQL, API, worker, web, and local artifact volume; an offline profile can retain SQLite and local artifact/key storage. Render is one deployment target, not an assumption in domain code. The existing root Dockerfile and `render.yaml` are not this topology. Configure secret injection, key backup/rotation, database backup/restore, ledger durability, readiness checks for DB/queue/worker, and a migration job. Log request, organization, submission, run, graph stage, worker, retry, and result IDs without raw evidence or secrets. Add dependency/SAST/container checks after measuring current CI coverage.
 
-## 13. Ordered independently testable implementation phases
-
-1. **Foundation:** PostgreSQL parity, organization/membership schema, tenant-scoped repository and identity context, local SQLite compatibility. Gate: migration parity and cross-tenant IDOR tests.
+## 13. Ordered independently testable implementation . **Foundation:** PostgreSQL parity, organization/membership schema, tenant-scoped repository and identity context, local SQLite compatibility. Gate: migration parity and cross-tenant IDOR tests.
 2. **Submission:** versioned artifact storage, bounded upload, validation, normalization, state and audit. Gate: real file -> canonical records with duplicate/failure tests.
 3. **Async analysis:** queue, leased worker, persistent progress and retry. Gate: API returns 202, worker completes, crash/retry remains idempotent.
 4. **LangGraph:** durable graph/checkpoints and review interrupt/resume around existing services. Gate: restart during a run and resume at the correct stage with no duplicate side effects.
@@ -129,7 +127,7 @@ Do not modify `web/src/` components, routing, styling, frontend state, or fronte
 
 ## 15. Principal migration risks and release gates
 
-The highest risks are tenant leakage through indirect child IDs and peer aggregates; divergence of digest/signature semantics during database migration; file-ledger consistency across transaction failures; replay of side-effecting graph nodes; credential/session exposure; long-running analysis overwhelming the API or database; loss of offline operation; and silent UI fixture use being mistaken for live backend data. Gate each phase with focused tests, then broader backend tests, and preserve a rollback path. Do not describe Render's current Next.js presentation service as a deployed backend SaaS.
+The highest risks are tenant leakage through indirect child IDs and peer aggregates; divergence of digest/signature semantics during database migration; file-ledger consistency across transaction failures; replay of side-effecting graph nodes; credential/session exposure; long-running analysis overwhelming the API or database; loss of offline operation; and silent UI fixture use being mistaken for live backend data. Gate each component with focused tests, then broader backend tests, and preserve a rollback path. Do not describe Render's current Next.js presentation service as a deployed backend SaaS.
 
 ## Sources inspected
 

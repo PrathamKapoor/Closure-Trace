@@ -1,13 +1,13 @@
-# Persistent analysis execution (Phase 3)
+# Persistent analysis execution
 
 SAT-SA now has a durable execution service around the existing deterministic
 analysis workers. This is an internal backend service and worker entry point;
-Phase 3 does not add or claim frontend-facing analysis HTTP routes.
+This revision does not add or claim frontend-facing analysis HTTP routes.
 
 ## Local SQLite mode
 
 SQLite remains suitable for offline work and test runs. Start with an existing
-database containing a tenant, an open assessment, and a Phase 2 submission
+database containing a tenant, an open assessment, and a the implementation submission
 version whose validation status is `valid`. The run-creation caller must pass
 the authenticated user's organization and user IDs and the existing audit
 service:
@@ -68,7 +68,7 @@ durable audit ledger used by workers. Keep credentials in deployment secrets,
 not command history or source control. A shared durable audit ledger is
 required when API and worker processes append to the same chain. No hosted
 deployment, S3 bucket, multi-host ledger volume, or production runbook has been
-validated as part of this phase.
+validated as part of this component.
 
 ## Run and queue semantics
 
@@ -100,7 +100,7 @@ SAT-SA analytical workers and Orchestrator. It does not call the legacy
 assessment-wide SQLite loader on PostgreSQL. Hosted peer population data is
 not queried: peer benchmarking and cross-entity insights abstain until a
 tenant-scoped, disclosure-governed aggregate is implemented. Cross-tenant
-aggregate comparison is prohibited in this phase.
+aggregate comparison is prohibited in this component.
 
 The existing risk algorithm is run over the tenant-owned run findings and its
 profile is persisted with a digest. Findings retain source-record references;
@@ -109,9 +109,9 @@ canonical-record metadata. SQLite can use the existing TRUST-SAT ML-DSA
 attestation/verification flow when `trust_key_dir` is configured. PostgreSQL
 trust attestation is intentionally unavailable because the current
 `TrustService` is SQLite-only. No hosted run is marked verified. LangGraph is
-not part of Phase 3.
+not part of the implementation.
 
-## Phase 5 supervised non-graph execution
+## supervised non-graph execution
 
 `create_run(..., review_required=True)` enables the same human review and trust
 boundary without LangGraph. Default non-graph requests remain analysis-only for
@@ -124,4 +124,4 @@ and requeues the existing job. On resume it skips completed analytical stages,
 finalizes and verifies TRUST-SAT, then completes the queue item. Failed trust
 finalization cannot silently complete the run. Configure `SATSA_TRUST_KEY_DIR`
 on workers with a durable secret-backed directory. No frontend API or route
-shape is changed. See [TRUST_MODEL.md](TRUST_MODEL.md#supervisory-finalization-phase-5).
+shape is changed. See [TRUST_MODEL.md](TRUST_MODEL.md#supervisory-finalization).

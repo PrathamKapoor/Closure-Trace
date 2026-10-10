@@ -1,5 +1,5 @@
 """CanonicalDataset: the frozen, in-memory read view of one entity's data
-for one assessment that analytical workers operate on (Phase 4+).
+for one assessment that analytical workers operate on (the implementation+).
 
 Built from the persisted canonical store in one scoped read — workers
 receive this object (already loaded), never a live database handle
@@ -118,7 +118,7 @@ class CanonicalDataset:
     # Which of the six SIH categories a submission actually contained data
     # for — an empty list means "submitted, nothing in it"; a category absent
     # from this set entirely means "file never submitted" (negative-space
-    # analysis distinguishes the two; see Phase 6).
+    # analysis distinguishes the two; see the implementation).
     submitted_categories: frozenset = frozenset()
 
     # ---- convenience views used by detectors ----

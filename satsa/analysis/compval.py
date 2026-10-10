@@ -1,7 +1,7 @@
 """Composition validation: bind synthetic ground truth to real
 analysis pipeline outputs.
 
-This module closes the P15 scaffold gap (validate.py line 286:
+This module closes the existing scaffold gap (validate.py line 286:
 ``emitted_families = list(case.expected_signals)``).
 Instead of comparing ground truth to itself, it:
 

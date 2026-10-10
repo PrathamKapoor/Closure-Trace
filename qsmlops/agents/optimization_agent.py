@@ -1,4 +1,4 @@
-"""Optimization Agent (Phase 9, pipeline-efficiency scope).
+"""Optimization Agent (pipeline-efficiency scope).
 
 Per the roadmap the archetype covers *pipeline* efficiency. The only
 optimization evidence this repository genuinely produces today is registry

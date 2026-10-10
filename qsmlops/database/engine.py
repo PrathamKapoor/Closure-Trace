@@ -2,9 +2,9 @@
 
 The platform's durable state (identities, permissions, audit mirror rows,
 migration bookkeeping) is reached only through the :class:`DatabaseEngine`
-interface. Phase 1 implements SQLite; the interface is intentionally thin so
+interface. the implementation implements SQLite; the interface is intentionally thin so
 a quantum-safe channel, encrypted storage, or a managed database can replace
-the local SQLite file in a later phase without touching repositories or
+the local SQLite file in a future work without touching repositories or
 services — the production database requirements (encrypted at rest,
 cryptographic identity columns, immutable audit) are satisfied then.
 
@@ -61,8 +61,8 @@ class DatabaseEngine(ABC):
     @abstractmethod
     def transaction(self):
         """Context manager: statements executed via ``execute()`` inside the
-        block either all commit together or none do (Phase 2 — see
-        docs/phase2/evidence-persistence.md). Prior to this, every
+        block either all commit together or none do (the implementation — see
+        docs/foundation/evidence-persistence.md). Prior to this, every
         ``execute()`` call committed independently; single-statement callers
         are unaffected, this only changes behaviour for callers that opt in
         by using ``with engine.transaction():``."""
@@ -75,7 +75,7 @@ class SQLiteDatabaseEngine(DatabaseEngine):
     def __init__(self, db_path: Path | str) -> None:
         self.db_path = Path(db_path)
         self._conn: sqlite3.Connection | None = None
-        # Phase 2: RLock (was Lock) so transaction() can hold the lock across
+        # RLock (was Lock) so transaction() can hold the lock across
         # a whole multi-statement block while still calling the public
         # execute()/query_one()/query_all() methods (which each also acquire
         # this lock) from inside that block on the same thread, without

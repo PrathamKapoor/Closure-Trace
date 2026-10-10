@@ -87,7 +87,7 @@ class ServiceContainer:
             return configure_logging(settings.log_level, json_format=settings.json_logs)
 
         def _platform_config() -> PlatformConfig:
-            # Phase 2: forward the layered crypto settings so the pipeline's
+            # forward the layered crypto settings so the pipeline's
             # AgilityEngine default matches what configs/settings.*.yaml (or
             # QSMLOPS_ env vars / explicit overrides) actually declares —
             # previously only `home` crossed this boundary and the declared
@@ -144,7 +144,7 @@ class ServiceContainer:
         def _identity_service():
             from qsmlops.security.identity.service import IdentityService
 
-            # Phase 2: reuse the pipeline's already-configured AgilityEngine
+            # reuse the pipeline's already-configured AgilityEngine
             # instead of letting IdentityService construct its own with no
             # configuration — otherwise the two independently defaulted to
             # potentially different suites.

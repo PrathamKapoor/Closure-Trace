@@ -5,7 +5,7 @@ evidence-backed findings plus a recommendation. Agents never mutate state;
 only the supervisor acts on observations. No agent may certify its own work:
 the registry enforces verifier/signer separation independently.
 
-Phase 2: every Finding carries structured evidence — an explicit observation
+every Finding carries structured evidence — an explicit observation
 statement, one or more Evidence objects (source, kind, payload), a confidence
 in [0,1], a derived risk level and a per-finding recommended action.
 """
@@ -64,7 +64,7 @@ class Finding:
     evidence: list[Evidence] = field(default_factory=list)
     confidence: float = 0.8  # agent certainty in [0, 1]
     recommendation: str = ""  # suggested action if failed (RETRAIN, ROTATE_KEYS, ...)
-    # Phase 2: a stable identity for this finding, independent of its
+    # a stable identity for this finding, independent of its
     # position in an observation's findings list, so a provenance edge (or a
     # persisted findings-table row) can reference *this* finding specifically
     # — mirrors Observation.observation_id below.

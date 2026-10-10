@@ -10,12 +10,12 @@ promotional. Companion documents: [PAPER_EVIDENCE_INDEX.md](PAPER_EVIDENCE_INDEX
 [LITERATURE_POSITIONING.md](LITERATURE_POSITIONING.md),
 [EXPERIMENTS.md](EXPERIMENTS.md).
 
-**Manuscript (Phase 12):** `paper/manuscript.tex` (compiled `paper/manuscript.pdf`),
+**Manuscript:** `paper/manuscript.tex` (compiled `paper/manuscript.pdf`),
 with every number generated into `paper/data/paper-data.json` / `values.tex` by
 `scripts/build_paper_assets.py` and checked by `scripts/audit_paper.py`. Reproduction
 package: `paper/REPRODUCIBILITY.md`; supplementary material: `paper/supplementary/`;
 literature matrix: `paper/literature-matrix.csv` (48 verified, cited sources; 33 from
-Phase 12 plus 15 from the Phase 13 structured search in `paper/literature-review/`,
+This revision plus 15 from the existing structured search in `paper/literature-review/`,
 77 sources included there in total). IEEE Access package: `paper/submission/`; release
 candidate and gate: `paper/release-candidate/`, `docs/SUBMISSION_GATE.md`. Hackathon
 narrative: [SIH_TECHNICAL_NARRATIVE.md](SIH_TECHNICAL_NARRATIVE.md).
@@ -46,7 +46,7 @@ a system behave under controlled perturbation and on independent data?
 | RQ3 | Can findings be traced to source records through an authorized decision and a verifying receipt? | T01, D01 |
 | RQ4 | How does the system behave with missing, duplicated, malformed, stale or contradictory evidence? | R01b |
 | RQ5 | Does TRUST-SAT detect changes to the finalized supervisory record? | T01 |
-| RQ6 | How sensitive is peer benchmarking to cohort size and spread? | P01 |
+| RQ6 | How sensitive is peer benchmarking to cohort size and spread? | the implementation |
 | RQ7 | What do durable orchestration and TRUST-SAT cost, and does the workflow recover from interruption? | O01, O02 |
 | EXT | What happens on an independent real workflow dataset, and why? | X02b, X03 |
 
@@ -89,7 +89,7 @@ intervals; no p-values (see STATISTICAL_AUDIT.md).
 | --- | --- | --- |
 | Controlled catalog v1.0.0 (5 executable scenarios) | controlled synthetic | C01, R01b, A01, O01, O02 |
 | Generated workload populations (seeds 100–119; 300–304) | controlled synthetic | PR01, A01 |
-| Engineered peer cohorts (96 cells) | controlled synthetic | P01 |
+| Engineered peer cohorts (96 cells) | controlled synthetic | the implementation |
 | One controlled trust workflow | controlled synthetic | T01 |
 | UCI-498 incident management event log (CC BY 4.0; 50 groups, 22,604 incidents) | external, IT service management (not SOC) | X02b, X03 |
 
@@ -134,7 +134,7 @@ volume, slowest median resolution, reassignment rate (X02b).
   verification (T01).
 - The peer rule never fired with fewer than 3 peers; with a tight peer spread
   it flagged every non-median subject from 3 peers, with a wide spread only
-  extreme subjects (P01).
+  extreme subjects.
 - The external IT incident dataset provided feasibility evidence — all
   134,888 mapped rows were accepted and all 50 group analyses completed — but
   did not establish an association between SAT-SA risk and SLA misses
@@ -154,7 +154,7 @@ volume, slowest median resolution, reassignment rate (X02b).
 4. Construct inversion of the fast-closure signal on ITSM data (X03).
 5. Detector saturation of existence rules at scale (X03).
 6. Stale and contradictory evidence accepted silently (R01b).
-7. Peer findings depend strongly on cohort composition (P01).
+7. Peer findings depend strongly on cohort composition.
 8. Four workers lowered population ranking quality when present (A01, exploratory).
 9. A real product defect (withheld finding) was found by evaluation and fixed (R01 → R01b).
 
@@ -178,7 +178,7 @@ volume, slowest median resolution, reassignment rate (X02b).
 | 1 Architecture | none | this document |
 | 2 Prioritization vs baselines | FIG-2-prioritization.csv | PR01 |
 | 3 Ablation | FIG-3-ablation.csv | A01 |
-| 4 Peer sensitivity | FIG-4-peer-sensitivity.csv | P01 |
+| 4 Peer sensitivity | FIG-4-peer-sensitivity.csv | the implementation |
 | 5 Missing-evidence robustness | FIG-5-missing-evidence-robustness.csv | R01b |
 | 6a LangGraph overhead | FIG-6a-langgraph-overhead.csv | O01 |
 | 6b Recovery | FIG-6b-recovery.csv | O02 |
@@ -197,7 +197,7 @@ volume, slowest median resolution, reassignment rate (X02b).
 | Orchestration overhead | orchestration_modes.*, orchestration_comparisons.* | O01 |
 | Recovery | recovery.* | O02 |
 | TRUST-SAT integrity | integrity_mutations.* | T01 |
-| Peer sensitivity | peer_sweep.* | P01 |
+| Peer sensitivity | peer_sweep.* | the implementation |
 | External validation | external_association.*, external_ranking.*, external_detector_saturation.*, external_failure_*.*, external_construct_validity.* | X02b, X03 |
 | Deployment/performance | deployment_smoke_local_processes.* (local processes only), orchestration_modes.* | D01, O01 |
 | Statistical audit | statistical_audit.* | all canonical |

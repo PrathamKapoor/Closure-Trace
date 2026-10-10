@@ -5,8 +5,8 @@ bundle (`manifest.json`, `config.json`, `raw/results.json`,
 `processed/metrics.json`, `processed/metrics.csv`, `summary.md`) through
 `evaluation.research.artifacts.write_experiment_bundle`. Numbers quoted here
 are copied from the named bundle; the bundle is the source of truth. Bundles
-live outside the repository (Phase 9 runs: `C:\tmp\satsa-phase9\`; Phase 8
-runs: `C:\tmp\satsa-phase8-final\`) and must be archived with the commit they
+live outside the repository (the implementation runs: `<local-evidence-directory>`; the implementation
+runs: `<local-evidence-directory>`) and must be archived with the commit they
 name before being cited.
 
 **Canonical results are frozen in `research/evidence/freeze-v2/`** (freeze v1 kept as history) (see
@@ -23,13 +23,13 @@ stated otherwise; they are not production-topology measurements.
 
 | ID | Purpose | Dataset | Sample size / unit | Baseline or control | Command | Status |
 | --- | --- | --- | --- | --- | --- | --- |
-| EXP-C01 | Controlled detection, baselines, workload, ablation (Phase 8) | 5 catalog scenarios; 6-entity population | 5 scenarios; 1 population, 25 random orders | Catalog labels; z/MAD/IQR/fixed/random closure baselines; random order | `run_controlled_benchmark.py` | MEASURED (Phase 8, `controlled-final-seed-17`, commit `82085d2`) |
+| EXP-C01 | Controlled detection, baselines, workload, ablation | 5 catalog scenarios; 6-entity population | 5 scenarios; 1 population, 25 random orders | Catalog labels; z/MAD/IQR/fixed/random closure baselines; random order | `run_controlled_benchmark.py` | MEASURED (the implementation, `controlled-final-seed-17`, commit `82085d2`) |
 | EXP-R01b | Robustness to imperfect evidence | 5 catalog scenarios × declared perturbations | 248 conditions (245 with a declared expectation, 3 not applicable) | Paired unperturbed control per scenario | `run_evidence_robustness_experiment.py` | MEASURED (commit `400f2d6`) |
 | EXP-R01 | Same, before the workflow-reconstruction fix | as above | as above | as above | as above | MEASURED, superseded by EXP-R01b (commit `e7aedd8`) |
 | EXP-O01 | Direct vs LangGraph overhead; TRUST-SAT cost | `mixed` catalog scenario | 30 trials per mode × 3 modes, rotated order, 1 warm-up each | Direct execution; unreviewed configuration | `run_orchestration_experiment.py overhead` | MEASURED (commit `698b507`) |
 | EXP-O02 | Interruption and recovery | `mixed` catalog scenario | 6 interruption points × 2 modes × 3 trials = 36 runs | Uninterrupted reference run per mode | `run_orchestration_experiment.py recovery` | MEASURED (commit `698b507`) |
 | EXP-T01 | TRUST-SAT mutation matrix | one controlled synthetic workflow | 14 mutations (13 expected tampered, 1 negative control) | Valid control, restored after each mutation | `run_trust_integrity_experiment.py` | MEASURED (commit `9325fdd`) |
-| EXP-P01 | Peer sensitivity sweep | engineered cohorts | 96 cells: 6 cohort sizes × 2 spreads × 8 subject values | Same peer policy (≥3 peers, 2 MAD) | `run_peer_sensitivity_experiment.py --sweep` | MEASURED (commit `9325fdd`) |
+| EXP-the implementation | Peer sensitivity sweep | engineered cohorts | 96 cells: 6 cohort sizes × 2 spreads × 8 subject values | Same peer policy (≥3 peers, 2 MAD) | `run_peer_sensitivity_experiment.py --sweep` | MEASURED (commit `9325fdd`) |
 | EXP-A01 | Component ablation | 5 catalog scenarios; 5 generated populations of 20 | 16 workers × (5 scenarios + 5 population seeds) | Full default worker set | `run_ablation_experiment.py` | MEASURED (commit `9325fdd`) |
 | EXP-PR01 | Replicated prioritization with matched baselines | 20 generated populations of 20 entities (5 pathological) | 20 independent seeds | Random order; critical-alert volume; fastest median closure | `run_prioritization_experiment.py` | MEASURED (commit `9325fdd`) |
 | EXP-D01 | HTTP smoke across local API and worker processes (SQLite, local storage) | one smoke tenant | 18 checks, 1 run | — | `scripts/deployment_smoke.py --provision --report …` | MEASURED: 18/18 PASS (commit `aa79109`; report `EXP-D01-local-process-smoke.json`) |
@@ -143,7 +143,7 @@ canonical payload, receipt signature, receipt public key, ledger chain). The
 negative control — the unsigned operational `lease_owner` queue field —
 still verified, as the design intends. This is not a tamper-detection rate.
 
-### EXP-P01 — peer sensitivity sweep
+### EXP- — peer sensitivity sweep
 
 The worker compares creation-to-close time (configured closure + 10 s
 acknowledgement). Peer values are evenly spaced around a 610 s median.
@@ -156,7 +156,7 @@ acknowledgement). Peer values are evenly spaced around a 610 s median.
   5 peers upward, as the MAD narrows.
 - A flagged subject ranked first by risk within its own cohort in every cell.
 
-### EXP-C01 closure-time baselines (Phase 8, canonical)
+### EXP-C01 closure-time baselines (, canonical)
 
 On 12 construction-labelled critical closures (3 fast), SAT-SA's fast-closure
 detector, the fixed-threshold baseline and the MAD baseline each scored

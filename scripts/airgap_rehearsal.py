@@ -1,4 +1,4 @@
-﻿"""P33 â€” non-destructive offline/air-gap deployment rehearsal.
+"""â€” non-destructive offline/air-gap deployment rehearsal.
 
 Verifies that an offline deployment bundle (a local wheelhouse) can
 actually install and run SAT-SA with NO network access, using the
@@ -125,7 +125,7 @@ def check_wheelhouse(wheelhouse: Path,
                 warnings.append(
                     "no setuptools wheel in the bundle â€” installing the "
                     "project itself uses a setuptools build backend and "
-                    "will fail on Python 3.12+ without one (P31)")
+                    "will fail on Python 3.12+ without one")
     return {
         "wheelhouse": str(wheelhouse),
         "n_wheels": len([p for p in wheelhouse.glob("*.whl")])
@@ -205,7 +205,7 @@ def run_rehearsal(*, wheelhouse=None, repo_root: Path = REPO_ROOT,
             # running from the repository root would put the source
             # tree on sys.path and mask an install that resolved
             # nothing — exactly the masking the packaging-discovery
-            # tests (phase 86) were written to prevent.
+            # tests were written to prevent.
             probe = (
                 "import sys, sysconfig, satsa, qsmlops;"
                 " sp = sysconfig.get_paths()['purelib'];"

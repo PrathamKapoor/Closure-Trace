@@ -1,6 +1,6 @@
 # Model-assisted capability and provider fallback
 
-SAT-SA's analytics, risk, priorities, recommendations and the Phase 21
+SAT-SA's analytics, risk, priorities, recommendations and the existing
 review-outcome ML model are deterministic or self-trained and never call a
 language model. One capability uses foundation models: the **reviewer
 briefing**, an advisory plain-language orientation for the supervisor, shown on

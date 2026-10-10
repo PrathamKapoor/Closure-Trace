@@ -1,6 +1,6 @@
 """LangGraph orchestration of durable SAT-SA analysis, without LLM calls.
 
-The Phase 3 queue owns execution and leases. Graph state contains references
+The existing queue owns execution and leases. Graph state contains references
 only; analytical output, recommendations and decisions live in domain tables.
 """
 
@@ -109,7 +109,7 @@ class AnalysisGraphRuntime:
 
     def analysis(self, state: AnalysisGraphState) -> dict:
         self._check(state)
-        # Phase 3 persists each deterministic worker stage atomically and
+        # persists each deterministic worker stage atomically and
         # skips completed stages on retry. Its existing risk result is unique.
         self.worker._execute(self.lease, self.context)
         self._check(state)

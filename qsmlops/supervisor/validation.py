@@ -1,4 +1,4 @@
-"""Evidence/observation validation (Phase 10 — Evidence Validation Engine).
+"""Evidence/observation validation (the implementation — Evidence Validation Engine).
 
 Deterministic, fail-safe sanitisation of everything an agent hands to the
 supervisor. Validation NEVER upgrades malformed input into trusted evidence:

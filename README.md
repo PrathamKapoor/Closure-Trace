@@ -1,23 +1,36 @@
 # Closure-Trace
 
-**ForgeHacks · AI + Cybersecurity.** Closure-Trace helps security reviewers identify investigation gaps, premature alert closures, and missed escalations using AI-assisted analysis and verifiable evidence.
+**AI-assisted security review with evidence-backed, verifiable decisions.**
 
-Built on the SAT-SA / TRUST-SAT foundation, this repository preserves its implementation and history. Internal packages, commands, and trust components retain their existing names. The original system targeted Smart India Hackathon (SIH) 26157 / NCIIPC; that background is retained in historical documentation.
-
-An alert marked "closed" does not show whether anyone investigated it, checked
-its evidence, or escalated a critical incident. Closure-Trace reviews submitted
-alert and case histories for those gaps, ranks the findings for human review,
-and links each signal back to its source records.
+A closed alert does not establish that it was investigated, supported by evidence,
+or escalated when needed. Closure-Trace analyzes submitted alert and case histories
+for investigation gaps, premature closures and missed escalations. It ranks findings,
+links them to source evidence and helps a human reviewer decide what happens next.
 
 **Evidence → gap analysis → reviewer briefing → human decision → verifiable record.**
 
-The optional language model summarizes computed results; it does not set risk
-or make decisions. Without a provider, the application shows a labelled
-deterministic briefing. TRUST-SAT binds the recorded evidence, results and
-decision using SHA3-256 and ML-DSA-65. It detects changes to the bound state;
-it does not prove that an alert was real or that the analyst was correct.
+The optional language model explains computed findings; it does not set risk or
+make decisions. Without a provider, the workbench presents a labelled deterministic
+briefing. The TRUST-SAT integrity layer binds recorded results and review decisions
+with SHA3-256 and ML-DSA-65. Verification detects changes to the bound state; it does
+not establish that the underlying evidence is true or the reviewer is correct.
 
-For the submission walkthrough, use the [Closure-Trace demo guide](docs/CLOSURE_TRACE_DEMO.md).
+[Demo guide](docs/CLOSURE_TRACE_DEMO.md) · [Verification results](docs/CLOSURE_TRACE_READINESS.md) · [Documentation](docs/README.md)
+
+## Capabilities
+
+- Ingest CSV, JSON, JSONL and SQLite submissions containing alerts, cases,
+  investigation steps, escalations, dispositions and assets.
+- Detect fast closures, acknowledgement without investigation, missing escalation,
+  repeated investigation, recurring incidents and coverage gaps.
+- Review decomposable risk, evidence confidence, prioritized findings and source
+  provenance. Risk and confidence describe different properties.
+- Generate bounded recommendations and optional model-assisted reviewer briefings.
+- Record human decisions with authorization, tenant isolation and an audit trail.
+- Finalize and verify signed review artifacts using the existing TRUST-SAT ledger.
+
+Closure-Trace is a periodic, evidence-driven review tool. It is not a SIEM, a SOC
+replacement, a continuous monitoring service or an autonomous decision authority.
 
 ## Fresh clone quickstart
 
@@ -48,7 +61,7 @@ SATSA_API_BASE_URL=http://127.0.0.1:8000 npm run dev
 # npm run dev
 ```
 
-Open http://localhost:3000. See [web setup](web/README.md), [API configuration](docs/API_CONTRACT.md), and [deployment setup](deploy/README.md). `.env.saas.example` and `deploy/production.env.example` contain placeholders for optional hosted infrastructure; supply your own values locally. Never commit populated environment files. Existing deployment links elsewhere in this README describe the inherited TRUST-SAT deployment, not a separately deployed Closure-Trace instance.
+Open http://localhost:3000. See [web setup](web/README.md), [API configuration](docs/API_CONTRACT.md), and [deployment setup](deploy/README.md). `.env.saas.example` and `deploy/production.env.example` contain placeholders for optional hosted infrastructure; supply your own values locally. Never commit populated environment files.
 
 Optional model-assisted reviewer briefings use your own provider credentials; see [provider configuration and fallback](docs/LLM.md) and `.env.example`. Obtain NVIDIA credentials from your NVIDIA API account or OpenRouter credentials from your OpenRouter account. Bedrock uses your AWS role and enabled model access. Export these variables into the worker environment; the Python application does not automatically load `.env`. With no provider configured, briefings fall back to deterministic summaries.
 
@@ -67,393 +80,97 @@ its temporary state after shutting down the API, worker and web server. It is a
 technical rehearsal, not a browser interaction test. The submitted product's
 verification API reports `VERIFIED`, `INCONSISTENT`, `NOT_FINALIZED` or `UNAVAILABLE`.
 
-## System identity and practical use
-
-- **Repository:** [Closure-Trace](https://github.com/PrathamKapoor/Closure-Trace)
-- **Packages:** `satsa` `0.16.0-phase52-ui` and `qsmlops` `0.1.0`
-- **Deployment model:** local, offline-first Python application with SQLite
-  evidence storage; it does not require a cloud account, SaaS connection, or
-  live SOC feed to run the committed demo.
-
-With this repository, an examiner or analyst can:
-
-1. launch a local FastAPI dashboard with a bootstrapped five-CSE demo dataset;
-2. run an end-to-end demonstration that ingests evidence, surfaces supervisory
-   findings, scores risk, records a review decision, and verifies its trust
-   chain;
-3. ingest CSV, JSON, JSONL, or SQLite submissions and operate the same
-   workflow from the `sat-sa` CLI;
-4. examine operational failures such as implausibly fast closures,
-   acknowledgement without investigation, missing escalation, and critical
-   assets with no observed alerts; and
-5. verify ML-DSA-65 signatures, canonical SHA3-256 digests, and the
-   append-only evidence ledger after a run.
-
-The committed demo and synthetic scenarios are suitable for local evaluation
-and demonstrations. They are not a claim that SAT-SA has processed NCIIPC,
-CIC-IDS2017, or Splunk BOTS production data.
-
-## What this is — and is not
-
-SAT-SA is:
-
-- a **periodic, offline, evidence-driven supervisory analytics** system;
-- a **human-supervised** instrument: agents observe and recommend, a
-  human examiner decides (terminal authority, append-only audit);
-- **post-quantum trusted**: every run and finding signed with ML-DSA-65,
-  hash-chained evidence ledger, deterministic content digests;
-- **offline core analytics**: the default analysis and signing path needs no
-  external service; explicitly configured model-assisted briefings make
-  outbound provider requests.
-
-SAT-SA is **not** a SIEM, a SOC replacement, a real-time monitor, a
-national monitoring system, a continuous telemetry collector, or an
-autonomous supervisory authority.
-
-## Architecture
+## Workflow and architecture
 
 ```mermaid
-flowchart LR
-    Input[CSE submissions<br/>CSV · JSON · JSONL · SQLite] --> Ingest[Readers and normalizer<br/>canonical evidence records]
-    Ingest --> Workers[16 analytical workers<br/>execution gaps · negative space · anomalies]
-    Workers --> Correlate[Correlation and 7-dimension risk]
-    Correlate --> Queue[Prioritized findings and<br/>bounded recommendations]
-    Queue --> Review[Human examiner review<br/>confirm · reject · defer · escalate]
-    Review --> Ledger[TRUST-SAT evidence ledger<br/>SHA3-256 · ML-DSA-65]
-    Ledger --> Verify[Live-row and chain verification]
-
-    Ingest --> Store[(Local SQLite)]
-    Workers --> Store
-    Correlate --> Store
-    Review --> Store
-    Ledger --> Store
-    Store --> UI[FastAPI dashboard]
-    Store --> CLI[sat-sa CLI]
+flowchart TD
+    Intake[Evidence intake] --> Analysis[Gap and risk analysis]
+    Analysis --> Briefing[Reviewer briefing]
+    Briefing --> Review[Human review]
+    Review --> Trust[TRUST-SAT binding]
+    Trust --> Verify[State and signature verification]
+    Store[(SQLite evidence store)] --- Intake
+    Store --- Analysis
+    Store --- Review
+    Store --- Trust
 ```
 
-The five layers are: (1) ingestion and normalization, (2) analytical workers
-and supervisory coordination, (3) correlation, risk, and prioritization, (4)
-TRUST-SAT evidence integrity, and (5) human presentation and terminal
-authority. See [the detailed SAT-SA architecture](docs/SATSA_SYSTEM_ARCHITECTURE.md)
-for component boundaries and the evidence flow.
+FastAPI exposes the authenticated application API. A local worker runs the analysis
+workflow; Next.js provides intake, findings, evidence, review and verification pages.
+The Python packages retain their source names: `satsa` contains supervisory analytics,
+while `qsmlops` supplies shared orchestration, identity, storage and cryptography.
 
-## The 32-agent model
+See the [system architecture](docs/SATSA_SYSTEM_ARCHITECTURE.md),
+[API contract](docs/API_CONTRACT.md), [authorization matrix](docs/security/AUTHORIZATION_MATRIX.md)
+and [trust model](docs/TRUST_MODEL.md) for the actual component boundaries.
 
-32 agents is a consequence of responsibility separation, not a target
-(grown from 26 in phase P25, then 31 to 32 in phase P26 — see
-`docs/AGENT_INVENTORY.md` for the full roster and why each addition
-was real, not decorative):
+## Repository structure
 
-- **9 retained MLOps agents** (`qsmlops/`): Data, Performance, Security,
-  QuantumSecurity, RedTeam, Governance, IncidentResponse, Optimization,
-  TrainingOptimization. Unchanged; they govern the ML platform itself.
-- **23 SAT-SA supervisory agents** (`satsa/`): EntityAssetResolution,
-  Ingestion, Normalization, ExecutionGap, NegativeSpace,
-  WorkflowReconstruction, Anomaly, PeerBenchmark, CoverageGap,
-  Drift, CrossEntityInsights, CaseSimilarity, EvidenceCompleteness,
-  CorrelationSignalFusion, EntityRiskScoring (formerly "Fusion"),
-  Prioritization, Recommendation, ReviewWorkflow, TrustProvenance,
-  EvidenceAssembly, MetaAudit, ReportGeneration, Validation.
+| Directory | Purpose |
+|---|---|
+| `satsa/` | Evidence ingestion, analytics, supervisory review and application API |
+| `qsmlops/` | Shared platform, security, storage and orchestration |
+| `web/` | Next.js workbench and public pages |
+| `scripts/` | Local startup, bootstrap, seed, rehearsal and evaluation commands |
+| `tests/` | Python regression, integration and security checks |
+| `evaluation/`, `public_benchmarks/` | Controlled evaluation tools and dataset adapters |
+| `docs/` | Setup, architecture, security, evaluation and engineering references |
+| `deploy/` | Optional deployment configuration and runbooks |
 
-Every agent implements the common contract `observe(context) →
-Observation` with severity, confidence, scope, subjects, evidence_refs,
-rationale, statistics, threshold, limitations, recommended_action,
-analysis_period, and provenance. Agents **must not** make irreversible
-supervisory decisions independently.
+## Testing and verification
 
-One generalized supervisor engine (`satsa/supervisor/engine.py`) runs
-**Observe → Reason → Act → Verify → Learn** with two pluggable,
-lexically disjoint decision vocabularies:
-
-- SAT-SA: `SATSA_SURFACE / SATSA_INSPECT / SATSA_REQUEST_EVIDENCE /
-  SATSA_ESCALATE_FOR_REVIEW / SATSA_DEFER / SATSA_ACCEPT /
-  SATSA_CLOSE_REVIEW` — all require human authority;
-- MLOps: `ACCEPT / DEPLOY / RETRAIN / QUARANTINE / ROTATE_KEYS /
-  BLOCK_DEPLOYMENT / ESCALATE / ROLLBACK` — policy-driven proposals.
-
-## Security data layer
-
-Six evidence categories per CSE submission: **alerts, cases,
-investigation steps, escalations, dispositions, assets** — plus source
-records, provenance, submissions, assessments, multiple CSEs, multiple
-periods. Offline SQLite store; the hash-chained ledger remains source of
-truth. Ingestion supports **CSV, JSON, JSONL, and SQLite**
-(`satsa/ingest/db_adapter.py`); equivalent evidence from different
-sources normalizes to equivalent canonical records.
-
-## ML / analytics layer
-
-16 analytical workers in the default run: 6 execution-gap detectors
-(fast closure, ack-without-investigation, critical-without-escalation,
-repeated investigation, recurring-without-remediation, metric gaming),
-negative space (6 rules), robust anomaly statistics, peer benchmarking
-(trimmed statistics), coverage gap, drift, cross-entity insights, case
-similarity, evidence completeness. Plus: 7-dimension decomposable risk
-(`execution_gap, peer_deviation, detection_gap, negative_space, anomaly,
-investigation_quality, escalation_discipline`), lexicographic
-prioritization, and the bounded recommendation engine
-(`INSPECT_INVESTIGATION, CHECK_ESCALATION_PATH,
-VERIFY_MONITORING_COVERAGE, COMPARE_WITH_PEERS,
-REQUEST_MISSING_EVIDENCE, REVIEW_METRIC_DEFINITION,
-INSPECT_ROOT_CAUSE_REMEDIATION, REVIEW`).
-
-Statistical analytics are valid. Deterministic rules are valid. Robust
-statistics are valid. ML only where it adds actual value.
-
-## Human supervision
-
-Review queue → evidence inspection → accept / reject / defer / request
-evidence / escalate / mark false positive → rationale → recorded
-decision → audit trail. Every decision binds the finding's content digest
-at decision time; corrections append, history is never rewritten.
-
-## TRUST-SAT
-
-- **PQC signatures**: ML-DSA-65 over canonical SHA3-256 digests;
-- **Provenance**: source → record → observation → finding → risk →
-  recommendation → decision;
-- **Hash-chain ledger**: append-only, tamper-evident evidence ledger;
-- **Evidence integrity**: verification re-derives digests from live rows;
-  any tamper (including of the stored digest column itself) is detected.
-
-Trust claim is **detection of tampering at verification time, not
-tamper-proofness**.
-
-## Installation (offline / air-gapped)
+With the virtual environment activated:
 
 ```bash
-python -m venv .venv
-# Windows: .venv\Scripts\activate   |   Linux/Mac: source .venv/bin/activate
-pip install -r requirements.txt
-pip install .
-python -m compileall satsa qsmlops
 python -m pytest tests/ -q
+python -m compileall -q satsa qsmlops scripts
+python -m pip install bandit
+python -m bandit -r satsa qsmlops scripts -lll -q
 ```
 
-Python ≥ 3.10. No network calls anywhere in the pipeline (verified by
-`tests/test_phase18_satsa_offline_hardening.py`, which blocks DNS/TCP
-and runs the demo + every UI page). No CDN, remote fonts, telemetry.
-
-## Usage
-
-### Demo (the judge path)
+From `web/`:
 
 ```bash
-python demo.py            # full SAT-SA story: 5 CSEs → findings → risk → trust → review
-sat-sa demo               # same via CLI (requires --db)
+npm run check
+npx playwright install chromium
+npm run test:e2e
 ```
 
-Then serve the UI —
+The browser suite starts the existing test stack. Optional HTTP smoke tests require
+a running frontend; see [web setup](web/README.md). Tests requiring PostgreSQL,
+HSMs or external providers have explicit prerequisites and may skip locally.
 
-```bash
-python scripts/serve_ui.py --db ./satsa.db --trust-key-dir ./keys --port 8000
-```
+The [verification snapshot](docs/CLOSURE_TRACE_READINESS.md) records the tested
+configuration and actual results. Synthetic demonstrations and controlled integrity
+experiments establish specific engineering behavior, not real-world detection accuracy.
+Public dataset adapters do not imply that real datasets were downloaded or evaluated.
 
-— open `http://127.0.0.1:8000/` (loads the demo dataset automatically
-on first run), and follow: Overview → entity → risk → evidence →
-Detect/Correlate/Assess → recommendation → TRUST-SAT → review →
-decision → architecture/agents. To submit your own CSE data instead
-of the demo, sign in at `/login` (see "Authentication" below) and use
-`/ingest`.
+## Deployment and security
 
-### CLI (same service layer as the UI — no duplicated logic)
+The default demo initializes its own SQLite database and generates local credentials
+and signing keys. Runtime directories, populated environment files, private keys,
+logs and local databases are ignored. Every developer supplies their own credentials;
+configuration templates contain placeholders only.
 
-```bash
-sat-sa --db ./satsa.db --trust-key-dir ./keys ingest CSE-X ./sub \
-  --period-start 1735689600 --period-end 1738281600
-sat-sa --db ./satsa.db --trust-key-dir ./keys analyze <entity> <assessment>
-sat-sa --db ./satsa.db risk <entity>
-sat-sa --db ./satsa.db prioritize [--run-id <run>]
-sat-sa --db ./satsa.db findings <run> [--state signal]
-sat-sa --db ./satsa.db --trust-key-dir ./keys verify <run>
-sat-sa --db ./satsa.db review --finding-id <f> --action confirm --reason "..."
-sat-sa --db ./satsa.db report <entity> [--out report.html]
-sat-sa --db ./satsa.db validate
-sat-sa agents
-sat-sa --db ./satsa.db decision <run> --vocabulary satsa
-```
+Core analytics, signing and verification work locally once dependencies are installed.
+Enabling an external model provider permits outbound provider requests. Production
+hosting, TLS, persistence and operational controls require explicit configuration:
+see the [deployment runbook](deploy/README.md) and [security review](docs/security/SECURITY_REVIEW.md).
 
-### Python API
+## Limitations
 
-```python
-from satsa.service import SatsaService
-svc = SatsaService(engine)                 # DatabaseService or bare engine
-e = svc.register_entity("CSE-X", sector="defence", environment_class="on-prem")
-a = svc.open_assessment(e.id, 1735689600.0, 1738281600.0)
-svc.submit(a.id, "./submission-dir")       # or {category: path}
-run = svc.run_analysis(e.id, a.id, trust_key_dir="./keys")
-risk = svc.compute_risk(e.id)
-report = svc.verify_run(run.run_id, "./keys")
-svc.record_review(finding_id=..., principal_identity_id="examiner-1",
-                  action="confirm", reason="...",
-                  finding_content_digest=..., previous_revision_id=None)
-```
+- The demo uses synthetic records and is not a detection-accuracy benchmark.
+- Optional live model providers are separately configured and require their own access.
+- Cryptographic verification binds the documented state and decision, not real-world truth.
+- The software post-quantum implementation and database/ledger/key trust boundary retain
+  the limitations in the [trust model](docs/TRUST_MODEL.md).
+- UI branding and the submission video remain separate presentation work; passing tests
+  does not establish production readiness or complete the competition submission.
 
-## Validation
+## Attribution and license
 
-Per-layer + composition, never one accuracy number:
+Closure-Trace is derived from the SAT-SA / TRUST-SAT foundation, originally developed
+for supervisory security analytics. Existing implementation history, package names and
+source attribution are preserved. It is not presented as independently written from scratch.
 
-- **synthetic ground truth**: 10 deterministic scenarios (healthy,
-  execution-gap, negative-space, anomaly, peer-deviation, mixed,
-  borderline, noisy, missing-evidence, conflicting-evidence) generated
-  outside the analytical execution, compared after the fact
-  (`satsa/analysis/validate.py`, `satsa/analysis/synth.py`);
-- **expert labels**: layer, is_signal, category, severity, expected
-  action, rationale, confidence, reviewer, timestamp;
-- **offline guarantee**, **scaling benchmark** (5/10/25/50 CSE),
-  **peer robustness**, **trust stress** (every mutation rejected or
-  classified).
-- **public-dataset benchmark framework** (`public_benchmarks/`): 12
-  controlled scenarios, each proven to trigger its declared detector
-  family through the real pipeline (known/permitted cross-detector
-  side effects are documented, not suppressed — see
-  `docs/PUBLIC_BENCHMARKS.md`). The adapters are schema-compatible
-  with CIC-IDS2017/Splunk BOTS but have **not** been run against the
-  actual downloaded dataset files in this environment — every
-  scenario here runs on hand-built, explicitly-labeled sample rows.
-  Read `docs/PUBLIC_BENCHMARKS.md` before citing this — it draws the
-  exact line between "validated ingestion/detection mechanics on
-  schema-compatible sample data" and "validated against real SOC
-  investigation behavior" (the latter remains explicitly not
-  claimed).
-
-## UI
-
-This repository contains two UIs. Both live on `main`:
-
-| | Web UI (`web/`) | Backend UI (`satsa/ui/`) |
-|---|---|---|
-| What | Public site + secure supervisory application | Operator dashboard over the real pipeline |
-| Stack | Next.js 16 / React 19 / Tailwind 4 | FastAPI + Jinja2 + vanilla JS |
-| Data | The SAT-SA API (`docs/API_CONTRACT.md`): sessions, organizations, ingest, runs, findings, evidence, risk, priorities, decisions, TRUST-SAT, audit | Live SQLite database: real ingest, findings, verification, reviews |
-| Run | `python scripts/local_stack.py --seed-demo`, then `cd web && npm ci && SATSA_API_BASE_URL=http://127.0.0.1:8000 npm run dev` | `python scripts/serve_ui.py` |
-| Hosted | No hosting provider configured (see below) | Local / air-gapped only |
-
-`web/` holds the current, redesigned UI. See [`web/README.md`](web/README.md).
-
-The hosted runtime is the tenant-scoped API (`python -m satsa.api.server`,
-`docs/API_CONTRACT.md`) with a separate analysis worker (`sat-sa-worker`),
-PostgreSQL or SQLite, and local or S3-compatible artifact storage. The web
-workbench is a client of that API; a browser end-to-end test drives the full
-workflow against a real API and worker (`web/e2e/`, CI job `web-e2e`). History
-of the convergence: [`docs/FRONTEND_BACKEND_CONVERGENCE.md`](docs/FRONTEND_BACKEND_CONVERGENCE.md).
-
-**Hosting.** `deploy/` runs the whole product on one Linux host: Caddy with
-automatic HTTPS, the web tier, the API, a separate worker, PostgreSQL and
-S3-compatible object storage, with production settings that fail closed. CI
-starts that stack and runs the browser workflow through HTTPS against it. The
-public deployment is AWS (EC2, RDS PostgreSQL 17, S3, EBS) at
-https://trustsat.mpst.me. Runbooks: [`deploy/README.md`](deploy/README.md)
-(any single host) and [`deploy/aws/README.md`](deploy/aws/README.md) (AWS).
-
-The backend UI is FastAPI + Jinja2 + vanilla JS, all local: Overview (command center) ·
-Entities · Entity detail · Findings · Finding detail (WHAT/WHY/EVIDENCE/
-CONFIDENCE/LIMITATIONS/NEXT/TRUST) · Review queue · Benchmarks ·
-Analytics pipeline · Security data · Decisions · TRUST-SAT · Agents ·
-Architecture · System · Reports · Ingest (submit your own CSE data).
-
-## Authentication
-
-Recording a review decision, or submitting new CSE data via `/ingest`,
-requires a real, server-verified identity — not a caller-supplied
-header. This reuses the existing qsmlops identity/credential system
-(salted API-key credentials); see `docs/deployment.md`'s "Authentication
-bootstrap" section for how to create the first identity on a fresh
-install. Roles: `satsa_viewer` (read-only), `satsa_analyst` (run
-analytics/ingest), `satsa_supervisor` (also records review decisions),
-`satsa_auditor` (read + platform audit log), `satsa_admin` (full
-control). Sign in at `/login` (browser) or pass
-`--credential`/`SATSA_CREDENTIAL` (CLI). The 16 read-only dashboard
-pages remain open without a credential; every state-changing action is
-gated.
-
-## Project structure
-
-```
-satsa/                 # SAT-SA supervisory analytics (the product)
-  ingest/              # CSV/JSON/JSONL/SQLite readers, normalization, service
-  store/               # SQLite repositories, canonical dataset
-  domain/              # entities, evidence, runs, workflow records
-  contracts/           # worker + orchestration contracts
-  analysis/            # 16 workers, run service, risk, prioritize,
-                       # recommend, review, trust, drift, insights,
-                       # similarity, synth, validate, benchmark, report
-  supervisor/          # 32-agent registry + Observe→Reason→Act→Verify→Learn
-  security.py          # identity/RBAC wiring for the UI + CLI
-  ui/                  # FastAPI app, templates (incl. /login, /ingest), demo loader
-  cli.py               # sat-sa entry point (incl. `doctor`)
-web/                   # Next.js web UI (public site + secure application,
-                       # typed data layer) -- see web/README.md
-qsmlops/               # reusable MLOps trust infrastructure (retained):
-                       # crypto (ML-DSA/ML-KEM/SHA3), evidence ledger,
-                       # passports, registry, identity/RBAC, 9 agents,
-                       # supervisor, pipeline
-evaluation/            # workload-reduction/prioritization-lift experiment,
-                       # baselines (z-score/MAD/IQR/random/severity-only),
-                       # ablation study -- all independent of the detectors
-                       # they measure
-public_benchmarks/     # CIC-IDS2017/Splunk BOTS schema-compatible
-                       # adapter framework + 12 workflow scenarios
-                       # -- see docs/PUBLIC_BENCHMARKS.md for
-                       # exactly what this does and does not validate
-tests/                 # per-layer, e2e, offline, trust stress, auth/RBAC,
-                       # tamper matrix, fresh-database reality tests,
-                       # public-benchmark scenario proofs -- see `pytest
-                       # tests/ -q` for the current count (see Testing)
-scripts/               # demo dataset builder, scaling benchmark, SoftHSM2
-                       # bootstrap, serve_ui.py (real UI launcher)
-docs/                  # phase docs, roadmap status, deployment, demo runbook,
-                       # claims table, requirements traceability, trust model
-demo.py                # SAT-SA end-to-end demonstration
-.github/workflows/     # CI (dependency install, full suite, offline/trust/
-                       # auth suites, CLI smoke, demo — see Limitations)
-Dockerfile             # backend image (API server by default; also runs the
-                       # worker and migration commands in docker-compose.saas.yml)
-docker-compose.saas.yml # provider-neutral API/worker/PostgreSQL/S3 topology
-```
-
-`qsmlops/` provides reusable infrastructure (crypto, evidence, logging,
-errors, the 9 retained agents). SAT-SA never repurposes its MLOps domain
-logic.
-
-## Limitations (honesty discipline)
-
-- **Risk weights are a starting hypothesis** pending domain-expert
-  calibration — never a claimed-final model;
-- **PQC is pure-Python** (dilithium-py / kyber-py), not side-channel
-  hardened; liboqs migration is the stated path;
-- **No PKCS#11 token supports ML-DSA/ML-KEM** — industry-wide hardware
-  limitation; the platform fails closed and self-certifies;
-- **SQLite single-writer boundary** — documented, not hidden;
-- **Expert validation scaffolded** — framework + synthetic ground truth
-  complete; production expert-label volume pending;
-- **Cross-entity insights + drift** are wired into the supervisor
-  context (`previous_period`, `cross_entity_aggregate`); they still
-  honestly abstain (`insufficient_data`) for an entity's first
-  assessment (no prior period to diff against) or the first entity
-  processed in a shared assessment (no peers yet) — never fabricate.
-- **Composition validation is now pipeline-bound**
-  (`satsa/analysis/compval.py`): synthetic scenarios run through the
-  real ingestion + analytics pipeline rather than comparing ground
-  truth to itself; 5 of the 10 scenarios genuinely cannot be
-  reproduced in a single-entity fixture (peer cohort / multi-period
-  baseline / threshold-edge scenarios) and are reported as
-  `not_executed` with a specific reason.
-- **Release-gate status must be checked from GitHub Actions** — the Docker
-  image build and `sat-sa doctor` smoke command have run successfully on a
-  GitHub-hosted Ubuntu runner. The workflow is not release-clear while any
-  required matrix job is failing; consult the current Actions run rather than
-  treating this README as a live status dashboard.
-
-## Testing
-
-```bash
-python -m pytest tests/ -q        # full suite (1000+, ~5-10 min)
-python -m compileall satsa qsmlops scripts tests
-```
-
-Never weaken tests; never delete tests to make the suite pass.
-
-## License
-
-MIT License. Author: Pratham Kapoor.
+Licensed under [MIT](LICENSE), copyright © 2026 Pratham Kapoor.

@@ -1,7 +1,7 @@
 """SAT-SA supervisor agent registry — the canonical 32-agent roster.
 
-The roadmap identifies 32 agents (grown from 26 in phase P25 by
-adding genuine new analytical responsibility, then to 32 in phase P26
+The roadmap identifies 32 agents (grown from 26 in this implementation by
+adding genuine new analytical responsibility, then to 32 in this implementation
 by splitting correlation/signal-fusion out from entity risk scoring
 as its own distinct agent — see ``docs/AGENT_INVENTORY.md``):
 
@@ -17,31 +17,31 @@ as its own distinct agent — see ``docs/AGENT_INVENTORY.md``):
 
 The 23 SAT-SA agents are:
 
- 1. EntityAssetResolutionAgent — EntityAssetResolutionWorker (Phase P25)
+ 1. EntityAssetResolutionAgent — EntityAssetResolutionWorker
  2. IngestionAgent          — satsa.ingest.service
  3. NormalizationAgent      — satsa.ingest.normalize
  4. ExecutionGapAgent       — analytical worker (synthesises the
                                 six SIH-EG detectors into one
                                 supervisory observation stream)
  5. NegativeSpaceAgent      — NegativeSpaceWorker
- 6. WorkflowReconstructionAgent — WorkflowReconstructionWorker (Phase P25)
+ 6. WorkflowReconstructionAgent — WorkflowReconstructionWorker
  7. AnomalyAgent            — AnomalyWorker
  8. PeerBenchmarkAgent      — PeerBenchmarkWorker
- 9. CoverageGapAgent        — CoverageGapWorker (Phase P12)
-10. DriftAgent              — DriftWorker (Phase P12)
-11. CrossEntityInsightsAgent — CrossEntityInsightsWorker (Phase P12)
-12. CaseSimilarityAgent     — CaseSimilarityWorker (Phase P12)
-13. EvidenceCompletenessAgent — EvidenceCompletenessWorker (Phase P12)
-14. CorrelationSignalFusionAgent — satsa.analysis.correlation (Phase P26)
+ 9. CoverageGapAgent        — CoverageGapWorker
+10. DriftAgent              — DriftWorker
+11. CrossEntityInsightsAgent — CrossEntityInsightsWorker
+12. CaseSimilarityAgent     — CaseSimilarityWorker
+13. EvidenceCompletenessAgent — EvidenceCompletenessWorker
+14. CorrelationSignalFusionAgent — satsa.analysis.correlation
 15. FusionAgent (Entity Risk Scoring) — RiskAggregator (satsa.analysis.risk)
 16. PrioritizationAgent     — satsa.analysis.prioritize
 17. RecommendationAgent     — satsa.analysis.recommend
 18. ReviewWorkflowAgent     — satsa.analysis.review
 19. TrustProvenanceAgent    — satsa.analysis.trust
-20. EvidenceAssemblyAgent   — satsa.analysis.evidence_assembly (Phase P25)
-21. MetaAuditAgent          — satsa.analysis.meta_audit (Phase P25)
-22. ReportGenerationAgent   — satsa.analysis.report (Phase P25, newly registered)
-23. ValidationAgent         — satsa.analysis.validate (Phase P13)
+20. EvidenceAssemblyAgent   — satsa.analysis.evidence_assembly
+21. MetaAuditAgent          — satsa.analysis.meta_audit
+22. ReportGenerationAgent   — satsa.analysis.report (registered component)
+23. ValidationAgent         — satsa.analysis.validate
 
 This module does not implement the analytical logic itself — it
 only registers the agents and exposes their declared inputs /
@@ -332,7 +332,7 @@ SATSA_AGENTS: tuple[AgentSpec, ...] = (
         purpose="Cross-finding corroboration: clusters signal findings "
                 "sharing a scoped subject and flags cross-detector-"
                 "family corroboration, ahead of and independent from "
-                "risk scoring (Phase P26)",
+                "risk scoring",
         inputs=("entity_finding_set",),
         outputs=("correlation_clusters",),
         evidence_types=("subject", "rule_families", "corroborated"),
@@ -447,7 +447,7 @@ SATSA_AGENTS: tuple[AgentSpec, ...] = (
         family="satsa",
         purpose="Per-layer + composition validation; expert labels; "
                 "synthetic ground truth; performance benchmark; "
-                "offline guarantee; extended in Phase P26 with a "
+                "offline guarantee; includes a "
                 "governed threshold-calibration workflow (propose -> "
                 "test against labeled data -> supervisor approval -> "
                 "versioned deployment, satsa.analysis.calibration)",

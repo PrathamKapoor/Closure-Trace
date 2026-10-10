@@ -1,4 +1,4 @@
-"""Persistence for AnalysisRun, Observation, Finding, Job (Phase 4)."""
+"""Persistence for AnalysisRun, Observation, Finding, Job."""
 from __future__ import annotations
 
 import json

@@ -1,6 +1,6 @@
 """ML Performance Agent: evaluates model metrics against deployment thresholds.
 
-Phase 2 upgrades:
+upgrades:
 - consumes structured DriftReports from qsmlops.ml.drift (PSI / KS / prediction
   / performance drift) supplied by the monitoring loop;
 - evaluates rolling-window production metrics against the training baseline;

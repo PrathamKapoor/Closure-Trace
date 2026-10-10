@@ -1,20 +1,12 @@
 # Closure-Trace readiness check — 10 October 2026
 
-## Scope and starting point
+## Verification scope
 
-Inspected `PrathamKapoor/Closure-Trace` at
-`29820a3ba6e82bd946a09b4acf5fea8dd7491bee`, its only published branch (`main`).
-The user confirmed Closure-Trace as the submission target. This is the
-supervisory alert-closure product derived from SAT-SA, not the separate scam
-investigation implementation discussed earlier. That implementation and its
-Phase 3–5 hashes are absent from this checkout.
-
-Review covered the fresh installation, manifests, local launcher, synthetic
-seed flow, analysis/orchestration, model briefing/fallback, human decision,
-canonical/trust implementation, API and frontend integration, existing test
-coverage, public product copy and submission instructions. The original SAT-SA
-repository was not changed or accessed for writes. No GitHub writes, pushes,
-pull requests, new remotes, history rewrites or attribution changes occurred.
+This snapshot covers the Closure-Trace supervisory alert-closure product: fresh
+installation, dependency manifests, local startup and seed flow, orchestration,
+reviewer briefing, human decisions, integrity verification, application integration
+and regression tests. It describes the tested configuration, not a production
+certification. Original implementation history and MIT attribution are preserved.
 
 ## Corrections
 
@@ -75,9 +67,8 @@ A supervisor confirmation led to a real ML-DSA-65 receipt and API verification.
 
 The rehearsal independently verified the signature with the receipt public
 key, changed the signed state's stored risk total, and received `INCONSISTENT`.
-It restored the exact original JSON and received `VERIFIED`. This matches the
-current API vocabulary; it does not expose the scam product's DIGEST_MISMATCH
-taxonomy or its separate signature/state booleans.
+It restored the exact original JSON and received `VERIFIED`. Verification uses
+the application's actual status vocabulary.
 
 The existing controlled integrity experiment independently detected **13/13
 material mutations** and preserved **1/1 unsigned operational-field controls**.
@@ -91,7 +82,8 @@ submission readiness still requires the UI and recording work:
 
 1. Active landing and application copy still uses SAT-SA/TRUST-SAT and SIH.
    Brand the product Closure-Trace and identify TRUST-SAT as its integrity layer.
-2. Landing GitHub CTAs still target SAT-SA-with-PQC. Update them to this repo.
+2. Repository links now target Closure-Trace. Verify all presentation copy and
+   links again when polishing the interface.
 3. Historical landing counters (seven entities, twelve runs, eighty-five
    signals) are not the current five-entity golden scenario. Scope or remove
    those counters; do not present them as live statistics.
@@ -108,21 +100,16 @@ truth nor analytical correctness. The local software PQC implementation and
 database/ledger/key trust boundary retain the limitations in `docs/TRUST_MODEL.md`.
 MIT licensing and source attribution are preserved.
 
-## Apply and rehearse
+## Reproduce locally
 
-The accompanying patch contains local commits authored as PrathamKapoor. Apply
-it inside a clean checkout of Closure-Trace based on the inspected HEAD:
-
-```bash
-git am /path/to/closure-trace-submission.patch
-python -m pip install -r requirements.txt
-```
-
-After the existing frontend build:
+Follow the installation commands in the root README, install dependencies in a
+virtual environment, and build the frontend with `npm run check` from `web/`.
+Then run:
 
 ```bash
 python scripts/rehearse_closure_trace.py --web
 ```
 
-See `docs/CLOSURE_TRACE_DEMO.md` for the live presentation workflow and UI
-handoff. These changes are local; the published GitHub repository is unchanged.
+See [the demo guide](CLOSURE_TRACE_DEMO.md) for the live presentation workflow,
+reset commands and recovery steps. Use the current `main` branch; do not apply an
+older patch over already-published changes.

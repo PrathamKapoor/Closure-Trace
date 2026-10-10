@@ -1,9 +1,9 @@
 # SAT-SA hosted system: threat model
 
 Scope: the system as deployed by `deploy/compose.production.yml` on one Linux
-host (Phase 19), and the code paths it runs. Each threat names the control
+host, and the code paths it runs. Each threat names the control
 that exists and the test that exercises it. Residual risks are stated, not
-hidden. This is the basis for the Phase 20 hardening; it is not a penetration
+hidden. This is the basis for the existing hardening; it is not a penetration
 test report.
 
 ## Assets
@@ -50,22 +50,22 @@ API: the web tier holds the session token server-side and calls the API with
 
 | # | Threat | Control | Evidence |
 |---|---|---|---|
-| T1 | Cross-tenant read by ID (IDOR) on any object | every query carries `organization_id`; membership re-checked per request (`TenantRepository._require`) | `tests/test_phase20_tenant_isolation.py` (22 read paths, both engines) |
+| T1 | Cross-tenant read by ID (IDOR) on any object | every query carries `organization_id`; membership re-checked per request (`TenantRepository._require`) | `tests/test_tenant_isolation.py` (22 read paths, both engines) |
 | T2 | Cross-tenant write: attach A's entity/assessment/version to B, decide/cancel/verify A's run, revoke A's member | ownership checked below the route in the services | same file, 11 mutation paths, row counts of 15 organization-scoped tables unchanged |
 | T3 | Forged `X-Organization-ID` | membership required for the named organization; malformed values rejected | `test_forged_organization_header_is_refused_for_every_role` |
 | T4 | Enumeration: foreign vs missing IDs distinguishable | identical status and code for both | `test_unknown_and_malformed_identifiers_do_not_leak_existence` |
-| T5 | Privilege escalation between roles | route matrix enforced by permission + membership role (decide/cancel) | `tests/test_phase20_authorization.py` (every route x 5 roles), `docs/security/AUTHORIZATION_MATRIX.md` |
+| T5 | Privilege escalation between roles | route matrix enforced by permission + membership role (decide/cancel) | `tests/test_authorization.py` (every route x 5 roles), `docs/security/AUTHORIZATION_MATRIX.md` |
 | T6 | Stale sessions: logout, expiry, revoked credential, disabled user or identity, revoked membership | session resolution joins user and identity status; credential re-checked; membership per request | `test_revoked_or_expired_sessions_and_disabled_identities_are_rejected`, `test_revoked_membership_is_listed_as_revoked_and_denied` |
 | T7 | CSRF against cookie sessions (API) and server actions (web) | API: HMAC CSRF token for cookie mutations; web: SameSite=Lax HttpOnly cookie, Next.js server-action origin check, CSP `form-action 'self'` | `test_cookie_sessions_require_csrf_for_every_mutation`, HTTP smoke |
 | T8 | Credential guessing | 5 login attempts/min per client address, identical error for all failures | `test_failed_logins_do_not_distinguish_credential_states`, `web/e2e/security/login-rate-limit.spec.ts` through the proxy |
-| T9a | Authenticated request flooding | per-IP cap plus per-user, per-operation caps (30 mutations/min, 300 reads/min by default); limit belongs to the user, not the organization | `tests/test_phase20_rate_limits.py` |
+| T9a | Authenticated request flooding | per-IP cap plus per-user, per-operation caps (30 mutations/min, 300 reads/min by default); limit belongs to the user, not the organization | `tests/test_rate_limits.py` |
 | T9 | Rate-limit bypass by forging `X-Forwarded-For` | Caddy overwrites the header; API trusts it only from the web tier | same E2E, run against the production stack in CI |
-| T10 | Malicious upload: traversal names, NUL, wrong type, binary, oversize, parser bombs | filename rules, type/extension agreement, 16 MiB service limit, 17 MiB edge limit, 18 MB proxy limit, opaque storage keys (no filename in the key) | `tests/test_phase20_upload_hardening.py` |
-| T11 | Malformed input reaching PostgreSQL (NUL bytes) as a 500 | edge rejects NUL in path/query; schemas reject NUL in strings | `test_nul_bytes_are_rejected_as_input_not_database_failures` (fixed in Phase 20) |
-| T12 | Replays and races: duplicate submissions, uploads, runs, validations, decisions; decision vs cancel | idempotency keys scoped per organization; row lock on the run for decide/cancel; atomic claim of a version for validation; a concurrent identical upload replays instead of conflicting | `tests/test_phase20_concurrency.py` (fixed in Phase 20) |
-| T13 | Tampering with recorded supervisory state | TRUST-SAT: canonical SHA3-256 digest, ML-DSA-65 receipt, ledger binding (key id, signature digest), DB constraints | `tests/test_phase5_trust_finalization.py`, `tests/test_phase20_trust_adversarial.py` |
+| T10 | Malicious upload: traversal names, NUL, wrong type, binary, oversize, parser bombs | filename rules, type/extension agreement, 16 MiB service limit, 17 MiB edge limit, 18 MB proxy limit, opaque storage keys (no filename in the key) | `tests/test_upload_hardening.py` |
+| T11 | Malformed input reaching PostgreSQL (NUL bytes) as a 500 | edge rejects NUL in path/query; schemas reject NUL in strings | `test_nul_bytes_are_rejected_as_input_not_database_failures` (fixed in this implementation) |
+| T12 | Replays and races: duplicate submissions, uploads, runs, validations, decisions; decision vs cancel | idempotency keys scoped per organization; row lock on the run for decide/cancel; atomic claim of a version for validation; a concurrent identical upload replays instead of conflicting | `tests/test_concurrency.py` (fixed in this implementation) |
+| T13 | Tampering with recorded supervisory state | TRUST-SAT: canonical SHA3-256 digest, ML-DSA-65 receipt, ledger binding (key id, signature digest), DB constraints | `tests/test_trust_finalization.py`, `tests/test_trust_adversarial.py` |
 | T14 | Premature or partial finalization (worker crash, missing key, cancel) | finalization is resumable at durable boundaries; a supervised run completes only after verification | `test_finalization_recovers_at_durable_boundaries`, `test_missing_signing_key_never_completes_a_supervised_run` |
-| T15 | Deleting the finalization to downgrade "inconsistent" to "not finalized" | verify reports a completed supervised run without finalization as inconsistent | `finalization_deleted` case (fixed in Phase 20) |
+| T15 | Deleting the finalization to downgrade "inconsistent" to "not finalized" | verify reports a completed supervised run without finalization as inconsistent | `finalization_deleted` case (fixed in this implementation) |
 | T16 | XSS / clickjacking / content injection in the workbench | React escaping, no `dangerouslySetInnerHTML`, CSP, `X-Frame-Options: DENY`, `frame-ancestors 'none'` | HTTP smoke in CI |
 | T17 | Sensitive pages cached by browsers or intermediaries | `Cache-Control: no-store` on every non-asset response; API adds it to all responses | HTTP smoke |
 | T18 | Internal services exposed | only Caddy publishes; API/PostgreSQL/object store on the backend network only | CI port assertion |
@@ -73,9 +73,9 @@ API: the web tier holds the session token server-side and calls the API with
 | T20 | Container breakout / persistence | non-root processes, `cap_drop: ALL`, `no-new-privileges`, read-only backend root filesystem | compose file, production-stack CI |
 | T21 | Vulnerable dependencies and base images | npm audit, pip-audit, Trivy in CI; Bandit gates HIGH-severity findings in application and deployment code (Medium findings reviewed by hand: request-path SQL is parameterized, the rest are operator-only tools) | `dependency-audit`, `image-scan` jobs; findings and decisions in `docs/security/IMAGE_SCAN.md` |
 | T22 | Loss of the host or its disk | executable backup/restore, restore verified in CI | `deploy/backup.sh`, `deploy/restore.sh`, production-stack job |
-| T23 | Code execution through a model artifact | production artifacts are data-only JSON loaded with `json.loads` + schema validation; no upload route; retained QSMLOps pickle/torch loaders refuse bytes not matching a trusted SHA3-256 digest, `torch.load(weights_only=True)` | `tests/test_phase21_artifact_trust_boundary.py`, `test_artifact_loader_rejects_tampering_and_malformed_content` |
+| T23 | Code execution through a model artifact | production artifacts are data-only JSON loaded with `json.loads` + schema validation; no upload route; retained QSMLOps pickle/torch loaders refuse bytes not matching a trusted SHA3-256 digest, `torch.load(weights_only=True)` | `tests/test_artifact_trust_boundary.py`, `test_artifact_loader_rejects_tampering_and_malformed_content` |
 | T24 | Tampered or swapped model artifact / passport | artifact and passport digests verified before deployment and before inference; failure blocks deployment, inference abstains (`model_unavailable`) | `test_damaged_artifact_or_passport_blocks_deployment`, `test_inference_abstains_when_deployed_artifact_disappears` |
-| T25 | Unauthorized model promotion | approve/deploy/rollback need supervisor or admin; the training requester cannot approve; only verified models are approvable and only approved models deployable | `test_approval_needs_role_justification_and_separation_of_duties`, role matrix in `test_phase20_authorization.py` |
+| T25 | Unauthorized model promotion | approve/deploy/rollback need supervisor or admin; the training requester cannot approve; only verified models are approvable and only approved models deployable | `test_approval_needs_role_justification_and_separation_of_duties`, role matrix in `test_authorization.py` |
 | T26 | Altered advisory score after review | the inference record is committed in the TRUST-SAT supervisory document with a recomputed digest | lifecycle E2E: tampered score verifies `inconsistent` |
 | T27 | Cross-tenant model or dataset access | organization_id on every MLOps table and query | `test_other_organization_cannot_see_or_act_on_models` |
 
@@ -90,7 +90,7 @@ API: the web tier holds the session token server-side and calls the API with
 - **Receipts are not pinned to a configured public key.** A key substitution
   is caught through the ledger binding (key id and signature digest), so it
   needs the ledger volume as well as the database; see `attacker_key` in
-  `tests/test_phase20_trust_adversarial.py`.
+  `tests/test_trust_adversarial.py`.
 - **CSP allows inline scripts and styles.** Next.js hydration needs them
   unless every page is rendered with per-request nonces; the policy still
   blocks third-party script sources and outbound connections.

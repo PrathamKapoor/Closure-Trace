@@ -1,5 +1,5 @@
-"""SAT-SA domain records (Part H/I). See docs/phase2/domain-foundation.md
-and docs/phase2/data-contracts.md for what each record is for and what
+"""SAT-SA domain records (Part H/I). See docs/foundation/domain-foundation.md
+and docs/foundation/data-contracts.md for what each record is for and what
 remains unimplemented (ingestion parsing, persistence, detectors)."""
 from __future__ import annotations
 

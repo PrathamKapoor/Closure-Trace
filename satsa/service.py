@@ -2,7 +2,7 @@
 management plus ingestion. One place API routes, the CLI and the demo all
 use, constructed over a DatabaseService (or bare engine in tests).
 
-Governance this phase: entities and assessments are operator-managed
+Governance this component: entities and assessments are operator-managed
 records; submission ingestion is the only bulk write.
 """
 from __future__ import annotations

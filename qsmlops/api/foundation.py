@@ -167,7 +167,7 @@ def register_foundation_routes(
 
     @app.post("/identity", status_code=201)
     def create_identity(payload: CreateIdentityRequest, request: Request) -> dict:
-        # Phase 2 identity-security hardening: previously any caller could
+        # identity-security hardening: previously any caller could
         # create an identity with any role (including "admin") with no
         # authentication at all. Bootstrap exception: the very first identity
         # on a fresh installation may be created without a credential (there

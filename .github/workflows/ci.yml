@@ -6,7 +6,7 @@ name: CI
 # CI/build-time requirement, not a claim about SAT-SA's own runtime.
 # SAT-SA's air-gapped guarantee is about the deployed application
 # making zero network calls once installed (proven by
-# tests/test_phase18_satsa_offline_hardening.py, which this workflow
+# tests/test_satsa_offline_hardening.py, which this workflow
 # runs), the same distinction the project already draws for local
 # `pip install` during deployment (docs/deployment.md).
 #
@@ -62,15 +62,15 @@ jobs:
           }
 
       - name: Offline-hardening guarantee (explicit, not just bundled in the suite above)
-        run: python -m pytest tests/test_phase18_satsa_offline_hardening.py -q -v
+        run: python -m pytest tests/test_satsa_offline_hardening.py -q -v
 
       - name: Deterministic trust behavior (explicit)
         run: |
-          python -m pytest tests/test_phase44_satsa_trust_stress.py -q -v
-          python -m pytest tests/test_phase66_satsa_tamper_matrix.py -q -v
+          python -m pytest tests/test_satsa_trust_stress.py -q -v
+          python -m pytest tests/test_satsa_tamper_matrix.py -q -v
 
       - name: Authentication / RBAC adversarial suite (explicit)
-        run: python -m pytest tests/test_phase63_satsa_auth_rbac.py -q -v
+        run: python -m pytest tests/test_satsa_auth_rbac.py -q -v
 
       - name: CLI smoke test
         run: |
@@ -289,7 +289,7 @@ jobs:
           # The browser E2E just before this step runs from the same client
           # address, and the API limits reads per address in fixed one-minute
           # windows. Start in a fresh window so these checks test security
-          # behaviour, not the limit (which Phase 20's own checks cover).
+          # behaviour, not the limit (which the component's own checks cover).
           sleep $((62 - $(date +%s) % 60))
           # Failing checks are also emitted as annotations, readable without the raw log.
           python3 deploy/http_security_check.py https://localhost --insecure | tee http-security.log || {

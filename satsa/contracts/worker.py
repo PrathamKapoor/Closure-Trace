@@ -1,8 +1,8 @@
 """The analytical worker contract: ``evaluate(snapshot, baselines, policy,
 run_context) -> ObservationBatch``, exactly as specified in
-docs/phase1/agent-architecture.md's target design. This module defines the
+docs/design/agent-architecture.md's target design. This module defines the
 contract and its typed inputs/outputs only — no detector implements real
-analytics yet (that is explicitly later-phase work per Rule 3); ``EchoWorker``
+analytics yet (that is explicitly future work per Rule 3); ``EchoWorker``
 below is a trivial no-op that exists only to prove the contract is callable
 end to end through the orchestrator (satsa.contracts.orchestration).
 """
@@ -24,8 +24,8 @@ BATCH_STATES = ("signal", "no_signal", "insufficient_data", "not_applicable", "e
 @dataclass(frozen=True)
 class SnapshotRef:
     """A reference to a frozen, normalized data snapshot — never the data
-    itself. A worker resolves this against the (later-phase) snapshot store;
-    Phase 2 only defines the shape of the reference."""
+    itself. A worker resolves this against the (future work) snapshot store;
+    only defines the shape of the reference."""
 
     digest: str
     entity_id: str
@@ -85,8 +85,8 @@ class ObservationBatch:
     """A worker's typed output for one run. Mirrors
     satsa.domain.evidence.Observation/Finding but as an in-memory execution
     result rather than a persisted record — a caller decides whether/how to
-    persist it (Phase 2 does not wire this automatically, matching the
-    equivalent decision in docs/phase2/evidence-persistence.md for the
+    persist it (the implementation does not wire this automatically, matching the
+    equivalent decision in docs/foundation/evidence-persistence.md for the
     qsmlops side)."""
 
     worker_name: str
@@ -131,7 +131,7 @@ class AnalyticalWorker(ABC):
     """Base contract every future detector-owning worker implements.
 
     Deliberately NOT a subclass of qsmlops.agents.base.BaseAgent: Part L is
-    explicit that SAT-SA agents "should be introduced in later phases" as
+    explicit that SAT-SA agents "should be introduced in future work" as
     their own thing, reusing the *interface pattern* (typed evaluate,
     typed output, no mutation authority) rather than the MLOps class
     hierarchy itself, which carries MLOps-specific assumptions (a single

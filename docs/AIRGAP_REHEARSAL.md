@@ -26,7 +26,7 @@ report recorded (see "Recording target evidence").
 - An offline bundle (wheelhouse) directory exists containing wheels
   for every runtime requirement in `requirements.txt` **plus
   `setuptools>=68`** (needed to build the project wheel; Python 3.12+
-  environments do not bundle it — P31).
+  environments do not bundle it — the implementation).
 - If no bundle exists locally, see "Preparing a bundle" below. The
   tool never downloads anything.
 
@@ -39,16 +39,16 @@ pip download "setuptools>=68" -d <wheelhouse-dir>
 
 This is a build/packaging concern, exactly like the CI dependency
 install; the deployed application itself makes zero network calls
-(verified by `tests/test_phase18_satsa_offline_hardening.py` and by
+(verified by `tests/test_satsa_offline_hardening.py` and by
 the `--no-index` install in the rehearsal itself).
 
 ## Commands
 
 ```bash
-# Missing/empty bundle → structured failure, no pretense:
+# Missing/empty bundle → structured failure, no pretense
 python scripts/airgap_rehearsal.py --wheelhouse <dir>
 
-# Full rehearsal (venv + data + report under --out, kept after):
+# Full rehearsal (venv + data + report under --out, kept after)
 python scripts/airgap_rehearsal.py --wheelhouse <dir> --out <dir> --keep
 ```
 
@@ -100,7 +100,7 @@ All temporary databases, keys, venvs, and reports are created under
 - If `install_project` fails, check the setuptools wheel is present
   and the bundle is complete (see check 1 warnings).
 - Backup/restore recovery is separately proven by
-  `tests/test_phase68_satsa_doctor_and_backup_restore.py` and
+  `tests/test_satsa_doctor_and_backup_restore.py` and
   documented in `docs/backup-restore.md`.
 
 ## Recording target-machine evidence
@@ -118,9 +118,9 @@ All temporary databases, keys, venvs, and reports are created under
 ## Explicit limits
 
 - Same-host rehearsal ≠ target NCIIPC deployment. No target-machine
-  rehearsal has been executed as of P33 (September 2026); the P33
+  rehearsal has been executed at the time of the recorded verification (September 2026); the existing
   evidence is a same-host rehearsal (see
-  `reports/CONTROLLED_BENCHMARK_P33.md`).
+  `reports/CONTROLLED_BENCHMARK_RESULTS.md`).
 - The rehearsal proves the install/run path offline; it does not prove
   hardware HSM signing (none exists industry-wide) or multi-writer
   production operation (SQLite single-writer boundary stands).

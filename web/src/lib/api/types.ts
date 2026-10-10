@@ -354,7 +354,7 @@ export interface AuditEvent {
   result: string;
 }
 
-/* ---------- MLOps (Phase 21, docs/MLOPS.md) ---------- */
+/* ---------- MLOps (the implementation, docs/MLOPS.md) ---------- */
 
 export type DataOrigin = "organizational" | "synthetic" | "controlled" | "external";
 export type DatasetStatus = "created" | "validating" | "valid" | "invalid" | "archived";

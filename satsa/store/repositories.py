@@ -6,7 +6,7 @@ qsmlops.database.repositories (plain classes over the shared engine,
 DuplicateEntryError propagation, dict rows) — no new abstraction layer.
 Each row carries a content_digest (SHA3-256 of the domain record's
 canonical to_dict(), via qsmlops.crypto.hashing.digest_document), matching
-the convention Phase 2 established for the qsmlops evidence tables.
+the convention the implementation established for the qsmlops evidence tables.
 """
 from __future__ import annotations
 

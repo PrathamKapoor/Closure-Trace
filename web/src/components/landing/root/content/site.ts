@@ -1,12 +1,12 @@
 /**
- * Real content for the SAT-SA landing page, sourced from github.com/PrathamKapoor/SAT-SA-with-PQC:
+ * Real content for the SAT-SA landing page, sourced from github.com/PrathamKapoor/Closure-Trace:
  * README.md, docs/CLAIMS.md, docs/AGENT_INVENTORY.md, docs/SATSA_SYSTEM_ARCHITECTURE.md,
- * docs/TRUST_MODEL.md, docs/roadmap-status.md, and a live run of the committed demo (scripts/serve_ui.py)
+ * docs/TRUST_MODEL.md, docs/IMPLEMENTATION_NOTES.md, and a live run of the committed demo (scripts/serve_ui.py)
  * on 2026-09-12. Numbers are cited with their source so nothing here drifts from the repo's own
  * honesty discipline ("never claim more than a test or a live run proves").
  */
 
-export const GITHUB_URL = "https://github.com/PrathamKapoor/SAT-SA-with-PQC";
+export const GITHUB_URL = "https://github.com/PrathamKapoor/Closure-Trace";
 
 export const navContent = {
   homeHref: "#",
@@ -128,7 +128,7 @@ export const agentsContent = {
   eyebrow: "The 32-agent model",
   title: "32 agents, one supervisory fabric.",
   intro:
-    "32 agents is a consequence of responsibility separation, not a target. It grew from 26 in phase P25, then 31 to 32 in phase P26. Every agent implements the same contract, observe(context) → Observation, and none may make an irreversible supervisory decision on its own.",
+    "The system separates responsibilities across 9 MLOps components and 23 supervisory components. Every agent implements the same contract, observe(context) → Observation, and none may make an irreversible supervisory decision on its own.",
   groups: [
     {
       count: 9,
@@ -261,9 +261,9 @@ export const limitationsContent = {
 };
 
 export const footerContent = {
-  repo: { label: "SAT-SA-with-PQC", href: GITHUB_URL },
+  repo: { label: "Closure-Trace", href: GITHUB_URL },
   packages: [
-    { name: "satsa", version: "0.16.0-phase52-ui" },
+    { name: "satsa", version: "0.16.0" },
     { name: "qsmlops", version: "0.1.0" },
   ],
   license: { label: "MIT License", author: "Pratham Kapoor" },

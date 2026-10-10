@@ -1,4 +1,4 @@
-"""P33 — controlled supervisory benchmark entry point.
+"""controlled supervisory benchmark entry point.
 
 Runs the versioned controlled benchmark
 (``evaluation.controlled_benchmark``) against the real SAT-SA pipeline

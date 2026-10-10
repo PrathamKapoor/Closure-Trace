@@ -3,15 +3,15 @@
 This backend-owned contract is implemented by `satsa.api` and served by
 `python -m satsa.api.server` (entry point `sat-sa-api`). The machine-readable
 schema is served at `/openapi.json`. The route index in section 4 is checked
-against the live application by `tests/test_phase17_api_contract.py`; the two
+against the live application by `tests/test_api_contract.py`; the two
 must not drift. The earlier frontend proposal in `web/docs/API_CONTRACT.md` is
 not this contract (section 11).
 
 The live API has **71 routes**. 44 existed at the research freeze's code commit
 (`837d1ef`, the figure the paper keeps through its pinned code facts); two were
-added in Phase 16: `GET /api/v1/priorities` and
+implemented: `GET /api/v1/priorities` and
 `GET /api/v1/versions/{version_id}/records`; 24 MLOps routes (`/api/v1/ml/...`
-and `GET /api/v1/runs/{run_id}/model-inference`) were added in Phase 21 and are
+and `GET /api/v1/runs/{run_id}/model-inference`) were implemented and are
 described in `docs/MLOPS.md`.
 
 ## 1. Transport, authentication and organization context

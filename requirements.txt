@@ -30,10 +30,10 @@ langgraph-checkpoint-sqlite==3.1.1
 # install flow does immediately after this file's install step.
 pytest>=8.0
 httpx>=0.27
-# tests/test_phase86_packaging_discovery.py intentionally calls the real
+# tests/test_packaging_discovery.py intentionally calls the real
 # `setuptools.find_packages` discovery function. Python 3.12+ environments
 # no longer bundle setuptools, so the CI test job must install it
-# explicitly (P31: this exact gap broke the Python 3.13 CI job).
+# explicitly (the implementation: this exact gap broke the Python 3.13 CI job).
 setuptools>=68
 # AWS configuration tests parse PostgreSQL connection options even without a
 # live server. Bundle libpq for fresh machines; LangGraph's transitive plain

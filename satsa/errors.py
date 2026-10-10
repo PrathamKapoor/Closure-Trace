@@ -32,5 +32,5 @@ class UnknownRecordError(SatsaError):
 class ScopeViolationError(SatsaError):
     """A relationship or reference crosses an entity/assessment boundary it
     must not cross (e.g. a Case referencing an Alert from a different
-    entity) — see docs/phase1/data-architecture.md's isolation rule:
+    entity) — see docs/design/data-architecture.md's isolation rule:
     "Relations must match entity scope.\""""

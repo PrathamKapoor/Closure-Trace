@@ -1,4 +1,4 @@
-"""Foundation-model provider configuration (not the Phase 21 ML model).
+"""Foundation-model provider configuration (not the existing ML model).
 
 The chain is configured by ``SATSA_LLM_CHAIN``: a JSON list, tried in order.
 It holds no credentials; each entry names the environment variable its key is

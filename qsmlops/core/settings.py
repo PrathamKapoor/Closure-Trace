@@ -33,11 +33,11 @@ ENV_VAR = "QSMLOPS_ENV"
 class ApiSettings:
     host: str = "127.0.0.1"
     port: int = 8000
-    # Phase 2 (Part G): Host-header allowlist for starlette's
+    # (Part G): Host-header allowlist for starlette's
     # TrustedHostMiddleware. "*" (the default) preserves prior behaviour
     # exactly — no Host validation, matching every existing deployment.
     # An operator serving this on a shared network should set explicit
-    # hostnames/IPs here; see docs/phase2/offline-hardening.md (Part G).
+    # hostnames/IPs here; see docs/foundation/offline-hardening.md (Part G).
     trusted_hosts: list[str] = field(default_factory=lambda: ["*"])
 
 

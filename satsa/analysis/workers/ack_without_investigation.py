@@ -8,7 +8,7 @@ fewer than ``min_steps_per_case`` investigation steps, the alert is
 flagged. Acknowledgement is required for the signal to fire (an alert
 that was never even acknowledged is the *negative-space* engine's
 concern, not this one — that distinction is the whole point of
-separating the two phases per docs/phase1/analytics-architecture.md).
+separating the two phases per docs/design/analytics-architecture.md).
 """
 from __future__ import annotations
 

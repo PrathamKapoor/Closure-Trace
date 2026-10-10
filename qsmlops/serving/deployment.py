@@ -1,10 +1,10 @@
-"""Governed deployment service (Phase 6).
+"""Governed deployment service.
 
 Implements the deployment-request boundary required by the Secure Model
 Deployment phase:
 
     Request -> Identity -> Registry state -> Cryptographic gates
-            -> Trust eligibility (Phase 5) -> Environment validation
+            -> Trust eligibility -> Environment validation
             -> Policy -> registry.deploy() -> Post-deployment verification
 
 The registry remains the SOLE promotion mechanism: this service requests and

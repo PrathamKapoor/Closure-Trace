@@ -137,7 +137,7 @@ class FastClosureWorker(AnalyticalWorker):
             confidence = ConfidenceVector(
                 analytical_support=analytical_support,
                 evidence_completeness=evidence_completeness,
-                peer_confidence=None,  # cohort benchmarking is a later phase
+                peer_confidence=None,  # cohort benchmarking is a future work
             )
             evidence_refs = [a.source_record_ref for a in qualifying if a.source_record_ref]
             rationale = (

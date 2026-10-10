@@ -263,7 +263,7 @@ def _run_scenarios(engine, *, trust_key_dir) -> tuple[list[dict], list[dict]]:
 def _closure_baseline_section(*, seed: int = 42) -> dict:
     """Deterministic closure-time corpus: fast closures are positive by
     construction, normal-paced closures negative by construction — the
-    same discipline as tests/test_phase77 (never derived from detector
+    same discipline as tests/test_evaluation_baselines.py (never derived from detector
     output). The real FastClosureWorker runs over a real
     CanonicalDataset; compare_closure_time_detectors scores every
     statistical baseline plus SAT-SA against the SAME labels."""
@@ -326,7 +326,7 @@ def _closure_baseline_section(*, seed: int = 42) -> dict:
     )
     flagged = {aid for f in batch.findings for aid in f.scoped_subjects}
     # scoped_subjects carry the Alert domain id (a per-construction
-    # random id, exactly as tests/test_phase77 does) — native_id would
+    # random id, exactly as tests/test_evaluation_baselines.py does) — native_id would
     # never match and would silently score the real worker as 0.
     satsa_flags = [a.id in flagged for a in dataset.alerts]
 

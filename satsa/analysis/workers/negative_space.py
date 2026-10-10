@@ -1,7 +1,7 @@
 """Negative-space detection: absence of evidence that should be there.
 
 A negative-space finding says "this thing is *missing*, not
-'wrong'." Per docs/phase1/analytics-architecture.md the negative-
+'wrong'." Per docs/design/analytics-architecture.md the negative-
 space engine must distinguish "absence in reality" from "absence
 from submission" — a CSE that did not submit a file at all is
 structurally different from one that submitted an empty one, even
@@ -9,7 +9,7 @@ if both look 'low activity' on the surface. The worker reports
 data-completeness for every negative-space finding so the human
 reviewer can interpret it correctly.
 
-Six categories of negative space, per the Phase 6 spec:
+Six categories of negative space, per the existing spec:
 
 * missing file (one of the six SIH categories was not submitted at
   all — a *data-completeness* finding, not a CSE-conduct finding;

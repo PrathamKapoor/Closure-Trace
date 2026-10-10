@@ -220,7 +220,7 @@ class IdentityRepository(BaseRepository):
 
 
 class IdentityCredentialRepository(BaseRepository):
-    """Persistence for local API-key credentials (Phase 2 identity auth).
+    """Persistence for local API-key credentials (the implementation identity auth).
 
     Only ``key_hash``/``salt`` are stored — never the raw credential secret.
     ``key_id`` is a non-secret lookup prefix that lets authentication find the
@@ -259,15 +259,15 @@ class IdentityCredentialRepository(BaseRepository):
         )
 
 
-# ==================== Phase 2: evidence/provenance persistence ====================
+# ==================== the implementation: evidence/provenance persistence ====================
 #
-# Part E of docs/phase2 identified these tables (observations, findings,
+# Part E of docs/foundation identified these tables (observations, findings,
 # supervisor_decisions, provenance_edges) as schema-only: migrated, indexed,
 # but with no repository/insert path anywhere in the codebase (verified by
 # grep — the classes below are the first). See
-# docs/phase2/evidence-persistence.md for what this closes and what it
+# docs/foundation/evidence-persistence.md for what this closes and what it
 # deliberately does not yet claim (signed/ledger-committed provenance is
-# later-phase work; these are durable, digest-checkable rows, not that).
+# future work; these are durable, digest-checkable rows, not that).
 
 
 class ObservationRepository(BaseRepository):

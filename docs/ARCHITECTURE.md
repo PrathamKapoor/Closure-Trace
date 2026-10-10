@@ -1,6 +1,6 @@
 # Architecture: Quantum-Secure Agentic MLOps Pipeline Management System
 
-> **SAT-SA deployment correction (Phase 7):** this repository also contains a
+> **SAT-SA deployment correction:** this repository also contains a
 > separately composed supervisory product. Its current hosted topology is the
 > FastAPI application and independent PostgreSQL-backed analysis worker, using
 > PostgreSQL for tenant/application/queue/checkpoint state, private S3-compatible
@@ -18,13 +18,13 @@ quantum-safe cryptography, model trust management, agentic verification, and
 self-healing operations. It is **not** an AI-workforce orchestration system,
 multi-model router, or coding-agent manager.
 
-Phases:
+Platform components:
 
-| Phase | Content |
+| Component | Responsibility |
 |---|---|
-| **Phase 1 (this document)** | Foundation: settings/logging/DI, TrustedObject base, identity + permissions, audit architecture, database abstraction, security service interfaces, foundation API |
-| Phase 2 | Quantum security layer (PQC key lifecycle hardening), serving gates, model trust framework, artifact integrity hardening, dashboard |
-| Phase 3 | Agentic intelligence layer with governed tool access, adaptive supervisor learning, control center |
+| Foundation | Settings, dependency injection, identity, permissions, audit, database abstraction, and service interfaces |
+| Trust and security | PQC key lifecycle, serving gates, model trust, and artifact integrity |
+| Governed agents | Tool access, adaptive supervision, and operational control |
 
 ## Governance contract (non-negotiable)
 
@@ -74,7 +74,7 @@ qsmlops/
 │   ├── hashing.py          # SHA3-256 + canonical JSON digests
 │   ├── keys.py             # versioned keystore with rotation/expiry
 │   ├── agility.py          # cipher-suite registry + migration planning
-│   └── secure_keystore.py  # AES-256-GCM encrypted vault (Phase 2)
+│   └── secure_keystore.py  # AES-256-GCM encrypted vault
 ├── evidence/               # immutable evidence layer
 │   ├── ledger.py           # append-only hash-chained ledger (authoritative store)
 │   └── packet.py           # VerificationPacket (tamper-evident decision records)
@@ -84,7 +84,7 @@ qsmlops/
 ├── registry/               # model registry + trust lifecycle state machine
 ├── pipeline/               # self-healing lifecycle orchestrator
 ├── ml/                     # drift detection + framework adapters
-├── serving/                # model serving (Phase 2)
+├── serving/                # model serving
 ├── supervisor/             # adaptive supervisor + declarative policy engine
 ├── agents/                 # observation agents (data/perf/security/quantum/redteam)
 └── api/
@@ -102,7 +102,7 @@ ledger, and mirrors are rebuilt from the chain when they diverge.
 
 ### 2. TrustedObject as the universal trust vocabulary
 Every governed object (identities today; models, artifacts, passports, BOMs
-in later phases) carries: `id, object_type, owner, version, created_at,
+in future work) carries: `id, object_type, owner, version, created_at,
 updated_at, hash, signature, verification_status, metadata`. Signing and
 verification status are separate from existence — an object is only trusted
 when `verify()` succeeds against a trust anchor.
@@ -110,15 +110,15 @@ when `verify()` succeeds against a trust anchor.
 ### 3. Least-privilege identity and permission model
 Human/service/agent identities resolve permissions through named roles plus
 explicit grants. Agents are never granted mutation permissions by built-in
-roles; `agent.act` exists but is intentionally never granted in Phase 1.
+roles; `agent.act` exists but is intentionally never granted in this implementation.
 Agent autonomy arrives only through the governed pipeline (observation →
 evidence → supervisor → policy → approved action).
 
 ### 4. Interface-first security services
 `EncryptionService`, `SignatureService`, `IntegrityService` and
-`KeyManagementService` are abstract contracts. Phase 1 implementations wrap
+`KeyManagementService` are abstract contracts. the implementation implementations wrap
 AES-GCM, ML-DSA providers, SHA3 hashing, and the existing KeyStore. Later
-phases swap implementations (hybrid PQC, HSM-backed KMS) without touching
+changes swap implementations (hybrid PQC, HSM-backed KMS) without touching
 call sites.
 
 ### 5. Dialect-neutral database abstraction
@@ -133,7 +133,7 @@ identity service, audit service, logging). The API app, CLI, and tests resolve
 services through it, preventing state duplication (e.g. two SQLite WAL
 connections to the registry file).
 
-## Extension points for later phases
+## Extension points for future work
 
 | Future capability | Extension point |
 |---|---|
@@ -162,9 +162,9 @@ metadata linking organization/run/decision and ledger commitment. SQLite and
 PostgreSQL share the same protocol. The existing EvidenceLedger and AuditService
 remain the append-only chain and audit infrastructure. No analytical worker,
 frontend or model lifecycle is replaced. See
-[TRUST_MODEL.md](TRUST_MODEL.md#supervisory-finalization-phase-5) for canonical
+[TRUST_MODEL.md](TRUST_MODEL.md#supervisory-finalization) for canonical
 binding, recovery, verification and residual limits.
-# Phase 6 hosted API boundary
+# hosted API boundary
 
 `satsa.api` is the authenticated `/api/v1` application, separate from the
 legacy local HTML/demo FastAPI app. QSMLOps IdentityService credentials resolve
@@ -173,9 +173,9 @@ The organization header selects an active membership, and tenant services and
 repositories enforce permissions and object ownership below route handlers.
 PostgreSQL/SQLite migration 15 backs revocation and shared fixed-window limits.
 
-The API submits validated version IDs to the Phase 3 queue and never runs
+The API submits validated version IDs to the existing queue and never runs
 analysis in the request process. A separate `sat-sa-worker` and the API share
 database, key directory, and evidence ledger paths. Both graph and standard API
-runs pause for human review and enter Phase 5 finalization before completion.
+runs pause for human review and enter the implementation finalization before completion.
 See [API_CONTRACT.md](API_CONTRACT.md) for routes, schemas and deliberate
 differences from the frontend proposal.

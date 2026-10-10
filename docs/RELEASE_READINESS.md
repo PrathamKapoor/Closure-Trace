@@ -1,4 +1,4 @@
-# Release readiness (Phase 14)
+# Release readiness
 
 - **State measured:** commit `af94370` on `release-fresh`, not pushed.
 - **Release candidate:** `paper/release-candidate/`, built at `baa2950`.
@@ -20,7 +20,7 @@ Status values:
 | --- | --- | --- |
 | freeze-v2 integrity | READY | `verify_evidence_freeze.py` intact, in the working repository and in a fresh clone (`af94370`) |
 | freeze-v1, publication-v1, publication-v2 unchanged | READY | publication-v1: 51 files intact; publication-v2: 275 files intact |
-| publication-v3 (Phase 14 snapshot) | READY | 278 files intact; paper commit `baa2950` |
+| publication-v3 (the implementation snapshot) | READY | 278 files intact; paper commit `baa2950` |
 | Negative findings and qualifiers preserved | READY | Values via `\V{}` only; external result framed as IT incident data, not SOC data |
 
 ## Paper
@@ -53,7 +53,7 @@ Status values:
 | --- | --- |
 | 1 Artifact verification | READY (demonstrated, including in a fresh clone) |
 | 2 Result regeneration | READY (demonstrated; fresh-clone regeneration left the tree unchanged) |
-| 3 Experiment reproduction | READY for T01 and P01 only |
+| 3 Experiment reproduction | READY for T01 and the implementation only |
 | 4 Environment reproduction | NOT EXECUTED |
 | 5 External-data reproduction | READY once, same machine (X02, X02b) |
 
@@ -62,13 +62,13 @@ Status values:
 | Check | Status | Result |
 | --- | --- | --- |
 | Full suite `python -m pytest tests/` | READY | **1,326 passed, 117 skipped, 0 failed**, 903.7 s. Skips: 99 need `SATSA_TEST_POSTGRES_DSN`; 15 PKCS#11 library absent; 2 SoftHSM2 unavailable; 1 S3 test extras not installed |
-| Paper tests (`test_phase12_paper.py`) | READY | 12 passed |
-| Release tests (`test_phase14_release.py`) | READY | 3 passed |
-| Publication snapshot tests (`test_phase11_publication.py`) | READY | 3 passed |
-| Evidence freeze tests (`test_phase10_evidence_freeze.py`) | READY | 7 passed |
-| Research experiment tests (phase 8–10 research modules) | READY | 30 passed |
-| mypy `evaluation/research scripts` | READY | 90 errors in 17 files, identical to the Phase 12 baseline. All 17 are pre-existing production modules reached through imports; **0 errors in Phase 13/14 code** (release, publication, paper_assets, build_submission_release, make_submission, literature scripts, release tests) |
-| ruff check / format (Phase 13/14 Python files) | READY | 0 new errors; new files formatted; legacy files not reformatted |
+| Paper tests (`test_paper.py`) | READY | 12 passed |
+| Release tests (`test_research_release.py`) | READY | 3 passed |
+| Publication snapshot tests (`test_publication.py`) | READY | 3 passed |
+| Evidence freeze tests (`test_evidence_freeze.py`) | READY | 7 passed |
+| Research experiment tests (the implementation research modules) | READY | 30 passed |
+| mypy `evaluation/research scripts` | READY | 90 errors in 17 files, identical to the existing baseline. All 17 are pre-existing production modules reached through imports; **0 errors in this implementation code** (release, publication, paper_assets, build_submission_release, make_submission, literature scripts, release tests) |
+| ruff check / format (the implementation Python files) | READY | 0 new errors; new files formatted; legacy files not reformatted |
 
 ## Security
 

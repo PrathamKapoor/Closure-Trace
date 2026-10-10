@@ -7,7 +7,7 @@ mistaken for production validation data. It exists to prove the
 layer-validation wiring (`satsa/analysis/validate.py`,
 `sat-sa validate --expert-labels <path>`) computes real
 precision/recall against findings an actual run emits — see
-`tests/test_phase62_satsa_expert_validation.py`.
+`tests/test_satsa_expert_validation.py`.
 
 Each entry corresponds to a finding family the committed demo
 dataset (`sat-sa demo`) is already known to emit, so the sample

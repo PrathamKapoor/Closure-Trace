@@ -1,7 +1,7 @@
 """Alert, Case, InvestigationStep, Escalation, Disposition — the SOC
 workflow records execution-gap/negative-space analytics will eventually
-read (Phase 3+, not this phase). Field lists follow
-docs/phase1/data-architecture.md's canonical model table.
+read (the implementation+, not this component). Field lists follow
+docs/design/data-architecture.md's canonical model table.
 """
 from __future__ import annotations
 
@@ -104,7 +104,7 @@ class Case:
 
     ``alert_refs`` being empty is a distinct, meaningful state ("no alert
     link submitted") from a case that legitimately has none — ingestion
-    quality checks (a later phase) are responsible for flagging the
+    quality checks (a future work) are responsible for flagging the
     difference; this record just carries what was submitted.
     """
 
@@ -166,7 +166,7 @@ class InvestigationStep:
 
     A note's presence/length is not, by itself, evidence of a meaningful
     investigation (data-architecture.md: "A note length or checkbox alone
-    does not prove investigation") — that judgment belongs to a later-phase
+    does not prove investigation") — that judgment belongs to a future work
     detector reading many steps together, not to this record.
     """
 
@@ -214,7 +214,7 @@ class Escalation:
     """An escalation event for an alert and/or case.
 
     Absence of an expected Escalation record is only interpretable relative
-    to a declared policy/expectation (a later-phase concept) — this record
+    to a declared policy/expectation (a future work concept) — this record
     does not itself decide whether its own absence is a finding.
     """
 

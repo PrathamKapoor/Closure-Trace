@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 import { buttonClass } from "@/components/ui/button";
 
-export const GITHUB_URL = "https://github.com/PrathamKapoor/SAT-SA-with-PQC";
+export const GITHUB_URL = "https://github.com/PrathamKapoor/Closure-Trace";
 
 const LINKS = [
   { href: "/", label: "Product" },

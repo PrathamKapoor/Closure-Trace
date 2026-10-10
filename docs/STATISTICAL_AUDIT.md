@@ -22,7 +22,7 @@ performed — intervals are therefore descriptive and uncorrected.
 | O01 overhead | 30 pairs | repeated runs on one machine, rotated order | 1 machine / 1 fixture | intervals describe run-to-run variability only |
 | O02 recovery | 36 runs | 6 points × 2 modes × 3 deterministic repeats | 12 cells | mechanism check, not a failure rate |
 | T01 integrity | 14 mutations | mutation classes on one workflow | 1 workflow | not a detection rate |
-| P01 peer | 96 cells | engineered deterministic grid (49 emit a finding) | none (designed grid) | mechanism map |
+| the implementation peer | 96 cells | engineered deterministic grid (49 emit a finding) | none (designed grid) | mechanism map |
 | A01 scenario | 5 | scenarios × 16 ablated worker sets | 5 scenarios | descriptive |
 | A01 population | 5 seeds | paired full vs ablated per seed | 5 populations | exploratory; no intervals (n < 10) |
 | PR01 prioritization | 20 seeds | generated populations; random = mean of 200 permutations per seed | 20 populations (same generator) | intervals reported; 27 comparisons uncorrected |

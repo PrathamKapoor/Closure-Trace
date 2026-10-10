@@ -296,10 +296,10 @@ MIGRATIONS = MIGRATIONS + (
         3,
         "identity_credentials",
         (
-            # Phase 2 (SAT-SA foundation hardening): local API-key credentials
+            # (SAT-SA foundation hardening): local API-key credentials
             # binding an inbound request to a real Identity record, closing the
             # gap where actor/approver/owner fields were accepted as arbitrary
-            # unauthenticated strings (docs/phase2/identity-security.md).
+            # unauthenticated strings (docs/foundation/identity-security.md).
             # Only a salted hash of the credential secret is ever stored;
             # key_id is a non-secret lookup prefix, never the secret itself.
             """
@@ -322,13 +322,13 @@ MIGRATIONS = MIGRATIONS + (
         4,
         "evidence_provenance_digests",
         (
-            # Phase 2 (SAT-SA foundation hardening): a content digest so a
+            # (SAT-SA foundation hardening): a content digest so a
             # persisted observation/finding/decision/provenance-edge row can be
             # compared against the digest an application-layer caller
             # recomputes from its fields — this detects an in-place row edit
             # that bypassed the repository layer. It is NOT yet a signed,
             # ledger-committed record (that is the "provenance writer" work
-            # scoped for a later phase; docs/phase2/evidence-persistence.md
+            # scoped for a future work; docs/foundation/evidence-persistence.md
             # states this distinction explicitly, per Rule 7).
             "ALTER TABLE observations ADD COLUMN content_digest TEXT NOT NULL DEFAULT ''",
             "ALTER TABLE findings ADD COLUMN content_digest TEXT NOT NULL DEFAULT ''",
@@ -340,7 +340,7 @@ MIGRATIONS = MIGRATIONS + (
 
 
 # ---------------------------------------------------------------------------
-# SAT-SA canonical store (Phase 3) — the six SIH input categories plus the
+# SAT-SA canonical store — the six SIH input categories plus the
 # scoping records (entity/assessment/submission) and per-row source-record
 # pointers used by the explainability chain. One shared schema_migrations
 # chain, deliberately: a single storage engine, a single version history.
@@ -536,10 +536,10 @@ MIGRATIONS = MIGRATIONS + (
         ),
     ),
     # -----------------------------------------------------------------
-    # SAT-SA analysis-run persistence (Phase 4). One analysis run, many
+    # SAT-SA analysis-run persistence. One analysis run, many
     # observations (one per worker), many findings (per observation),
     # many jobs (per worker invocation). All digests are SHA3-256 over
-    # the canonical to_dict() of the domain record (matches Phase 2's
+    # the canonical to_dict() of the domain record (matches the component's
     # qsmlops evidence-tables convention).
     Migration(
         7,
@@ -619,7 +619,7 @@ MIGRATIONS = MIGRATIONS + (
         ),
     ),
     # -----------------------------------------------------------------
-    # SAT-SA trust / provenance (Phase 11). One PQC signature
+    # SAT-SA trust / provenance. One PQC signature
     # per signed subject (run, finding, ...). A re-sign of the
     # same subject with a different digest replaces the previous
     # row; verification recomputes the digest from the live
@@ -644,7 +644,7 @@ MIGRATIONS = MIGRATIONS + (
         ),
     ),
     # -----------------------------------------------------------------
-    # SAT-SA human review decisions (Phase 12). One row per
+    # SAT-SA human review decisions. One row per
     # authenticated examiner action; append-only by convention (a
     # correction creates a new row referencing previous_revision_id,
     # it never edits history).
@@ -673,7 +673,7 @@ MIGRATIONS = MIGRATIONS + (
 )
 
 
-# Phase 1 SaaS foundation. Existing offline rows remain unassigned (NULL
+# SaaS foundation. Existing offline rows remain unassigned (NULL
 # organization_id) until an explicit, validated ownership import maps them.
 # Hosted repository operations require a non-null organization and never
 # select these legacy rows implicitly.
@@ -770,7 +770,7 @@ MIGRATIONS = MIGRATIONS + (
 )
 
 
-# Phase 2 keeps validated canonical snapshots per immutable version. Legacy
+# keeps validated canonical snapshots per immutable version. Legacy
 # assessment tables remain available for the offline analysis path; corrected
 # versions can repeat native IDs without overwriting an earlier snapshot.
 MIGRATIONS = MIGRATIONS + (
@@ -832,7 +832,7 @@ MIGRATIONS = MIGRATIONS + (
 )
 
 
-# Phase 3: link durable execution records to one validated tenant submission
+# link durable execution records to one validated tenant submission
 # version and add a leased, recoverable run queue. Existing synchronous rows
 # remain valid and retain their original status values.
 MIGRATIONS = MIGRATIONS + (
@@ -922,7 +922,7 @@ MIGRATIONS = MIGRATIONS + (
 )
 
 
-# Phase 4 adds run-level review and recommendation references while LangGraph
+# adds run-level review and recommendation references while LangGraph
 # owns its own checkpoint tables in the same configured database.
 MIGRATIONS = MIGRATIONS + (
     Migration(
@@ -1039,7 +1039,7 @@ MIGRATIONS += (
 )
 
 
-# Phase 21: organization-scoped MLOps lifecycle for SAT-SA (satsa/mlops).
+# organization-scoped MLOps lifecycle for SAT-SA (satsa/mlops).
 # Every row carries organization_id; there are no global models. Datasets,
 # passports and model artifacts are immutable once written: a change is a
 # new version, never an UPDATE of content columns.
@@ -1224,7 +1224,7 @@ MIGRATIONS += (
 )
 
 
-# Phase 22: records of model-assisted capabilities (satsa/llm). Metadata about
+# records of model-assisted capabilities (satsa/llm). Metadata about
 # which provider produced an output; never prompts' secrets or credentials.
 MIGRATIONS += (
     Migration(

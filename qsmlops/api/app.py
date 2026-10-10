@@ -18,7 +18,7 @@ Routes:
                                         trust evaluations, approval denials
     GET  /dashboard                  — dashboard summary document
 
-Read routes never mutate platform state. The Phase 5 mutation routes
+Read routes never mutate platform state. The existing mutation routes
 (/registry/trust, /registry/approve, /registry/revoke) delegate entirely to
 the governed pipeline/registry code paths — the API never touches registry
 state directly, so policy, separation of duties and evidence apply equally.
@@ -119,7 +119,7 @@ def register_dashboard_routes(app: FastAPI, pipeline: SelfHealingMLOps) -> None:
                     pipeline.registry.active_deployment(m["model_name"])
                     for m in {v["model_name"]: v for v in versions}.values()) if d]}
 
-    # ---------------- registry (Phase 5) ----------------
+    # ---------------- registry ----------------
     @app.get("/registry/models")
     def registry_models() -> dict:
         versions = pipeline.registry.list_versions()
@@ -200,7 +200,7 @@ def register_dashboard_routes(app: FastAPI, pipeline: SelfHealingMLOps) -> None:
             "reason": body.reason,
         }
 
-    # ---------------- monitoring (Phase 7) ----------------
+    # ---------------- monitoring ----------------
     @app.get("/metrics/{model_name}")
     def metrics_summary(model_name: str) -> dict:
         versions = [v["version_id"] for v in pipeline.registry.list_versions(model_name)]
@@ -275,7 +275,7 @@ def register_dashboard_routes(app: FastAPI, pipeline: SelfHealingMLOps) -> None:
         return {"model": model_name, "alerts": [a.to_dict() for a in alerts],
                 "count": len(alerts)}
 
-    # ---------------- deployment (Phase 6) ----------------
+    # ---------------- deployment ----------------
     @app.post("/deployment/request")
     def deployment_request(body: DeploymentRequestBody) -> dict:
         """Governed deployment request: every gate runs; refusals return a
@@ -372,7 +372,7 @@ def register_dashboard_routes(app: FastAPI, pipeline: SelfHealingMLOps) -> None:
             ],
             "suite_inventory": suites,
             "default_suite": pipeline.agility.default_suite,
-            # Phase 2: explicit runtime introspection of the active crypto
+            # explicit runtime introspection of the active crypto
             # policy (algorithm family/identifier/security level/configured
             # vs. auto-selected) with no secrets — see AgilityEngine.effective_policy.
             "crypto_policy": pipeline.agility.effective_policy(),

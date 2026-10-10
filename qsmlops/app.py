@@ -51,7 +51,7 @@ def build_app(container=None, env: str | None = None):
     from qsmlops.api.app import register_dashboard_routes
     from qsmlops.api.foundation import register_foundation_routes
 
-    # Phase 2 offline hardening: FastAPI's default interactive docs (/docs,
+    # offline hardening: FastAPI's default interactive docs (/docs,
     # /redoc) load swagger-ui/redoc JS+CSS from a public CDN
     # (cdn.jsdelivr.net) at browser-request time — a real, concrete air-gap
     # violation for a production install, not a hypothetical one (confirmed:
@@ -74,7 +74,7 @@ def build_app(container=None, env: str | None = None):
     )
     app.state.container = container
 
-    # Phase 2 (Part G): Host-header allowlist. "*" (the default; every
+    # (Part G): Host-header allowlist. "*" (the default; every
     # existing deployment) is a pass-through no-op — this only starts
     # rejecting requests once an operator explicitly configures
     # api.trusted_hosts, so it changes no current behaviour by default.
@@ -115,10 +115,10 @@ def main(argv: list[str] | None = None) -> None:
     settings = container.settings
     app = build_app(container)
 
-    # Phase 2 (Part G): binding to a non-loopback address is not itself
+    # (Part G): binding to a non-loopback address is not itself
     # wrong (a LAN-reachable single install may be the intended deployment),
     # but it must be a visible, deliberate fact, not a silent default —
-    # this is exactly the distinction Phase 1's audit asked Phase 2 to make.
+    # this is exactly the distinction the component's audit asked the implementation to make.
     if settings.api.host not in ("127.0.0.1", "localhost", "::1"):
         log.warning(
             "binding to non-loopback host %s:%s — this instance is reachable "

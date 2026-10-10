@@ -356,7 +356,7 @@ def build_facts(
         **{f"{k}_risk": v for k, v in per_agent_risk.items()},
         **(scores or {}),
     }
-    # Phase 5: expose the explainable trust evaluation to the policy layer so
+    # expose the explainable trust evaluation to the policy layer so
     # rules can distinguish high-trust, low-trust and cryptographically
     # invalid models. Never used to bypass hard security failures.
     if trust:

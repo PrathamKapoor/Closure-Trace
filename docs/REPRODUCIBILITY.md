@@ -51,7 +51,7 @@ subject closure times of 30/400/750 seconds. Each cohort is isolated by
 explicit sector/environment labels in a temporary local database. It is not a
 production cross-tenant query.
 
-### Phase 9 experiments
+### experiments
 
 Each command writes one bundle `<out>\<experiment-id>\` with the same layout
 and refuses an existing ID. IDs below are the ones used for the recorded runs.
@@ -61,7 +61,7 @@ python scripts/run_evidence_robustness_experiment.py --out C:\sat-sa-results --e
 python scripts/run_orchestration_experiment.py overhead --out C:\sat-sa-results --experiment-id EXP-O01-orchestration-overhead --trials 30
 python scripts/run_orchestration_experiment.py recovery --out C:\sat-sa-results --experiment-id EXP-O02-orchestration-recovery --trials 3
 python scripts/run_trust_integrity_experiment.py --out C:\sat-sa-results --experiment-id EXP-T01-trust-mutation-matrix
-python scripts/run_peer_sensitivity_experiment.py --sweep --out C:\sat-sa-results --experiment-id EXP-P01-peer-sweep
+python scripts/run_peer_sensitivity_experiment.py --sweep --out C:\sat-sa-results --experiment-id EXP-the implementation-peer-sweep
 python scripts/run_ablation_experiment.py --out C:\sat-sa-results --experiment-id EXP-A01-component-ablation --seeds 5
 python scripts/run_prioritization_experiment.py --out C:\sat-sa-results --experiment-id EXP-PR01-prioritization-replicated --seeds 20
 ```
@@ -79,7 +79,7 @@ for the same commit.
 C:\sat-sa-results\tables` regenerates CSV, Markdown and LaTeX tables from
 completed bundles (it never edits a bundle).
 
-### Phase 10: external data and evidence freeze
+### external data and evidence freeze
 
 ```powershell
 # UCI-498 (CC BY 4.0): download and check the recorded checksum first
@@ -95,7 +95,7 @@ The external run takes about 25 minutes locally (50 groups). A new freeze is
 built with `scripts/build_evidence_freeze.py --selection <file> --out
 research/evidence/freeze-vN`; never edit an existing freeze.
 
-### Phase 12: manuscript and publication package
+### manuscript and publication package
 
 ```powershell
 python scripts/build_paper_assets.py   # paper values, tables, figures, supplementary from freeze-v2
@@ -158,5 +158,5 @@ credentials beneath the research output root.
 The current executable benchmark is synthetic/controlled. Actual CIC-IDS2017
 and BOTS files, external expert labels, a human-review study, PostgreSQL/S3
 service-boundary performance, and hosted deployment are not part of an
-executed Phase 8 run. The benchmark has no independent random-seed replication
+executed the implementation run. The benchmark has no independent random-seed replication
 or inferential statistical analysis; do not report statistical significance.

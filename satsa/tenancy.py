@@ -1,4 +1,4 @@
-"""Phase 1 tenant-owned repository and persistent hosted session primitives.
+"""tenant-owned repository and persistent hosted session primitives.
 
 Provisioning methods are internal administration operations; no public route
 is registered for them. Normal resource methods bind both organization and

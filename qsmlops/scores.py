@@ -8,7 +8,7 @@ and consumed by the policy engine as facts:
 - trust_score    : overall confidence in a model version (crypto posture +
   agent findings + drift status). 100 = no open concerns.
 
-Phase 5 extends this module (without changing the two functions above) with
+extends this module (without changing the two functions above) with
 the explainable trust evaluation required by the Secure Model Registry:
 `evaluate_trust` derives a composite score from actual evidence — signature
 verification, artifact integrity, BOM verifiability, provenance completeness,
@@ -38,7 +38,7 @@ _COMPONENT_WEIGHTS: dict[str, float] = {
     "operational": 0.10,
 }
 
-# Provenance fields that constitute complete dataset lineage (Phase 4
+# Provenance fields that constitute complete dataset lineage (the implementation
 # passports record these; older/partial passports score proportionally).
 _LINEAGE_PROVENANCE_FIELDS = (
     "bom_digest",
@@ -121,7 +121,7 @@ def compute_scores(observations, passport=None, keystore=None, drift_summary=Non
 
 
 # ----------------------------------------------------------------------
-# Phase 5: explainable trust evaluation
+# explainable trust evaluation
 # ----------------------------------------------------------------------
 
 @dataclass

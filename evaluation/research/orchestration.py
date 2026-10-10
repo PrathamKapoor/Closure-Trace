@@ -4,7 +4,7 @@ Both modes run the identical hosted analysis path on the identical
 fixture: submission validation, the default deterministic workers,
 recommendations, a paused supervisory review, an authorized decision and
 TRUST-SAT finalization. ``direct`` is ``review_required=True`` on the
-Phase 3 worker; ``graph`` is ``graph_enabled=True`` (LangGraph with a
+worker; ``graph`` is ``graph_enabled=True`` (LangGraph with a
 durable SQLite checkpointer). ``direct_unreviewed`` runs the same
 analytics with no review pause and no supervisory finalization; it is a
 benchmark configuration for TRUST-SAT overhead only, never a product mode.

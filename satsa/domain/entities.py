@@ -1,6 +1,6 @@
 """Entity, Assessment, Submission, Asset — the scoping records every other
 SAT-SA record is anchored to. Field lists follow
-docs/phase1/data-architecture.md's canonical model table; nothing here adds
+docs/design/data-architecture.md's canonical model table; nothing here adds
 a field that document did not already justify (Part H: "do not invent
 fields that have no purpose").
 """

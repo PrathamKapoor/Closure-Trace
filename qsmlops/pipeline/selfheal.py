@@ -75,7 +75,7 @@ class SelfHealingMLOps:
         self.registry = ModelRegistry(
             self.config.registry_path, self.artifacts, self.keystore, self.ledger
         )
-        # Phase 2: forward the configured suite (if any) so the engine's
+        # forward the configured suite (if any) so the engine's
         # default matches configs/settings.*.yaml instead of silently
         # auto-selecting its own strongest suite. Both fields are None for
         # any caller that builds PlatformConfig without a crypto policy
@@ -97,7 +97,7 @@ class SelfHealingMLOps:
             SecurityAgent(self.artifacts),
             QuantumSecurityAgent(self.agility),
             RedTeamAgent(self.artifacts),
-            # Phase 9 agentic-intelligence archetypes (observational only):
+            # agentic-intelligence archetypes (observational only):
             TrainingOptimizationAgent(),
             IncidentResponseAgent(self.registry),
             GovernanceAgent(self.registry),
@@ -117,13 +117,13 @@ class SelfHealingMLOps:
             verifier_owner=VERIFIER,
         )
         self.supervisor.set_retrain_function(self._auto_retrain)
-        # Phase 6: governed deployment-request boundary. registry.deploy()
+        # governed deployment-request boundary. registry.deploy()
         # remains the sole promotion mechanism; this service validates each
         # request (identity, registry state, crypto gates, Phase-5 trust
         # eligibility, environment compatibility, policy) and then delegates
         # promotion to the registry.
         self.deployments = DeploymentService(self.registry)
-        # Phase 7: monitoring foundation — persistent telemetry + alert rules.
+        # monitoring foundation — persistent telemetry + alert rules.
         self.telemetry = TelemetryCollector(self.config.telemetry_path)
 
     def request_deployment(
@@ -294,7 +294,7 @@ class SelfHealingMLOps:
             version="1.0.0",
         )
 
-        # Phase 4 lineage components: a fingerprint of the runtime environment
+        # lineage components: a fingerprint of the runtime environment
         # the model was produced in, plus the third-party trainer dependencies
         # actually in use. Entry bytes live in the artifact store so agents can
         # re-verify every declared digest.
@@ -405,7 +405,7 @@ class SelfHealingMLOps:
                 if f.severity in ("CRITICAL", "HIGH"):
                     checks.append((f"{o.agent}:{f.name}", f.passed))
         packet = self.registry.verify_version(version_id, VERIFIER, checks)
-        # Phase 5: evidence-based trust evaluation over the same sweep;
+        # evidence-based trust evaluation over the same sweep;
         # persisted by the registry and audited in the ledger.
         trust = self.registry.trust_evaluation(
             version_id, observations=obs_objects, actor=f"verify:{VERIFIER}"
@@ -417,7 +417,7 @@ class SelfHealingMLOps:
             "trust": trust.to_dict(),
         }
 
-    # ---------------- Phase 5: governed approval ----------------
+    # ---------------- the implementation: governed approval ----------------
     def request_approval(self, version_id: str, approver: str) -> dict:
         """Run verification + trust evaluation, then promote to APPROVED.
 
@@ -528,11 +528,11 @@ class SelfHealingMLOps:
         }
         outcome = self.supervisor.run_cycle(version_id, context_override=context)
         outcome["observed_metrics"] = metrics
-        # Phase 7: record telemetry + evaluate monitoring alerts.
+        # record telemetry + evaluate monitoring alerts.
         self.telemetry.record_model_health(model_name, metrics)
         if drift_summary:
             self.telemetry.record_drift(model_name, drift_summary)
-        # Phase 8: persist per-feature attribution + rolling baselines.
+        # persist per-feature attribution + rolling baselines.
         from qsmlops.config import MONITORING_ROLLING_WINDOW, MONITORING_MIN_HISTORY
 
         attribution = (drift_summary or {}).get("feature_attribution") or []
@@ -605,7 +605,7 @@ class SelfHealingMLOps:
         reports = engine.detect_all(cur, current_predictions=cur_preds,
                                     current_metrics=current_metrics or dict(passport.metrics))
         summary = engine.get_summary(reports)
-        # Phase 8: per-feature attribution + deterministic interpretation.
+        # per-feature attribution + deterministic interpretation.
         from qsmlops.ml.drift import build_feature_attribution, classify_drift
         from qsmlops.config import (MONITORING_MIN_HISTORY,
                                     DRIFT_BROAD_FEATURE_FRACTION)

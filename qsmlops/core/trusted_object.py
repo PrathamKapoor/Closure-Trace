@@ -5,8 +5,8 @@ BOMs) and governance objects (identities, permissions, audit events) as
 *trusted objects*: each one carries identity, ownership, version, a content
 hash, an optional signature, provenance, and an explicit verification status.
 
-Phase 1 defines the vocabulary only. Signing of instances and full provenance
-chains are later-phase capabilities; the fields exist now so downstream code
+defines the vocabulary only. Signing of instances and full provenance
+chains are future work capabilities; the fields exist now so downstream code
 can populate them without schema breaks.
 
 Compatibility contract: :class:`TrustedObject` serializes to the same flat key

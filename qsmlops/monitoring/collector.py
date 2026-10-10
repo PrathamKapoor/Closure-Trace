@@ -1,4 +1,4 @@
-"""Telemetry collection for the monitoring foundation (Phase 7).
+"""Telemetry collection for the monitoring foundation.
 
 A minimal, dependency-free time-series store: newline-delimited JSON records
 appended under ``<home>/monitoring/telemetry.jsonl``. This is the Tier-3
@@ -135,7 +135,7 @@ class TelemetryCollector:
 
     # ------------------------------------------------------------------
     def feature_history(self, model_id: str) -> list[dict]:
-        """All persisted per-feature drift attributions (Phase 8)."""
+        """All persisted per-feature drift attributions."""
         return list(self.iter_entries(model_id, "feature_drift"))
 
     def latest_feature_attribution(self, model_id: str) -> list[dict]:
@@ -150,7 +150,7 @@ class TelemetryCollector:
     def record_feature_attribution(
         self, model_id: str, attribution_rows: list[dict], source: str = "drift_engine",
     ) -> int:
-        """Persist one row per drifting feature (Phase 8)."""
+        """Persist one row per drifting feature."""
         n = 0
         check_ts = time.time()
         for row in attribution_rows:

@@ -1,4 +1,4 @@
-"""Training Optimization Agent (Phase 9).
+"""Training Optimization Agent.
 
 Deterministic, evidence-bearing analysis of how a model was trained, using
 only facts recorded at training time (passport ``training_info``), the

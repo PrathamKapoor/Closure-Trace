@@ -167,7 +167,7 @@ def synthetic_ground_truth() -> list[GroundTruthCase]:
 
 @dataclass
 class LayerMetric:
-    """YES / NO / UNLABELED semantics (fixed this phase — see
+    """YES / NO / UNLABELED semantics (fixed this component — see
     ``evaluate_layer``'s docstring for the bug this replaced):
 
     * a positively-labeled (``is_signal=True``) family is YES ground
@@ -213,7 +213,7 @@ def evaluate_layer(layer: str, emitted_families: list[str],
     (e.g. ``["execution_gap.fast_closure"]``) the run produced.
     ``expert_labels`` are the ExpertLabel objects for this layer.
 
-    Before this phase, a family with *no* label at all was silently
+    Before this component, a family with *no* label at all was silently
     treated identically to a family the expert explicitly said should
     NOT fire (``is_signal=False``) — both fell into "emitted minus
     positively-labeled" and counted as a false positive. That
