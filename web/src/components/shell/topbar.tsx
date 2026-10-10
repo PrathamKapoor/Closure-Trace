@@ -42,7 +42,7 @@ export function TopBar({ nav, context }: { nav: SidebarProps; context: TopBarCon
             <span className="truncate">{context.organization}</span>
           </span>
         )}
-        <Tooltip tip="Every value on these pages is read from the SAT-SA service. The browser never calls it directly." side="bottom">
+        <Tooltip tip="Every value on these pages is read from the Closure-Trace service. The browser never calls it directly." side="bottom">
           <span tabIndex={0} className="inline-flex items-center gap-1.5 rounded-sm border border-line px-2 py-1 text-[12px] text-ink-2">
             <Database className="size-3.5" aria-hidden="true" />
             <span className="max-lg:sr-only">Live backend</span>

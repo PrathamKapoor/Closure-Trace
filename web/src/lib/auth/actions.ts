@@ -17,7 +17,7 @@ const secure = () => process.env.NODE_ENV === "production" && process.env.SATSA_
  * discarded after this request.
  */
 export async function signInWithCredential(_prev: SignInState, form: FormData): Promise<SignInState> {
-  if (!apiBase()) return { error: "This deployment has no SAT-SA service configured (SATSA_API_BASE_URL)." };
+  if (!apiBase()) return { error: "This deployment has no Closure-Trace service configured (SATSA_API_BASE_URL)." };
   const credential = String(form.get("credential") ?? "").trim();
   if (!credential) return { error: "Enter your issued credential." };
   try {

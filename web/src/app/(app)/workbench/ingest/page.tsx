@@ -20,7 +20,7 @@ export default async function IngestPage({ searchParams }: { searchParams: Promi
       <PageHeader
         eyebrow="Data"
         title="Ingest a CSE submission"
-        description="Register the entity and assessment period, upload the evidence files, and let the SAT-SA service validate every record. A valid version can then be analysed; the run stops for a supervisor's decision."
+        description="Register the entity and assessment period, upload the evidence files, and let the Closure-Trace service validate every record. A valid version can then be analysed; the run stops for a supervisor's decision."
       />
       {!allowed ? (
         <EmptyState title="Your role cannot ingest submissions">Ingestion requires the analyst, supervisor or administrator role in this organization.</EmptyState>

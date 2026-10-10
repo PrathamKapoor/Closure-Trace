@@ -50,7 +50,7 @@ export function PublicFooter() {
         <div>
           <Wordmark sub />
           <p className="mt-4 max-w-sm text-[13px] leading-relaxed text-muted">
-            A periodic, offline, evidence-driven supervisory analytics system for SOC assessment. Built for Smart India Hackathon problem 26157.
+            Evidence review for security alerts and case histories: investigation gaps and premature closures surfaced for human decision, with the recorded review bound by TRUST-SAT.
           </p>
         </div>
         <div>

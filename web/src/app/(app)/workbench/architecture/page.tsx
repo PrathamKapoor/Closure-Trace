@@ -52,7 +52,7 @@ export default function ArchitecturePage() {
           <WifiOff className="size-3.5" aria-hidden="true" />
           Offline deployment boundary
         </p>
-        <ol aria-label="SAT-SA layers, top to bottom" className="space-y-2">
+        <ol aria-label="Closure-Trace layers, top to bottom" className="space-y-2">
           {LAYERS.map((l, i) => (
             <li key={l.n}>
               <div className="grid gap-x-8 gap-y-3 rounded-md border border-line px-5 py-4 md:grid-cols-[3rem_minmax(0,18rem)_minmax(0,1fr)]">
@@ -99,7 +99,7 @@ export default function ArchitecturePage() {
           </p>
         </div>
         <div>
-          <SectionHeader title="What SAT-SA is not" as="h3" />
+          <SectionHeader title="What Closure-Trace is not" as="h3" />
           <p className="text-[13px] leading-relaxed text-ink-2">
             Not a SIEM, not a real-time SOC monitor, not a national telemetry collector, and not an autonomous authority. It analyses periodic submissions and supports a human decision.
           </p>

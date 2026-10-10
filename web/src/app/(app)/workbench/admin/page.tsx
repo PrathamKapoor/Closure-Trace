@@ -24,7 +24,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
       <PageHeader
         eyebrow="Admin"
         title="Members"
-        description={`Who can work in ${ctx.organization.name}, and in which role. Roles decide what the SAT-SA service allows; the workbench only mirrors them.`}
+        description={`Who can work in ${ctx.organization.name}, and in which role. Roles decide what the Closure-Trace service allows; the workbench only mirrors them.`}
       />
       {!loaded.ok ? (
         <ApiErrorPanel error={loaded.error} context="Members" />

@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Select organization", robots: { inde
 
 const REASON: Record<string, string> = {
   unavailable: "The previously selected organization is no longer available to you.",
-  unreachable: "The SAT-SA service could not confirm the organization. Try again.",
+  unreachable: "The Closure-Trace service could not confirm the organization. Try again.",
 };
 
 export default async function OrganizationPage({ searchParams }: { searchParams: Promise<{ reason?: string }> }) {
@@ -26,7 +26,7 @@ export default async function OrganizationPage({ searchParams }: { searchParams:
         </div>
         <h1 className="mt-3 text-[26px] font-semibold tracking-[-0.02em] text-ink">Choose where to work</h1>
         <p className="mt-2 text-[13.5px] leading-relaxed text-muted">
-          Signed in as <span className="font-medium text-ink">{session.name}</span>. Every request is scoped to the organization you choose, and the SAT-SA service checks
+          Signed in as <span className="font-medium text-ink">{session.name}</span>. Every request is scoped to the organization you choose, and the Closure-Trace service checks
           your membership on each one.
         </p>
         {reason && REASON[reason] && <ErrorState className="mt-5" title={REASON[reason]} />}

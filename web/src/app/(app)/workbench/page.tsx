@@ -31,7 +31,7 @@ export default async function WorkbenchPage() {
       <PageHeader
         eyebrow={`${ctx.organization.name} · ${ROLE_LABEL[ctx.role] ?? ctx.role}`}
         title="Workbench"
-        description="Supervision state of this organization, read live from the SAT-SA service: what awaits a decision, what is still running, and where risk is highest."
+        description="Supervision state of this organization, read live from the Closure-Trace service: what awaits a decision, what is still running, and where risk is highest."
         actions={
           <>
             {can(ctx.role, "analysis.run") && (

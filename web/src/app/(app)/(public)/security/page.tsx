@@ -3,7 +3,7 @@ import { KeyRound, Lock, ShieldCheck, WifiOff } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Security and trust",
-  description: "How SAT-SA protects evidence integrity, access and the supervisory decision record.",
+  description: "How Closure-Trace protects evidence integrity, access and the supervisory decision record.",
 };
 
 const PILLARS = [
@@ -53,7 +53,7 @@ export default function SecurityPage() {
         A result is only useful if it can be checked.
       </h1>
       <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-muted">
-        TRUST-SAT is the evidence-integrity layer of SAT-SA. It answers one question for every record: has this changed since it was produced?
+        TRUST-SAT is the evidence-integrity layer of Closure-Trace. It answers one question for every record: has this changed since it was produced?
       </p>
 
       <ul className="mt-16 grid gap-x-12 gap-y-14 md:grid-cols-2">

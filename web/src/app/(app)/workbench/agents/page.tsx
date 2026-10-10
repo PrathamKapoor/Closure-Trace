@@ -35,7 +35,7 @@ export default async function AgentsPage() {
       <PageHeader
         eyebrow="Intelligence"
         title="Agents"
-        description="The registered SAT-SA agents are deterministic components, not language models. Eleven analytical agents group the sixteen default workers; the rest are pipeline stages. Worker status below is read from the most recent analysed run."
+        description="The registered agents are deterministic components, not language models. Eleven analytical agents group the sixteen default workers; the rest are pipeline stages. Worker status below is read from the most recent analysed run."
       />
       {!loaded.ok ? (
         <ApiErrorPanel error={loaded.error} context="Agents" />

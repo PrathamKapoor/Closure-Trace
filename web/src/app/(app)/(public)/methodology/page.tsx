@@ -3,7 +3,7 @@ import { DIMENSION_LABEL, DIMENSION_ORDER, FAMILY_DESCRIPTION, FAMILY_LABEL, REC
 
 export const metadata: Metadata = {
   title: "Methodology",
-  description: "How SAT-SA turns periodic CSE submissions into prioritised, explainable supervisory findings.",
+  description: "How Closure-Trace turns periodic CSE submissions into prioritised, explainable supervisory findings.",
 };
 
 const FAMILIES: FindingFamily[] = [
@@ -51,7 +51,7 @@ export default function MethodologyPage() {
         Transparent rules, robust statistics, human judgement.
       </h1>
       <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-muted">
-        SAT-SA prefers a rule a supervisor can read over a model they cannot. Statistics are robust to outliers, thresholds are declared, and machine learning is used only where it adds
+        Closure-Trace prefers a rule a supervisor can read over a model they cannot. Statistics are robust to outliers, thresholds are declared, and machine learning is used only where it adds
         real value.
       </p>
 

@@ -1,0 +1,261 @@
+/*
+ * Entry sculpture stage: wordmark planes, WebGL sculpture, vignette, rules and
+ * technical labels.
+ *
+ * Ported from the presentation source's hero/entry stylesheet. Every selector
+ * here belongs to the stage subtree and every custom property is scoped to the
+ * scene root, so importing this file (landing entry, sign-in page) cannot
+ * change the workbench's tables, dialogs or controls.
+ */
+
+.hero-stage__scene {
+  /* Palette and motion tokens, scoped to the stage. */
+  --ct-ink: #f4f4f6;
+  --ct-ink-3: #5c5c66;
+  --ct-line: rgba(255, 255, 255, 0.08);
+  --ct-grid-line: rgba(255, 255, 255, 0.045);
+  --ct-violet: #7b5cff;
+  --ct-signal: #b7a6ff;
+  --ct-ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ct-ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* Stacking, inside the stage's own context. */
+  --z-word-back: 3;
+  --z-sculpture: 4;
+  --z-word-front: 5;
+  --z-vignette: 6;
+  --z-labels: 7;
+  --z-copy: 10;
+
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.entry__depth {
+  position: absolute;
+  inset: 0;
+}
+
+.entry__word-plane {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.entry__word-plane--back {
+  z-index: var(--z-word-back);
+  filter: drop-shadow(0 0 26px rgba(96, 62, 220, 0.22));
+}
+.entry__word-plane--front {
+  z-index: var(--z-word-front);
+  filter: drop-shadow(0 0 38px rgba(140, 105, 255, 0.34));
+}
+
+.entry__word {
+  position: absolute;
+  left: 0;
+  top: 47%;
+  transform: translateY(-50%);
+  display: flex;
+  font-family: var(--ct-font-sans, "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif);
+  font-weight: 640;
+  /*
+   * CLOSURE-TRACE is thirteen glyphs where the source word was nine, so the
+   * size is derived from the word's own measure (about 8.1em for this weight
+   * and tracking) and capped to leave the sculpture room. The cap height and
+   * the -0.05em tracking are the source's; only the fit factor changed, so
+   * the whole word stays on one readable line at every tested width.
+   */
+  font-size: clamp(26px, 11.4cqw, 168px);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  white-space: nowrap;
+}
+
+.entry__letter {
+  display: inline-block;
+  background-image: linear-gradient(
+    180deg,
+    rgba(184, 162, 255, 0.94) 0%,
+    rgba(126, 91, 255, 0.78) 58%,
+    rgba(84, 58, 190, 0.62) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  opacity: 0;
+  transform: translate(var(--lx, 0), var(--ly, 0.4em)) rotate(var(--lr, 4deg)) scale(1.06);
+  filter: blur(10px);
+  transition:
+    opacity 900ms var(--ct-ease-out-expo),
+    transform 1100ms var(--ct-ease-out-expo),
+    filter 1000ms var(--ct-ease-out-expo);
+  transition-delay: var(--ld, 0ms);
+  will-change: transform, opacity, filter;
+}
+.entry__letter--in {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+}
+/* The back plane is laid out for metrics, then hidden: every visible glyph is
+   painted on the front plane, above the sculpture. */
+.entry__letter--behind {
+  visibility: hidden;
+}
+.entry__letter--dash {
+  position: relative;
+  top: -0.04em;
+}
+
+.entry__word-plane--dim .entry__word {
+  transition: opacity 600ms var(--ct-ease-soft);
+  opacity: 0.32;
+}
+
+.entry__stage {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-sculpture);
+  opacity: 0;
+  transform: scale(0.965);
+  transition:
+    opacity 1500ms var(--ct-ease-out-expo) 320ms,
+    transform 2200ms var(--ct-ease-out-expo) 320ms;
+}
+.hero-stage__scene--live .entry__stage {
+  opacity: 1;
+  transform: none;
+}
+.entry__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.entry__vignette {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-vignette);
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 3, 6, 0) 58%, rgba(3, 3, 6, 0.3) 84%, rgba(3, 3, 6, 0.52) 100%),
+    radial-gradient(ellipse 122% 88% at 44% 40%, transparent 40%, rgba(3, 3, 5, 0.44) 82%, rgba(3, 3, 5, 0.84) 100%),
+    linear-gradient(to bottom, rgba(5, 5, 7, 0.5), transparent 15%, transparent 60%, rgba(5, 5, 7, 0.92) 100%);
+}
+
+.entry__rules {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-labels);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s var(--ct-ease-soft) 1400ms;
+}
+.hero-stage__scene--decorated .entry__rules {
+  opacity: 0.55;
+}
+.entry__rule {
+  position: absolute;
+  width: 1px;
+  background: var(--ct-grid-line);
+}
+.entry__rule--gutter {
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+.entry__rule--split {
+  left: 52%;
+  top: 0;
+  bottom: 0;
+}
+
+.entry__labels {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-labels);
+  pointer-events: none;
+  font-family: var(--ct-font-mono, ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ct-ink-3);
+  opacity: 0;
+  transition: opacity 1.2s var(--ct-ease-soft) 1400ms;
+}
+.hero-stage__scene--decorated .entry__labels {
+  opacity: 0.5;
+}
+.entry__label {
+  position: absolute;
+  white-space: nowrap;
+}
+.entry__label--1 {
+  top: 17%;
+  left: 0;
+}
+.entry__label--2 {
+  top: 64%;
+  left: 71%;
+}
+.entry__label--3 {
+  top: 15%;
+  right: 4%;
+}
+
+/* The grain layer, shared by the entry and the sign-in visual. */
+.ct-grain {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.ct-grain canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+}
+
+/* The stage fills whatever box it is placed in: the entry's left column, or
+   the sign-in page's visual panel. */
+.ct-visual {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+@media (max-width: 767px) {
+  .entry__word {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: min(11.4cqw, 17vh, 150px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry__letter {
+    transition: opacity 300ms ease;
+    transform: none;
+    filter: none;
+  }
+  .entry__stage {
+    transition: opacity 500ms ease;
+    transform: none;
+  }
+  .entry__rules,
+  .entry__labels {
+    transition: opacity 400ms ease;
+  }
+}
+
+/* Sign-in page variant: the stage composited into the left column. */
+.ct-login-visual {
+  background:
+    radial-gradient(circle at 42% 40%, rgba(76, 50, 160, 0.16), transparent 52%),
+    #030306;
+}

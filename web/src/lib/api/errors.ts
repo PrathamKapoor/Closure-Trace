@@ -3,7 +3,7 @@ import type { ErrorDetail } from "./types";
 /**
  * A failed API call, as the backend's error envelope describes it
  * (docs/API_CONTRACT.md, section 9). `status` 0 and code NETWORK_ERROR mean
- * the SAT-SA service could not be reached at all.
+ * the Closure-Trace service could not be reached at all.
  */
 export interface ApiErrorInfo {
   status: number;
@@ -33,13 +33,13 @@ export interface ErrorPresentation {
 export function present(info: ApiErrorInfo): ErrorPresentation {
   switch (info.code) {
     case "NETWORK_ERROR":
-      return { title: "The SAT-SA service could not be reached", message: "Check that the backend is running, then try again.", retry: true };
+      return { title: "The Closure-Trace service could not be reached", message: "Check that the backend is running, then try again.", retry: true };
     case "ORGANIZATION_REQUIRED":
       return { title: "No organization selected", message: "Select the organization to work in.", retry: false };
     case "AUTHENTICATION_ERROR":
       return { title: "Your session has ended", message: "Sign in again to continue.", retry: false };
     case "ORIGIN_DENIED":
-      return { title: "This site is not allowed to sign in", message: "The SAT-SA service does not accept sign-in from this origin. An administrator must add it to SATSA_ALLOWED_ORIGINS.", retry: false };
+      return { title: "This site is not allowed to sign in", message: "The Closure-Trace service does not accept sign-in from this origin. An administrator must add it to SATSA_ALLOWED_ORIGINS.", retry: false };
     case "PERMISSION_DENIED":
       return { title: "Not permitted", message: "Your role in this organization does not allow this, or the record belongs to another organization.", retry: false };
     case "NOT_FOUND":
@@ -53,14 +53,14 @@ export function present(info: ApiErrorInfo): ErrorPresentation {
     case "VALIDATION_ERROR":
       return { title: "The request was not valid", message: fieldMessages(info) || info.message, retry: false };
     case "REQUEST_TOO_LARGE":
-      return { title: "File too large", message: "The upload exceeds the size the SAT-SA service accepts.", retry: false };
+      return { title: "File too large", message: "The upload exceeds the size the Closure-Trace service accepts.", retry: false };
     case "RATE_LIMITED":
       return { title: "Too many requests", message: "Wait a moment and try again.", retry: true };
     case "NOT_READY":
-      return { title: "The SAT-SA service is not ready", message: "A backend dependency is unavailable. Try again shortly.", retry: true };
+      return { title: "The Closure-Trace service is not ready", message: "A backend dependency is unavailable. Try again shortly.", retry: true };
     default:
       return info.status >= 500
-        ? { title: "The SAT-SA service failed", message: "An unexpected backend error occurred.", retry: true }
+        ? { title: "The Closure-Trace service failed", message: "An unexpected backend error occurred.", retry: true }
         : { title: "The request failed", message: info.message || `HTTP ${info.status}`, retry: false };
   }
 }

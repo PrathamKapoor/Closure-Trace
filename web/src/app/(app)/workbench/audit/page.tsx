@@ -23,7 +23,7 @@ export default async function AuditPage({ searchParams }: { searchParams: Promis
       <PageHeader
         eyebrow="Trust"
         title="Audit"
-        description="The organization's audit events and its members' sign-in and sign-out events, as the SAT-SA service recorded them."
+        description="The organization's audit events and its members' sign-in and sign-out events, as the Closure-Trace service recorded them."
         meta={
           run ? (
             <span className="text-[12.5px] text-muted">

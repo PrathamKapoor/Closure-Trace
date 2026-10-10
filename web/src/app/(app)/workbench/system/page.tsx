@@ -14,10 +14,10 @@ export default async function SystemPage() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 py-6 md:px-8">
-      <PageHeader eyebrow="Admin" title="System" description="Where this interface gets its data, whether the SAT-SA service is ready, and how your session is established." />
+      <PageHeader eyebrow="Admin" title="System" description="Where this interface gets its data, whether the Closure-Trace service is ready, and how your session is established." />
       <div className="grid gap-6 lg:grid-cols-2">
         <Panel className="px-5 py-5">
-          <SectionHeader title="SAT-SA service" />
+          <SectionHeader title="Closure-Trace service" />
           <KeyValue
             columns={1}
             items={[

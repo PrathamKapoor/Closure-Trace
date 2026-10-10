@@ -325,7 +325,7 @@ export function IngestWorkflow({ entities, assessments, initialEntity }: { entit
             3. Evidence files
           </h2>
           <p className="mb-3 text-[12.5px] text-muted">
-            One file per category: CSV, JSON, JSONL or SQLite. The pre-check below runs in your browser and only reads column names; the SAT-SA service is the validator.
+            One file per category: CSV, JSON, JSONL or SQLite. The pre-check below runs in your browser and only reads column names; the Closure-Trace service is the validator.
           </p>
           <ul className="space-y-2">
             {EVIDENCE_CATEGORIES.map((category) => {
@@ -457,7 +457,7 @@ export function IngestWorkflow({ entities, assessments, initialEntity }: { entit
           })}
         </ol>
         <p className="mt-5 text-[12px] leading-relaxed text-muted">
-          Each step is one call to the SAT-SA service. A retry repeats only unfinished steps with the same idempotency keys, so nothing is created twice.
+          Each step is one call to the Closure-Trace service. A retry repeats only unfinished steps with the same idempotency keys, so nothing is created twice.
         </p>
       </aside>
     </div>

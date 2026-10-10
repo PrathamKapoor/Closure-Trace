@@ -17,7 +17,7 @@ function Submit({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Credential sign-in against the SAT-SA service. */
+/** Credential sign-in against the Closure-Trace service. */
 export function CredentialForm({ configured }: { configured: boolean }) {
   const [state, action] = useActionState<SignInState, FormData>(signInWithCredential, { error: null });
   return (
@@ -51,7 +51,7 @@ export function CredentialForm({ configured }: { configured: boolean }) {
           </p>
         ) : (
           <p id="credential-hint" className="mt-2 text-[12px] text-muted">
-            {configured ? "Format key_id.secret, as shown once when the credential was issued." : "This deployment has no SAT-SA service configured (SATSA_API_BASE_URL)."}
+            {configured ? "Format key_id.secret, as shown once when the credential was issued." : "This deployment has no Closure-Trace service configured (SATSA_API_BASE_URL)."}
           </p>
         )}
       </div>

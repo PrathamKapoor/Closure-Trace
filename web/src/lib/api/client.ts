@@ -116,7 +116,7 @@ async function raw(path: string, options: CallOptions): Promise<Response> {
     return await fetch(url(path, options.query), { method: options.method ?? "GET", headers, body, cache: "no-store" });
   } catch (cause) {
     if (cause instanceof ApiError) throw cause;
-    throw new ApiError({ status: 0, code: "NETWORK_ERROR", message: "The SAT-SA service could not be reached", requestId: "", details: [] });
+    throw new ApiError({ status: 0, code: "NETWORK_ERROR", message: "The Closure-Trace service could not be reached", requestId: "", details: [] });
   }
 }
 
@@ -158,7 +158,7 @@ export async function createSession(credential: string): Promise<{ token: string
     .map((c) => c.split(";")[0])
     .find((c) => c.startsWith(`${BACKEND_SESSION_COOKIE}=`))
     ?.slice(BACKEND_SESSION_COOKIE.length + 1);
-  if (!token) throw new ApiError({ status: 502, code: "INTERNAL_ERROR", message: "The SAT-SA service did not issue a session", requestId: res.headers.get("X-Request-ID") ?? "", details: [] });
+  if (!token) throw new ApiError({ status: 502, code: "INTERNAL_ERROR", message: "The Closure-Trace service did not issue a session", requestId: res.headers.get("X-Request-ID") ?? "", details: [] });
   return { token: decodeURIComponent(token), session };
 }
 

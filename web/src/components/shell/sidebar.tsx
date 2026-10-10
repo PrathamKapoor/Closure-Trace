@@ -134,10 +134,10 @@ export function Sidebar(props: SidebarProps) {
       <div className={cn("flex h-14 items-center border-b border-line", collapsed ? "justify-center" : "justify-between px-4")}>
         <Link
           href="/"
-          title="Return to SAT-SA public site"
+          title="Return to Closure-Trace public site"
           className="-mx-1.5 rounded-sm px-1.5 py-1 transition-colors hover:bg-sunken focus-visible:outline-2 focus-visible:outline-brand"
         >
-          <span className="sr-only">Return to SAT-SA public site: </span>
+          <span className="sr-only">Return to Closure-Trace public site: </span>
           {collapsed ? <BrandMark /> : <Wordmark sub />}
         </Link>
         {!collapsed && (
@@ -174,8 +174,8 @@ export function MobileNav(props: SidebarProps) {
       <Drawer open={open} onClose={() => setOpen(false)} title="Navigation" side="left">
         <div className="flex h-full flex-col">
           <div className="flex h-14 items-center border-b border-line px-4">
-            <Link href="/" title="Return to SAT-SA public site" className="-mx-1.5 rounded-sm px-1.5 py-1 hover:bg-sunken" onClick={() => setOpen(false)}>
-              <span className="sr-only">Return to SAT-SA public site: </span>
+            <Link href="/" title="Return to Closure-Trace public site" className="-mx-1.5 rounded-sm px-1.5 py-1 hover:bg-sunken" onClick={() => setOpen(false)}>
+              <span className="sr-only">Return to Closure-Trace public site: </span>
               <Wordmark sub />
             </Link>
           </div>

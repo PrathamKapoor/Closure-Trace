@@ -35,7 +35,7 @@ export default async function SecurityDataPage({ searchParams }: { searchParams:
       <PageHeader
         eyebrow="Data"
         title="Security data"
-        description="Canonical records of a validated submission version, exactly as the SAT-SA service stored them after validation. Findings cite these records by source record ID."
+        description="Canonical records of a validated submission version, exactly as the Closure-Trace service stored them after validation. Findings cite these records by source record ID."
       />
       {!loaded.ok ? (
         <ApiErrorPanel error={loaded.error} context="Security data" />

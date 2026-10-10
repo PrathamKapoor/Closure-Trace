@@ -7,9 +7,9 @@ const fontSans = Geist({ subsets: ["latin"], variable: "--font-geist-sans" });
 const fontMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" });
 
 export const metadata: Metadata = {
-  title: { template: "%s · TRUST-SAT", default: "TRUST-SAT · Supervisory Analytics for SOC Assessment" },
+  title: { template: "%s · Closure-Trace", default: "Closure-Trace · Evidence to decision" },
   description:
-    "A periodic, offline, evidence-driven supervisory analytics system that supports human examiners, with post-quantum verifiable evidence (TRUST-SAT).",
+    "Closure-Trace reviews submitted security alert and case histories for investigation gaps, premature closures and missed escalations, connects findings to evidence, supports human review, and verifies the integrity of the recorded decision (TRUST-SAT, ML-DSA-65).",
 };
 
 export const viewport: Viewport = { themeColor: "#ffffff", colorScheme: "light" };

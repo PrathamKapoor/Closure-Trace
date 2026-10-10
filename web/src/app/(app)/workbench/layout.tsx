@@ -8,7 +8,7 @@ import { can, ROLE_LABEL } from "@/lib/auth/permissions";
 import { NAV } from "@/lib/nav";
 
 export const metadata: Metadata = {
-  title: { template: "%s · TRUST-SAT", default: "Workbench · TRUST-SAT" },
+  title: { template: "%s · Closure-Trace", default: "Workbench · Closure-Trace" },
   robots: { index: false, follow: false },
 };
 

@@ -17,13 +17,26 @@ export function BrandMark({ className }: { className?: string }) {
   );
 }
 
-export function Wordmark({ className, sub }: { className?: string; sub?: boolean }) {
+export function Wordmark({
+  className,
+  sub,
+  tone = "ink",
+}: {
+  className?: string;
+  sub?: boolean;
+  /** "paper" reads on the dark entry/sign-in visual; "ink" on light surfaces. */
+  tone?: "ink" | "paper";
+}) {
+  const title = tone === "paper" ? "text-white" : "text-ink";
+  const note = tone === "paper" ? "text-white/60" : "text-muted";
   return (
     <span className={cn("inline-flex items-center gap-2.5", className)}>
       <BrandMark />
       <span className="leading-none">
-        <span className="block font-mono text-[13px] font-semibold tracking-[0.14em] text-ink">TRUST-SAT</span>
-        {sub && <span className="mt-1 block text-[11px] text-muted">Supervisory Analytics</span>}
+        <span className={cn("block font-mono text-[13px] font-semibold tracking-[0.14em]", title)}>
+          CLOSURE-TRACE
+        </span>
+        {sub && <span className={cn("mt-1 block text-[11px]", note)}>Evidence to decision</span>}
       </span>
     </span>
   );
