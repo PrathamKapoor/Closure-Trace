@@ -173,4 +173,4 @@ Closure-Trace is derived from the SAT-SA / TRUST-SAT foundation, originally deve
 for supervisory security analytics. Existing implementation history, package names and
 source attribution are preserved. It is not presented as independently written from scratch.
 
-Licensed under [MIT](LICENSE), copyright © 2026 Pratham Kapoor.
+Licensed under the [MIT License](LICENSE), copyright © 2026 Pratham Kapoor.
