@@ -1,6 +1,10 @@
-# SAT-SA — Supervisory Analytics Tool for SOC Assessment
+# Closure-Trace
 
-**Smart India Hackathon (SIH) 26157 · NCIIPC.** A periodic, offline,
+**ForgeHacks · AI + Cybersecurity.** Closure-Trace helps security reviewers identify investigation gaps, premature alert closures, and missed escalations using AI-assisted analysis and verifiable evidence.
+
+Built on the SAT-SA / TRUST-SAT foundation, this repository preserves its implementation and history. Internal packages, commands, and trust components retain their existing names. The original system targeted Smart India Hackathon (SIH) 26157 / NCIIPC; that background is retained in historical documentation.
+
+A periodic, offline,
 evidence-driven supervisory analytics system supporting human examiners in
 identifying entities, controls, processes, investigations, and alert samples
 requiring supervisory attention.
@@ -11,9 +15,44 @@ on what evidence, with what confidence — terminating in a human
 supervisor's recorded decision over cryptographically verified evidence
 (**TRUST-SAT**).
 
+## Fresh clone quickstart
+
+Requirements: Python 3.10 or newer (CI uses 3.11 and 3.13), Node.js 24 or newer, and npm. Installing dependencies requires internet access.
+
+```bash
+git clone https://github.com/PrathamKapoor/Closure-Trace.git
+cd Closure-Trace
+python -m venv .venv
+# Windows PowerShell: .\.venv\Scripts\Activate.ps1
+# Linux/macOS: source .venv/bin/activate
+python -m pip install -r requirements.txt
+python -m pip install -e . --no-deps
+python scripts/local_stack.py --seed-demo
+```
+
+The local stack initializes SQLite, starts the API and analysis worker, and seeds synthetic demo data. Local data and generated login credentials live in ignored `.satsa-local/`; use your own generated credentials from that directory to sign in. No hosted deployment credentials or external model API keys are required for the default local demo.
+
+In another terminal:
+
+```bash
+cd web
+npm ci
+# Linux/macOS:
+SATSA_API_BASE_URL=http://127.0.0.1:8000 npm run dev
+# Windows PowerShell instead:
+# $env:SATSA_API_BASE_URL = "http://127.0.0.1:8000"
+# npm run dev
+```
+
+Open http://localhost:3000. See [web setup](web/README.md), [API configuration](docs/API_CONTRACT.md), and [deployment setup](deploy/README.md). `.env.saas.example` and `deploy/production.env.example` contain placeholders for optional hosted infrastructure; supply your own values locally. Never commit populated environment files. Existing deployment links elsewhere in this README describe the inherited TRUST-SAT deployment, not a separately deployed Closure-Trace instance.
+
+Optional model-assisted reviewer briefings use your own provider credentials; see [provider configuration and fallback](docs/LLM.md) and `.env.example`. Obtain NVIDIA credentials from your NVIDIA API account or OpenRouter credentials from your OpenRouter account. Bedrock uses your AWS role and enabled model access. Export these variables into the worker environment; the Python application does not automatically load `.env`. With no provider configured, briefings fall back to deterministic summaries.
+
+Validation: `python -m pytest tests/ -q`; from `web/`, run `npm run check` for lint, type checking, and a production build. The hackathon submission also requires a separately published 2–4 minute demo video.
+
 ## System identity and practical use
 
-- **Repository:** [SAT-SA-with-PQC](https://github.com/PrathamKapoor/SAT-SA-with-PQC)
+- **Repository:** [Closure-Trace](https://github.com/PrathamKapoor/Closure-Trace)
 - **Packages:** `satsa` `0.16.0-phase52-ui` and `qsmlops` `0.1.0`
 - **Deployment model:** local, offline-first Python application with SQLite
   evidence storage; it does not require a cloud account, SaaS connection, or
