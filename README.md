@@ -4,16 +4,20 @@
 
 Built on the SAT-SA / TRUST-SAT foundation, this repository preserves its implementation and history. Internal packages, commands, and trust components retain their existing names. The original system targeted Smart India Hackathon (SIH) 26157 / NCIIPC; that background is retained in historical documentation.
 
-A periodic, offline,
-evidence-driven supervisory analytics system supporting human examiners in
-identifying entities, controls, processes, investigations, and alert samples
-requiring supervisory attention.
+An alert marked "closed" does not show whether anyone investigated it, checked
+its evidence, or escalated a critical incident. Closure-Trace reviews submitted
+alert and case histories for those gaps, ranks the findings for human review,
+and links each signal back to its source records.
 
-SAT-SA turns structured CSE (Constituent Security Entity) submissions
-into evidence-backed supervisory intelligence: who needs attention, why,
-on what evidence, with what confidence — terminating in a human
-supervisor's recorded decision over cryptographically verified evidence
-(**TRUST-SAT**).
+**Evidence → gap analysis → reviewer briefing → human decision → verifiable record.**
+
+The optional language model summarizes computed results; it does not set risk
+or make decisions. Without a provider, the application shows a labelled
+deterministic briefing. TRUST-SAT binds the recorded evidence, results and
+decision using SHA3-256 and ML-DSA-65. It detects changes to the bound state;
+it does not prove that an alert was real or that the analyst was correct.
+
+For the submission walkthrough, use the [Closure-Trace demo guide](docs/CLOSURE_TRACE_DEMO.md).
 
 ## Fresh clone quickstart
 
@@ -50,6 +54,19 @@ Optional model-assisted reviewer briefings use your own provider credentials; se
 
 Validation: `python -m pytest tests/ -q`; from `web/`, run `npm run check` for lint, type checking, and a production build. The hackathon submission also requires a separately published 2–4 minute demo video.
 
+After building the frontend, rehearse the real workflow in an isolated temporary
+database (including real signing, a risk-field mutation, rejection of the changed
+state, restoration, and HTTP UI smoke checks):
+
+```bash
+python scripts/rehearse_closure_trace.py --web
+```
+
+This command generates disposable local keys, prints no credentials, and deletes
+its temporary state after shutting down the API, worker and web server. It is a
+technical rehearsal, not a browser interaction test. The submitted product's
+verification API reports `VERIFIED`, `INCONSISTENT`, `NOT_FINALIZED` or `UNAVAILABLE`.
+
 ## System identity and practical use
 
 - **Repository:** [Closure-Trace](https://github.com/PrathamKapoor/Closure-Trace)
@@ -85,7 +102,9 @@ SAT-SA is:
   human examiner decides (terminal authority, append-only audit);
 - **post-quantum trusted**: every run and finding signed with ML-DSA-65,
   hash-chained evidence ledger, deterministic content digests;
-- **air-gapped by design**: zero network calls in the full pipeline.
+- **offline core analytics**: the default analysis and signing path needs no
+  external service; explicitly configured model-assisted briefings make
+  outbound provider requests.
 
 SAT-SA is **not** a SIEM, a SOC replacement, a real-time monitor, a
 national monitoring system, a continuous telemetry collector, or an
