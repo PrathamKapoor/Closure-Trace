@@ -78,7 +78,7 @@ Thumbs.db
 /SAT-SA-with-PQC/
 
 # Local SAT-SA backend for web development (scripts/local_stack.py)
-.satsa-local/
+.satsa-local*/
 
 # Production deployment secrets (deploy/README.md)
 deploy/production.env

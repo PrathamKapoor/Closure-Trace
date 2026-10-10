@@ -119,9 +119,12 @@ class Api:
 
 
 def seed(api: Api, *, mode: str) -> list[str]:
+    directories = sorted(p for p in DEMO_ROOT.iterdir() if p.is_dir())
+    if not directories:
+        raise SystemExit("no demo submissions found; setup cannot continue")
     existing = {e["display_name"]: e for e in api.all("/api/v1/entities")}
     runs = []
-    for cse_dir in sorted(p for p in DEMO_ROOT.iterdir() if p.is_dir()):
+    for cse_dir in directories:
         name = cse_dir.name
         entity = existing.get(name) or api.call(
             "POST",
@@ -174,10 +177,9 @@ def seed(api: Api, *, mode: str) -> list[str]:
         else:
             report = api.call("GET", f"/api/v1/versions/{version['id']}/validation")
         if report["status"] != "valid":
-            print(
-                f"{name}: validation {report['status']}; not analysed", file=sys.stderr
+            raise SystemExit(
+                f"{name}: validation {report['status']}; demo setup failed"
             )
-            continue
         run = api.call(
             "POST",
             "/api/v1/runs",
@@ -190,14 +192,18 @@ def seed(api: Api, *, mode: str) -> list[str]:
 
 
 def wait(api: Api, runs: list[str], timeout: float) -> None:
+    if not runs:
+        raise SystemExit("no demo analysis runs were created")
     deadline = time.monotonic() + timeout
     pending = set(runs)
     while pending and time.monotonic() < deadline:
         for run_id in list(pending):
             status = api.call("GET", f"/api/v1/runs/{run_id}")["status"]
-            if status not in ("queued", "running", "cancel_requested"):
+            if status in ("awaiting_review", "completed", "partial"):
                 print(f"run {run_id}: {status}")
                 pending.discard(run_id)
+            elif status not in ("queued", "running", "resuming", "cancel_requested"):
+                raise SystemExit(f"demo run {run_id} ended with {status}; setup failed")
         if pending:
             time.sleep(2)
     if pending:

@@ -95,6 +95,18 @@ def _write_private(path: Path, text: str) -> None:
         pass
 
 
+def _stop_processes(*processes: subprocess.Popen) -> None:
+    for process in processes:
+        if process.poll() is None:
+            process.terminate()
+    for process in processes:
+        try:
+            process.wait(timeout=10)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            process.wait(timeout=10)
+
+
 def start(
     data: Path, port: int, *, seed_demo: bool, log_dir: Path | None = None
 ) -> tuple[subprocess.Popen, subprocess.Popen, dict]:
@@ -104,6 +116,7 @@ def start(
     _run(["-m", "satsa.api.migrate", "upgrade"], env)
     _run(["scripts/initialize_trust_key.py"], env)
     logs = log_dir or data
+    logs.mkdir(parents=True, exist_ok=True)
     api = subprocess.Popen(
         [sys.executable, "-m", "satsa.api.server"],
         cwd=ROOT,
@@ -111,7 +124,21 @@ def start(
         stdout=open(logs / "api.log", "a"),  # noqa: SIM115 (lives as long as the process)
         stderr=subprocess.STDOUT,
     )
-    worker = subprocess.Popen(
+    try:
+        worker = _start_worker(env, logs)
+    except BaseException:
+        _stop_processes(api)
+        raise
+    try:
+        credentials = _finish_start(data, env, base, api, seed_demo=seed_demo)
+    except BaseException:
+        _stop_processes(worker, api)
+        raise
+    return api, worker, credentials
+
+
+def _start_worker(env: dict[str, str], logs: Path) -> subprocess.Popen:
+    return subprocess.Popen(
         [
             sys.executable,
             "-c",
@@ -122,10 +149,14 @@ def start(
         stdout=open(logs / "worker.log", "a"),  # noqa: SIM115 (lives as long as the process)
         stderr=subprocess.STDOUT,
     )
+
+
+def _finish_start(data, env, base, api, *, seed_demo: bool) -> dict:
     _wait_ready(base, api)
     credentials_file = data / "credentials.json"
     if credentials_file.exists():
         credentials = json.loads(credentials_file.read_text(encoding="utf-8"))
+        credentials["api"] = base
     else:
         out = _run(
             [
@@ -179,7 +210,7 @@ def start(
             ],
             env,
         )
-    return api, worker, credentials
+    return credentials
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -199,15 +230,17 @@ def main(argv: list[str] | None = None) -> int:
     print(
         "Web UI:  cd web && SATSA_API_BASE_URL=" + credentials["api"] + " npm run dev"
     )
+    exit_code = 1
     try:
         while api.poll() is None and worker.poll() is None:
             time.sleep(1)
     except KeyboardInterrupt:
-        pass
+        exit_code = 0
+    else:
+        print("API or worker exited unexpectedly; inspect api.log and worker.log", file=sys.stderr)
     finally:
-        for process in (worker, api):
-            process.terminate()
-    return 0
+        _stop_processes(worker, api)
+    return exit_code
 
 
 if __name__ == "__main__":

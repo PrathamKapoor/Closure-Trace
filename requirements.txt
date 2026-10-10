@@ -35,3 +35,7 @@ httpx>=0.27
 # no longer bundle setuptools, so the CI test job must install it
 # explicitly (P31: this exact gap broke the Python 3.13 CI job).
 setuptools>=68
+# AWS configuration tests parse PostgreSQL connection options even without a
+# live server. Bundle libpq for fresh machines; LangGraph's transitive plain
+# psycopg install otherwise requires a separately installed system library.
+psycopg[binary]>=3.2,<4
