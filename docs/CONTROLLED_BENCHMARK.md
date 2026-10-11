@@ -1,6 +1,6 @@
 # Controlled Supervisory Benchmark — methodology
 
-Benchmark: `satsa-controlled-supervisory-benchmark` **v1.0.0**
+Benchmark: `satsa-controlled-supervisory-benchmark` **v1.1.0**
 Runner: `scripts/run_controlled_benchmark.py`
 Implementation: `evaluation/controlled_benchmark/` (manifest.py, runner.py)
 
@@ -37,12 +37,12 @@ manifest.py`) re-declares the catalog and `validate_manifest()` fails
 loudly if a manifest entry disagrees with the catalog — so labels can
 never be edited to flatter detector output.
 
-Five scenarios are executable in single-entity fixtures:
+Six scenarios are executable in single-entity fixtures:
 `healthy` (negative control), `eg-fast-closure`,
-`ns-missing-investigation`, `mixed`, `missing-evidence`.
-Five are declared **not_executable** with documented reasons
-(anomaly-rate, peer-deviation, borderline, noisy,
-conflicting-evidence) and are never scored as zero.
+`ns-missing-investigation`, `mixed`, `missing-evidence`,
+`conflicting-evidence` (contradictory dispositions detected by `EvidenceQualityWorker`).
+Four are declared **not_executable** with documented reasons
+(anomaly-rate, peer-deviation, borderline, noisy) and are never scored as zero.
 
 The workload population's labels (pathological vs clean) come from the
 *generator configuration* chosen by a seeded shuffle before any
