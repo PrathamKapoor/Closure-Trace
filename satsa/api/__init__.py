@@ -970,6 +970,55 @@ def create_app(
         except ValueError as exc:
             raise NotFoundError("receipt not available") from exc
 
+    @app.get(
+        "/api/v1/runs/{run_id}/export",
+        tags=["trust"],
+        operation_id="export_verification_bundle",
+    )
+    def export_bundle(run_id: str, t: Tenant, request: Request, user: User):
+        svc = execution(t)
+        svc.get_run(run_id)
+        from satsa.analysis.canonical import supervisory_document
+        from qsmlops.crypto.hashing import digest_document, sha3_hex
+
+        finalization = t.db.query_one(
+            "SELECT * FROM satsa_trust_finalizations WHERE organization_id=? AND run_id=?",
+            (t.org, run_id),
+        )
+        if finalization is None:
+            raise NotFoundError("run finalization record not found")
+
+        doc = supervisory_document(t.db, t.org, run_id)
+        receipt = t.db.query_one(
+            "SELECT * FROM satsa_trust_receipts WHERE id=?", (finalization["receipt_id"],)
+        )
+        if receipt is None:
+            raise NotFoundError("trust receipt record not found")
+
+        audit_action(
+            request, user, "trust.export_bundle_requested", f"analysis_run:{run_id}"
+        )
+
+        import base64
+        return {
+            "format_version": "closure_trace_bundle/1.0.0",
+            "run_id": run_id,
+            "organization_id": t.org,
+            "canonical_document": doc,
+            "canonical_digest": finalization["content_digest"],
+            "receipt": {
+                "id": receipt["id"],
+                "algorithm_id": receipt["algorithm_id"],
+                "public_key_b64": base64.b64encode(bytes(receipt["public_key"])).decode("ascii"),
+                "public_key_fingerprint": sha3_hex(bytes(receipt["public_key"])),
+                "signature_b64": base64.b64encode(bytes(receipt["signature"])).decode("ascii"),
+                "created_at": receipt["created_at"],
+            },
+            "ledger": {
+                "entry_hash": finalization["ledger_entry_hash"],
+            },
+        }
+
     @app.post(
         "/api/v1/runs/{run_id}/verify",
         response_model=s.Verification,
