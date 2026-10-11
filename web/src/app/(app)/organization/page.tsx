@@ -13,8 +13,8 @@ const REASON: Record<string, string> = {
   unreachable: "The Closure-Trace service could not confirm the organization. Try again.",
 };
 
-export default async function OrganizationPage({ searchParams }: { searchParams: Promise<{ reason?: string }> }) {
-  const { reason } = await searchParams;
+export default async function OrganizationPage({ searchParams }: { searchParams: Promise<{ reason?: string; returnTo?: string }> }) {
+  const { reason, returnTo } = await searchParams;
   const { session, organizations } = await requireSignedIn();
   return (
     <main className="flex min-h-dvh flex-col items-center justify-center bg-canvas px-6 py-10">
@@ -36,6 +36,7 @@ export default async function OrganizationPage({ searchParams }: { searchParams:
           </EmptyState>
         ) : (
           <form action={selectOrganization} className="mt-6">
+            {returnTo ? <input type="hidden" name="returnTo" value={returnTo} /> : null}
             <ul className="space-y-2" aria-label="Your organizations">
               {organizations.map((o) => (
                 <li key={o.id}>

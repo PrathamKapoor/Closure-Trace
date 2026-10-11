@@ -11,6 +11,16 @@ export interface SignInState {
 
 const secure = () => process.env.NODE_ENV === "production" && process.env.SATSA_INSECURE_COOKIES !== "true";
 
+export async function sanitizeReturnTo(raw: unknown): Promise<string> {
+  if (typeof raw !== "string") return "/workbench";
+  const path = raw.trim();
+  // Protect against open redirects: must start with /workbench or /organization, cannot start with //
+  if ((path.startsWith("/workbench") || path.startsWith("/organization")) && !path.startsWith("//")) {
+    return path;
+  }
+  return "/workbench";
+}
+
 /**
  * Exchange an issued credential for a backend session (POST /api/v1/session).
  * Only the session token is stored, in an HttpOnly cookie; the credential is
@@ -19,6 +29,7 @@ const secure = () => process.env.NODE_ENV === "production" && process.env.SATSA_
 export async function signInWithCredential(_prev: SignInState, form: FormData): Promise<SignInState> {
   if (!apiBase()) return { error: "This deployment has no Closure-Trace service configured (SATSA_API_BASE_URL)." };
   const credential = String(form.get("credential") ?? "").trim();
+  const returnTo = await sanitizeReturnTo(form.get("returnTo"));
   if (!credential) return { error: "Enter your issued credential." };
   try {
     const { token, session } = await createSession(credential);
@@ -40,7 +51,7 @@ export async function signInWithCredential(_prev: SignInState, form: FormData): 
     }
     throw error;
   }
-  redirect("/workbench");
+  redirect(returnTo);
 }
 
 /** Revoke the backend session (DELETE /api/v1/session with the session token), then clear the cookies. */
@@ -65,6 +76,7 @@ export async function signOut(): Promise<void> {
  */
 export async function selectOrganization(form: FormData): Promise<void> {
   const id = String(form.get("organization") ?? "");
+  const returnTo = await sanitizeReturnTo(form.get("returnTo"));
   const jar = await cookies();
   const token = jar.get(SESSION_COOKIE)?.value;
   if (!token) redirect("/login");
@@ -77,5 +89,5 @@ export async function selectOrganization(form: FormData): Promise<void> {
   }
   if (!allowed) redirect("/organization?reason=unavailable");
   jar.set(ORG_COOKIE, id, { httpOnly: true, sameSite: "lax", path: "/", secure: secure() });
-  redirect("/workbench");
+  redirect(returnTo);
 }

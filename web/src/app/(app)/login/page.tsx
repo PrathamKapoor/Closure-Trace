@@ -15,10 +15,10 @@ const NOTICE: Record<string, string> = {
   "signed-out": "You are signed out.",
 };
 
-export default async function LoginPage({ searchParams }: { searchParams: Promise<{ reason?: string }> }) {
+export default async function LoginPage({ searchParams }: { searchParams: Promise<{ reason?: string; returnTo?: string }> }) {
   // A present session cookie is resolved by the workbench, which returns here if it is invalid.
-  if ((await cookies()).get(SESSION_COOKIE)) redirect("/workbench");
-  const { reason } = await searchParams;
+  const { reason, returnTo } = await searchParams;
+  if ((await cookies()).get(SESSION_COOKIE)) redirect(returnTo ? returnTo : "/workbench");
 
   return (
     <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1fr)_minmax(0,36rem)]">
@@ -66,7 +66,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
               {NOTICE[reason]}
             </p>
           )}
-          <CredentialForm configured={Boolean(apiBase())} />
+          <CredentialForm configured={Boolean(apiBase())} returnTo={returnTo} />
           <p className="mt-10 text-[12px] leading-relaxed text-faint">
             The credential is sent once to the Closure-Trace service, which returns a revocable session. Only that session is kept, in an HttpOnly cookie; the credential is not
             stored.

@@ -39,31 +39,18 @@ export interface NavGroup {
 
 export const NAV: NavGroup[] = [
   {
-    label: "Command",
+    label: "Review Workspace",
     items: [
       { href: "/workbench", label: "Workbench", icon: "workbench" },
-    ],
-  },
-  {
-    label: "Supervision",
-    items: [
       { href: "/workbench/entities", label: "Entities", icon: "entities" },
       { href: "/workbench/findings", label: "Findings", icon: "findings" },
       { href: "/workbench/review-queue", label: "Review queue", icon: "queue", countKey: "awaitingReview" },
       { href: "/workbench/decisions", label: "Decisions", icon: "decisions" },
-    ],
-  },
-  {
-    label: "Analytics",
-    items: [
-      { href: "/workbench/analytics", label: "Analytics", icon: "analytics" },
-      { href: "/workbench/benchmarks", label: "Benchmarks", icon: "benchmarks" },
       { href: "/workbench/runs", label: "Analysis runs", icon: "pipeline" },
-      { href: "/workbench/models", label: "Models", icon: "models", requires: "model.read" },
     ],
   },
   {
-    label: "Data",
+    label: "Evidence & Ingest",
     items: [
       { href: "/workbench/submissions", label: "Submissions", icon: "submissions" },
       { href: "/workbench/ingest", label: "Ingest", icon: "ingest", requires: "analysis.run" },
@@ -71,23 +58,21 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    label: "Intelligence",
+    label: "Supervisory Trust",
     items: [
-      { href: "/workbench/agents", label: "Agents", icon: "agents" },
-      { href: "/workbench/architecture", label: "Architecture", icon: "architecture" },
+      { href: "/workbench/trust", label: "TRUST-SAT", icon: "trust", requires: "trust.verify" },
+      { href: "/workbench/audit", label: "Audit", icon: "audit", requires: "audit.read" },
       { href: "/workbench/reports", label: "Reports", icon: "reports" },
     ],
   },
   {
-    label: "Trust",
+    label: "Advanced Platform",
     items: [
-      { href: "/workbench/trust", label: "TRUST-SAT", icon: "trust", requires: "trust.verify" },
-      { href: "/workbench/audit", label: "Audit", icon: "audit", requires: "audit.read" },
-    ],
-  },
-  {
-    label: "Admin",
-    items: [
+      { href: "/workbench/analytics", label: "Analytics", icon: "analytics" },
+      { href: "/workbench/benchmarks", label: "Benchmarks", icon: "benchmarks" },
+      { href: "/workbench/models", label: "Models", icon: "models", requires: "model.read" },
+      { href: "/workbench/agents", label: "Agents", icon: "agents" },
+      { href: "/workbench/architecture", label: "Architecture", icon: "architecture" },
       { href: "/workbench/admin", label: "Members", icon: "admin", requires: "identity.manage" },
       { href: "/workbench/system", label: "System", icon: "system" },
     ],

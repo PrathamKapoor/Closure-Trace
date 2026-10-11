@@ -18,10 +18,11 @@ function Submit({ children }: { children: React.ReactNode }) {
 }
 
 /** Credential sign-in against the Closure-Trace service. */
-export function CredentialForm({ configured }: { configured: boolean }) {
+export function CredentialForm({ configured, returnTo }: { configured: boolean; returnTo?: string }) {
   const [state, action] = useActionState<SignInState, FormData>(signInWithCredential, { error: null });
   return (
     <form action={action} className="mt-8 space-y-4" noValidate>
+      {returnTo ? <input type="hidden" name="returnTo" value={returnTo} /> : null}
       <div>
         <label htmlFor="credential" className="block text-[13px] font-medium text-ink">
           Issued credential
