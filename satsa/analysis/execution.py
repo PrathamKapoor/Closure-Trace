@@ -186,6 +186,7 @@ class AnalysisExecutionService:
                             "idempotency key belongs to a different execution mode"
                         )
                     return previous
+                default_workers = _default_workers(DEFAULT_FAST_CLOSURE_POLICY)
                 self.db.execute(
                     "INSERT INTO satsa_runs (id,organization_id,entity_id,assessment_id,"
                     "snapshot_digest,code_version,analytics_version,status,started_at,"
@@ -204,7 +205,7 @@ class AnalysisExecutionService:
                         now,
                         self.user,
                         correlation_id,
-                        16,
+                        len(default_workers),
                         0,
                         0,
                         now,
@@ -227,7 +228,7 @@ class AnalysisExecutionService:
                         int(review_required),
                     ),
                 )
-                for worker in _default_workers(DEFAULT_FAST_CLOSURE_POLICY):
+                for worker in default_workers:
                     self.db.execute(
                         "INSERT INTO satsa_jobs (id,run_id,worker_name,status,created_at,"
                         "result_json,content_digest,attempt,retryable)"

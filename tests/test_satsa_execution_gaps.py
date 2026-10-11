@@ -621,4 +621,5 @@ def test_workers_register_in_deterministic_order():
         "evidence-completeness",
         "workflow-reconstruction",
         "entity-asset-resolution",
+        "evidence-quality",
     ]
