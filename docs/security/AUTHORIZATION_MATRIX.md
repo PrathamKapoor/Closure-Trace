@@ -25,7 +25,7 @@ Roles: **V** viewer, **An** analyst, **S** supervisor, **Au** auditor, **Ad** ad
 | `GET /api/v1/members` | | | | | ✓ | `identity.read`; shows membership status (revoked members read as revoked) |
 | `POST /api/v1/members` | | | | | ✓ | `identity.manage` |
 | `DELETE /api/v1/members/{user_id}` | | | | | ✓ | `identity.manage`; member of this organization; not the caller |
-| `GET` entities, assessments, submissions, versions, runs, steps, findings, evidence, risk, priorities, recommendations, decision, receipt, artifacts, validation, summary, records | ✓ | ✓ | ✓ | ✓ | ✓ | `finding.view` / `evidence.view` / `review.read` |
+| `GET` entities, assessments, submissions, versions, runs, steps, findings, evidence, risk, priorities, recommendations, decision, receipt, export, artifacts, validation, summary, records | ✓ | ✓ | ✓ | ✓ | ✓ | `finding.view` / `evidence.view` / `review.read` |
 | `POST` entities, assessments | | ✓ | ✓ | | ✓ | `analysis.run` |
 | `POST` submissions, versions, artifacts (upload), complete, validate | | ✓ | ✓ | | ✓ | `analysis.run` |
 | `POST /api/v1/runs` | | ✓ | ✓ | | ✓ | `analysis.run`; version must be valid |

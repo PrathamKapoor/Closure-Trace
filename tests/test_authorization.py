@@ -62,6 +62,7 @@ MATRIX = {
     ("POST", "/api/v1/runs/{run_id}/decision"): REVIEWERS,
     ("GET", "/api/v1/runs/{run_id}/decision"): ALL,
     ("GET", "/api/v1/runs/{run_id}/receipt"): ALL,
+    ("GET", "/api/v1/runs/{run_id}/export"): ALL,
     ("POST", "/api/v1/runs/{run_id}/verify"): ALL,
     ("GET", "/api/v1/audit/events"): {"auditor", "admin"},
     # MLOps: everyone reads; analysts build datasets and request

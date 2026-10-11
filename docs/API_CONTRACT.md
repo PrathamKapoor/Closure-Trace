@@ -7,12 +7,12 @@ against the live application by `tests/test_api_contract.py`; the two
 must not drift. The earlier frontend proposal in `web/docs/API_CONTRACT.md` is
 not this contract (section 11).
 
-The live API has **71 routes**. 44 existed at the research freeze's code commit
+The live API has **72 routes**. 44 existed at the research freeze's code commit
 (`837d1ef`, the figure the paper keeps through its pinned code facts); two were
 implemented: `GET /api/v1/priorities` and
 `GET /api/v1/versions/{version_id}/records`; 24 MLOps routes (`/api/v1/ml/...`
 and `GET /api/v1/runs/{run_id}/model-inference`) were implemented and are
-described in `docs/MLOPS.md`.
+described in `docs/MLOPS.md`. One portable verification export route (`GET /api/v1/runs/{run_id}/export`) was added.
 
 ## 1. Transport, authentication and organization context
 
@@ -146,6 +146,7 @@ GET    /api/v1/runs/{run_id}/recommendations
 POST   /api/v1/runs/{run_id}/decision
 GET    /api/v1/runs/{run_id}/decision
 GET    /api/v1/runs/{run_id}/receipt
+GET    /api/v1/runs/{run_id}/export
 POST   /api/v1/runs/{run_id}/verify
 GET    /api/v1/audit/events
 GET    /api/v1/runs/{run_id}/model-inference
@@ -248,6 +249,7 @@ Categories: `alerts`, `cases`, `investigation_steps`, `escalations`,
 | `POST /api/v1/runs/{run_id}/decision` | org, supervisor or admin | `{"action": "confirm" \| "dismiss" \| "escalate", "reason": str (≤ 4000)}` | `201 Decision`; an identical retry returns the same decision; a different second decision is `409 DOMAIN_CONFLICT`; a run that has not reached review is `422 DOMAIN_INVALID` |
 | `GET /api/v1/runs/{run_id}/decision` | org, `finding.view` | – | `200 Decision` · `404` before a decision |
 | `GET /api/v1/runs/{run_id}/receipt` | org, `evidence.view` | – | `200 Receipt` · `404` before finalization |
+| `GET /api/v1/runs/{run_id}/export` | org, `evidence.view` | – | `200 VerificationBundle` · `404` before finalization |
 | `POST /api/v1/runs/{run_id}/verify` | org, `evidence.view` | – | `200 Verification` for an owned run; the outcome is in `status` |
 | `GET /api/v1/audit/events` | org, `audit.read` | `limit, offset, run_id?` | `200 Page[AuditEvent]`: the organization's events plus its members' login and logout events |
 | `GET /api/v1/runs/{run_id}/briefing` | org, `finding.view` | – | `200 ReviewerBriefing`: advisory summary (`generated` by a provider, `deterministic`, or `abstained` with a reason) with provider, model, fallback level and attempts · `404` when the run has none (docs/LLM.md) |

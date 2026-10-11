@@ -981,15 +981,15 @@ def create_app(
         from satsa.analysis.canonical import supervisory_document
         from qsmlops.crypto.hashing import digest_document, sha3_hex
 
-        finalization = t.db.query_one(
+        finalization = engine.query_one(
             "SELECT * FROM satsa_trust_finalizations WHERE organization_id=? AND run_id=?",
-            (t.org, run_id),
+            (t.organization_id, run_id),
         )
         if finalization is None:
             raise NotFoundError("run finalization record not found")
 
-        doc = supervisory_document(t.db, t.org, run_id)
-        receipt = t.db.query_one(
+        doc = supervisory_document(engine, t.organization_id, run_id)
+        receipt = engine.query_one(
             "SELECT * FROM satsa_trust_receipts WHERE id=?", (finalization["receipt_id"],)
         )
         if receipt is None:
@@ -1003,7 +1003,7 @@ def create_app(
         return {
             "format_version": "closure_trace_bundle/1.0.0",
             "run_id": run_id,
-            "organization_id": t.org,
+            "organization_id": t.organization_id,
             "canonical_document": doc,
             "canonical_digest": finalization["content_digest"],
             "receipt": {
