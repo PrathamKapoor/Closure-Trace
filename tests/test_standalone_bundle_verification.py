@@ -62,3 +62,8 @@ def test_verify_bundle_success_and_tamper_detection(tmp_path):
     ok, msgs = verify_bundle(tampered_sig_bundle)
     assert ok is False
     assert any("signature verification failed" in m for m in msgs)
+
+    # 4. Fingerprint mismatch against untrusted key is caught
+    ok, msgs = verify_bundle(bundle, expected_key_fingerprint="0000000000000000" * 4)
+    assert ok is False
+    assert any("does not match expected trusted key" in m for m in msgs)
