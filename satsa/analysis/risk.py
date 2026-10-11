@@ -105,6 +105,7 @@ class EntityRiskProfile:
     dimensions: list  # list[DimensionRisk]
     weights: dict
     correlation_clusters: list = field(default_factory=list)  # list[CorrelationCluster]
+    policy_version: str = "2.0.0"
 
     def to_dict(self) -> dict:
         return {
@@ -114,6 +115,7 @@ class EntityRiskProfile:
             "dimensions": [d.to_dict() for d in self.dimensions],
             "weights": dict(self.weights),
             "correlation_clusters": [c.to_dict() for c in self.correlation_clusters],
+            "policy_version": self.policy_version,
         }
 
     def decomposition(self) -> dict:
@@ -156,9 +158,16 @@ def _confidence_bucket(avg_conf: float) -> str:
 
 
 def compute_entity_risk(engine, entity_id: str, *,
-                        run_id: Optional[str] = None) -> EntityRiskProfile:
+                        run_id: Optional[str] = None,
+                        policy_version: str = "2.0.0") -> EntityRiskProfile:
     """Build a risk profile for ``entity_id`` from a specific run
-    (or, if ``run_id`` is None, the most-recent completed run)."""
+    (or, if ``run_id`` is None, the most-recent completed run).
+    
+    policy_version="2.0.0" (default) mitigates saturating aggregation and
+    unjustified effects of repeated or overlapping evidence citations across
+    findings by dampening redundant evidence subsets.
+    policy_version="1.0.0" preserves historical saturating aggregation.
+    """
     rows_engine = engine
     if run_id is None:
         # Find the most recent completed (or partial) run for this entity
@@ -170,7 +179,8 @@ def compute_entity_risk(engine, entity_id: str, *,
             return EntityRiskProfile(
                 entity_id=entity_id, run_id=None, total_score=0.0,
                 confidence_bucket="very_low", dimensions=[],
-                weights=dict(DIMENSION_WEIGHTS))
+                weights=dict(DIMENSION_WEIGHTS),
+                policy_version=policy_version)
         run_id = row["id"]
     finding_rows = rows_engine.query_all(
         "SELECT * FROM satsa_findings"
@@ -194,29 +204,64 @@ def compute_entity_risk(engine, entity_id: str, *,
     total = 0.0
     for dim_name, weight in DIMENSION_WEIGHTS.items():
         findings = by_dimension.get(dim_name, [])
-        # Each finding contributes up to its full dimension weight,
-        # scaled by confidence.overall. A single finding can never
-        # push a dimension above its weight; a single very-strong
-        # finding and many weak ones are both legitimate.
-        raw = sum(_confidence_overall(f) for f in findings)
-        # Use a saturating curve so many low-confidence findings
-        # still cap at the dimension weight.
-        score = weight * (1 - (1 / (1 + raw))) if raw else 0.0
-        # round to 2 decimals for stable display
-        score = round(score, 2)
-        total += score
-        # rationale describes the dimension + the source findings
         if not findings:
+            score = 0.0
             rationale = f"No findings in this dimension (weight {weight})."
-        else:
+        elif policy_version == "1.0.0":
+            # Historical v1.0.0 saturating curve
+            raw = sum(_confidence_overall(f) for f in findings)
+            score = weight * (1 - (1 / (1 + raw))) if raw else 0.0
+            score = round(score, 2)
             top = sorted(findings,
                          key=lambda f: _confidence_overall(f),
                          reverse=True)[:3]
             rule_summary = ", ".join(
                 f.get("rule_or_category", "?") for f in top)
             rationale = (
-                f"{len(findings)} finding(s) in this dimension; "
+                f"{len(findings)} finding(s) in this dimension (v1.0.0); "
                 f"top contributors: {rule_summary}.")
+        else:
+            # v2.0.0: Discriminate evidence overlap and duplicate citations.
+            # When multiple findings cite the exact same evidence or subject set,
+            # marginal contributions diminish to prevent submission size inflation.
+            import json
+            seen_evidence: set[str] = set()
+            effective_contributions: list[float] = []
+            sorted_findings = sorted(findings, key=lambda f: _confidence_overall(f), reverse=True)
+
+            for f in sorted_findings:
+                conf = _confidence_overall(f)
+                raw_ev = f.get("evidence_refs_json") or "[]"
+                try:
+                    ev_refs = set(json.loads(raw_ev) if isinstance(raw_ev, str) else raw_ev)
+                except (ValueError, TypeError):
+                    ev_refs = set()
+
+                if not ev_refs:
+                    # No explicit evidence refs (or subject-only finding):
+                    # discount subsequent findings by position
+                    overlap_ratio = 0.5 if seen_evidence else 0.0
+                else:
+                    new_ev = ev_refs - seen_evidence
+                    overlap_ratio = (len(ev_refs) - len(new_ev)) / len(ev_refs) if ev_refs else 0.0
+                    seen_evidence.update(ev_refs)
+
+                # Marginal weight dampens with higher overlap
+                marginal_factor = max(0.2, 1.0 - 0.8 * overlap_ratio)
+                effective_contributions.append(conf * marginal_factor)
+
+            raw = sum(effective_contributions)
+            # Normalised saturation curve
+            score = weight * (1 - (1 / (1 + 0.8 * raw))) if raw else 0.0
+            score = round(score, 2)
+            top = sorted_findings[:3]
+            rule_summary = ", ".join(
+                f.get("rule_or_category", "?") for f in top)
+            rationale = (
+                f"{len(findings)} finding(s) in this dimension (v2.0.0 overlap-adjusted); "
+                f"top contributors: {rule_summary}.")
+
+        total += score
         dims.append(DimensionRisk(
             name=dim_name, weight=weight, score=score,
             finding_ids=[f["id"] for f in findings],
@@ -235,4 +280,5 @@ def compute_entity_risk(engine, entity_id: str, *,
         confidence_bucket=_confidence_bucket(avg_conf),
         dimensions=dims, weights=dict(DIMENSION_WEIGHTS),
         correlation_clusters=correlation_clusters,
+        policy_version=policy_version,
     )
