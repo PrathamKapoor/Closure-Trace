@@ -37,7 +37,7 @@ def facts_for_run(db, org: str, run_id: str) -> dict:
     risk = db.query_one(
         "SELECT profile_json FROM satsa_run_risk WHERE organization_id=? AND run_id=?", (org, run_id))
     findings = db.query_all(
-        "SELECT f.rule_or_category, f.state FROM satsa_findings f"
+        "SELECT f.id, f.rule_or_category, f.state FROM satsa_findings f"
         " JOIN satsa_observations o ON o.id=f.observation_id JOIN satsa_runs r ON r.id=o.run_id"
         " WHERE r.organization_id=? AND r.id=?", (org, run_id))
     recs = db.query_one(
@@ -54,6 +54,7 @@ def facts_for_run(db, org: str, run_id: str) -> dict:
         "risk_dimensions": {d["name"]: d["score"] for d in profile["dimensions"]} if profile else {},
         "finding_states": dict(sorted(states.items())),
         "signal_rules": sorted({f["rule_or_category"] for f in findings if f["state"] == "signal"})[:25],
+        "finding_ids": [f["id"] for f in findings if f.get("id")],
         "recommendation_count": recs["n"] if recs else 0,
         "advisory_model": (
             {"status": inference["status"], "abstain_reason": inference["abstain_reason"],
@@ -62,7 +63,8 @@ def facts_for_run(db, org: str, run_id: str) -> dict:
     }
 
 
-def validate(output: dict) -> dict:
+def validate(output: dict, facts: dict | None = None) -> dict:
+    """Validate model output structure and ensure factual consistency against facts if provided."""
     if not isinstance(output, dict) or set(output) - {"summary", "key_points"}:
         raise ValueError("unexpected fields")
     summary, points = output.get("summary"), output.get("key_points")
@@ -72,6 +74,19 @@ def validate(output: dict) -> dict:
         raise ValueError("key_points must have 1-5 entries")
     if any(not isinstance(p, str) or not p.strip() or len(p) > MAX_POINT for p in points):
         raise ValueError("key_points entries invalid")
+
+    # Traceability & factual verification:
+    # If facts are supplied, check that cited finding_ids actually exist in the computed tenant facts
+    if facts:
+        known_finding_ids = set(facts.get("finding_ids", []))
+        import re
+        for text in [summary] + points:
+            # Check for hallucinated finding_ IDs (e.g. finding_123)
+            cited_findings = re.findall(r"finding_[a-zA-Z0-9]+", text)
+            for cf in cited_findings:
+                if known_finding_ids and cf not in known_finding_ids:
+                    raise ValueError(f"unsupported finding reference cited: {cf}")
+
     return {"summary": summary.strip(), "key_points": [p.strip() for p in points]}
 
 
@@ -116,7 +131,7 @@ def brief_run(db, org: str, run_id: str, *, environ=None, callers=None) -> dict:
         import logging
         logging.getLogger("satsa.llm").error("invalid SATSA_LLM_CHAIN: %s", exc)
     kwargs = {"callers": callers} if callers else {}
-    result = run_chain(config, messages, validate, deterministic=lambda: deterministic(facts),
+    result = run_chain(config, messages, lambda out: validate(out, facts), deterministic=lambda: deterministic(facts),
                        context={"run_id": run_id, "organization_id": org, "node": CAPABILITY}, **kwargs)
     record = result.to_record()
     content = {"run_id": run_id, "organization_id": org, "capability": CAPABILITY,
