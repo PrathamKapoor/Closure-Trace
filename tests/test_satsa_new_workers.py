@@ -180,10 +180,10 @@ def test_default_run_now_has_16_workers():
         eid, aid = _seed_alerts_cases(eng)
         result = RunService(eng).run(eid, aid)
         assert result.status in ("completed", "partial")
-        # 16 observations — one per default worker (14 + the existing
+        # 17 observations — one per default worker (14 + the existing
         # agent-expansion additions: workflow-reconstruction,
-        # entity-asset-resolution).
-        assert len(result.observation_ids) == 16
+        # entity-asset-resolution + evidence-quality).
+        assert len(result.observation_ids) == 17
         # No finding was silently dropped: every persisted signal
         # finding cites evidence and carries confidence.
         rows = eng.query_all(

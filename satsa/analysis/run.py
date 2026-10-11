@@ -74,6 +74,9 @@ from satsa.analysis.workers import (
     DEFAULT_ENTITY_ASSET_RESOLUTION_POLICY,
     EntityAssetResolutionThresholds,
     EntityAssetResolutionWorker,
+    DEFAULT_EVIDENCE_QUALITY_POLICY,
+    EvidenceQualityThresholds,
+    EvidenceQualityWorker,
     attach_baseline,
     compute_peer_baseline,
 )
@@ -128,12 +131,13 @@ def _default_workers(fast_closure_thresholds: FastClosureThresholds,
                     completeness_thresholds: EvidenceCompletenessThresholds | None = None,
                     workflow_reconstruction_thresholds: WorkflowReconstructionThresholds | None = None,
                     entity_asset_resolution_thresholds: EntityAssetResolutionThresholds | None = None,
+                    evidence_quality_thresholds: EvidenceQualityThresholds | None = None,
                     ) -> list[AnalyticalWorker]:
     """The default worker set — execution gaps + negative space +
     anomaly + peer benchmark + coverage gap + drift +
     cross-entity insights + case similarity + evidence
     completeness + workflow reconstruction + entity/asset
-    resolution. Each subsequent phase appends to this list, never
+    resolution + evidence quality. Each subsequent phase appends to this list, never
     overwrites it — registry ordering stays deterministic."""
     return [
         FastClosureWorker(thresholds=fast_closure_thresholds),
@@ -169,6 +173,9 @@ def _default_workers(fast_closure_thresholds: FastClosureThresholds,
         EntityAssetResolutionWorker(
             thresholds=entity_asset_resolution_thresholds
             or DEFAULT_ENTITY_ASSET_RESOLUTION_POLICY),
+        EvidenceQualityWorker(
+            thresholds=evidence_quality_thresholds
+            or DEFAULT_EVIDENCE_QUALITY_POLICY),
     ]
 
 

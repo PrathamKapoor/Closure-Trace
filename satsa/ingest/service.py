@@ -172,7 +172,9 @@ class IngestionService:
                 asset_native_to_id=asset_map, preassigned=pre.get(category) or {},
                 existing_natives={"alerts": existing_alert_natives,
                                   "cases": existing_case_natives,
-                                  "assets": existing_asset_natives}.get(category, set()))
+                                  "assets": existing_asset_natives}.get(category, set()),
+                period_start=float(assessment.get("period_start", 0.0) or 0.0),
+                period_end=float(assessment.get("period_end", 0.0) or 0.0))
             results[category] = res
             # prune pre-assigned ids for rows that failed normalization, so
             # later categories never resolve references into phantom records

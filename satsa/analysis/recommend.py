@@ -80,6 +80,14 @@ _RULE_FAMILIES = [
      "An in-scope value is an outlier relative to the median. Compare against the peer cohort baseline."),
     ("peer_benchmark.", RECOMMEND_COMPARE_WITH_PEERS,
      "The entity deviates from the peer cohort baseline. Inspect the specific metric for cohort-specific factors."),
+    ("evidence_quality.out_of_period", RECOMMEND_REQUEST_MISSING_EVIDENCE,
+     "Evidence timestamps fall outside the declared assessment window. Request re-submission aligned with the assessment period."),
+    ("evidence_quality.chronology_violation", RECOMMEND_INSPECT_INVESTIGATION,
+     "Chronological inversion detected in alert/case lifecycle. Audit system logging clocks and verify manual override notes."),
+    ("evidence_quality.contradictory_dispositions", RECOMMEND_INSPECT_ROOT_CAUSE,
+     "Opposing disposition outcomes recorded for the same event. Reconcile alert findings and verify analyst disposition rationale."),
+    ("evidence_quality.incompatible_workflow_states", RECOMMEND_INSPECT_INVESTIGATION,
+     "Case closed while linked alerts remain open or unresolved. Inspect orphan alerts and confirm closure status."),
 ]
 
 

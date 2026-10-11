@@ -142,7 +142,9 @@ def _missing_required(fields: dict, specs: tuple) -> list:
 def normalize_category(pf: ParsedFile, *, entity_id: str, assessment_id: str,
                        case_native_to_id: dict, alert_native_to_id: dict,
                        asset_native_to_id: dict, preassigned: dict | None = None,
-                       existing_natives: set | None = None) -> NormResult:
+                       existing_natives: set | None = None,
+                       period_start: float = 0.0,
+                       period_end: float = 0.0) -> NormResult:
     """Normalize one parsed file into domain records + source records.
 
     case/alert/asset native->internal maps must contain the ids of the
@@ -193,6 +195,10 @@ def normalize_category(pf: ParsedFile, *, entity_id: str, assessment_id: str,
                     and not any("created_at" in f for f in fail):
                 if not any("missing required field 'created_at'" in f for f in fail):
                     fail.append("missing/empty required timestamp 'created_at'")
+            if created_at is not None and period_start > 0 and period_end > 0:
+                if created_at < period_start or created_at > period_end:
+                    res.warnings.append(
+                        f"{locator}: alert {native_id or '(none)'} created_at {created_at} is outside assessment period [{period_start}, {period_end}]")
             mapped_sev, sev_ok = map_severity(fields.get("severity"))
             if not sev_ok and fields.get("severity") not in (None, ""):
                 res.warnings.append(
@@ -234,6 +240,10 @@ def normalize_category(pf: ParsedFile, *, entity_id: str, assessment_id: str,
             opened_at = _ts("opened_at")
             if opened_at is None and not any("opened_at" in f for f in fail):
                 fail.append("missing/empty required timestamp 'opened_at'")
+            if opened_at is not None and period_start > 0 and period_end > 0:
+                if opened_at < period_start or opened_at > period_end:
+                    res.warnings.append(
+                        f"{locator}: case {native_id or '(none)'} opened_at {opened_at} is outside assessment period [{period_start}, {period_end}]")
             status = str(fields.get("status") or "open").strip().lower()
             if status not in CASE_STATUSES:
                 res.warnings.append(

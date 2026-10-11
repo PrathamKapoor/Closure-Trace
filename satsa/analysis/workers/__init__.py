@@ -114,6 +114,11 @@ from satsa.analysis.workers.workflow_reconstruction import (
     WorkflowReconstructionThresholds,
     WorkflowReconstructionWorker,
 )
+from satsa.analysis.workers.evidence_quality import (
+    DEFAULT_EVIDENCE_QUALITY_POLICY,
+    EvidenceQualityThresholds,
+    EvidenceQualityWorker,
+)
 
 __all__ = [
     "FastClosureWorker", "FastClosureThresholds", "DEFAULT_FAST_CLOSURE_POLICY",
@@ -142,4 +147,6 @@ __all__ = [
     "DEFAULT_WORKFLOW_RECONSTRUCTION_POLICY",
     "EntityAssetResolutionWorker", "EntityAssetResolutionThresholds",
     "DEFAULT_ENTITY_ASSET_RESOLUTION_POLICY",
+    "EvidenceQualityWorker", "EvidenceQualityThresholds",
+    "DEFAULT_EVIDENCE_QUALITY_POLICY",
 ]

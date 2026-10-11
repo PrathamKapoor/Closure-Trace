@@ -20,6 +20,7 @@ from satsa.domain.workflow import (
 )
 from satsa.store.repositories import (
     AlertStore,
+    AssessmentStore,
     AssetStore,
     CaseStore,
     DispositionStore,
@@ -175,9 +176,15 @@ def load_dataset(engine, entity_id: str, assessment_id: str) -> CanonicalDataset
         from qsmlops.crypto.hashing import digest_document
         digest = digest_document(sorted(digest_parts))
 
+    assessment_row = AssessmentStore(engine).get(assessment_id)
+    p_start = float(assessment_row.get("period_start", 0.0)) if assessment_row else 0.0
+    p_end = float(assessment_row.get("period_end", 0.0)) if assessment_row else 0.0
+
     return CanonicalDataset(
         entity_id=entity_id, assessment_id=assessment_id,
         snapshot_digest=digest,
+        period_start=p_start,
+        period_end=p_end,
         alerts=[_alert_from(r) for r in alerts],
         cases=[_case_from(r) for r in cases],
         steps=steps, escalations=[_escalation_from(r) for r in escalations],
