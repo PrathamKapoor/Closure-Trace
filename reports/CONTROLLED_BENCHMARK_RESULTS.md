@@ -45,6 +45,8 @@ Corpus micro (family level): tp=6, fp=8, fn=0 →
 | missing-evidence | evidence_completeness.missing_categories | ✓ | negative_space.missing_disposition | REQUEST_EVIDENCE ✓ |
 | conflicting-evidence | evidence_quality.contradictory_dispositions | ✓ | 1× peer_benchmark | INSPECT ✓ |
 
+> *Note on Scenario 6 (`conflicting-evidence`)*: This scenario is a controlled synthetic fixture demonstrating evidence-quality detector mechanics on contradictory alert dispositions. It validates that the pipeline and supervisor surface the conflict, but does not establish or claim real-world detection recall.
+
 Action alignment: **5/6 (0.8333)**. All expected families were detected
 (recall 1.0); the 8 extra family emissions are cross-detector side
 effects on fixtures whose catalog does not declare family exclusivity

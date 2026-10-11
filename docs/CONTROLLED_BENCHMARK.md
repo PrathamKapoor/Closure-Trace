@@ -41,6 +41,7 @@ Six scenarios are executable in single-entity fixtures:
 `healthy` (negative control), `eg-fast-closure`,
 `ns-missing-investigation`, `mixed`, `missing-evidence`,
 `conflicting-evidence` (contradictory dispositions detected by `EvidenceQualityWorker`).
+*Note on conflicting-evidence*: This is a controlled synthetic test fixture designed to demonstrate evidence-quality detector mechanics and data handling; it does not establish real-world detection recall or general SOC evidence validity.
 Four are declared **not_executable** with documented reasons
 (anomaly-rate, peer-deviation, borderline, noisy) and are never scored as zero.
 
