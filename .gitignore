@@ -79,6 +79,7 @@ Thumbs.db
 
 # Local SAT-SA backend for web development (scripts/local_stack.py)
 .satsa-local*/
+.satsa-demo-stack*/
 
 # Production deployment secrets (deploy/README.md)
 deploy/production.env
