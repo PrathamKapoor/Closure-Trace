@@ -155,8 +155,8 @@ def synthetic_ground_truth() -> list[GroundTruthCase]:
                         expected_action="SATSA_REQUEST_EVIDENCE",
                         description="Missing categories in submission."),
         GroundTruthCase("conflicting-evidence", "conflicting-evidence",
-                        expected_signals=[],
-                        expected_action="SATSA_DEFER",
+                        expected_signals=["evidence_quality.contradictory_dispositions"],
+                        expected_action="SATSA_INSPECT",
                         description="Conflicting evidence between sources."),
     ]
 

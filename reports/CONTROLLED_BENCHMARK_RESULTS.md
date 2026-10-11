@@ -13,13 +13,13 @@
 
 | Item | Value |
 |---|---|
-| Benchmark | satsa-controlled-supervisory-benchmark v1.0.0 |
+| Benchmark | satsa-controlled-supervisory-benchmark v1.1.0 |
 | Python | 3.13.14 |
 | Platform | Windows-11-10.0.26200-SP0 (development host) |
 | SAT-SA | 0.16.0 (package `qsmlops` 0.1.0) |
 | Workload seed | 42 (population 10, 4 pathological; 200 random trials) |
-| Pipeline runs executed | 5 scenario + 10 population + 18 ablation = 33 real full-pipeline runs |
-| Total runner duration | ~22 s |
+| Pipeline runs executed | 6 scenario + 10 population + 19 ablation = 35 real full-pipeline runs |
+| Total runner duration | ~16 s |
 
 Machine-readable results: `controlled-benchmark-results.json`
 (command in `docs/CONTROLLED_BENCHMARK.md`). Determinism is enforced
@@ -29,12 +29,12 @@ by fixed seeds and proven by
 
 ## A. Scenario corpus (declared catalog labels, real pipeline)
 
-Coverage: **5 executed / 5 not_executed** (anomaly-rate, peer-deviation,
-borderline, noisy, conflicting-evidence — documented single-fixture
-reasons; not scored as zero).
+Coverage: **6 executed / 4 not_executed** (anomaly-rate, peer-deviation,
+borderline, noisy — documented single-fixture reasons; not scored as zero).
+*Conflicting-evidence is now executed via EvidenceQualityWorker.*
 
-Corpus micro (family level): tp=5, fp=7, fn=0 →
-**precision 0.4167, recall 1.0, F1 0.5882**.
+Corpus micro (family level): tp=6, fp=8, fn=0 →
+**precision 0.4286, recall 1.0, F1 0.6000**.
 
 | Scenario | Expected family(ies) | Detected | Extra emitted | Action |
 |---|---|---|---|---|
@@ -43,9 +43,10 @@ Corpus micro (family level): tp=5, fp=7, fn=0 →
 | ns-missing-investigation | negative_space.missing_investigation | ✓ | none | INSPECT ✓ |
 | mixed | execution_gap.fast_closure, negative_space.missing_monitoring | both ✓ | coverage_gap, recurring, 3× peer_benchmark | **SURFACE ✗ (expected REQUEST_EVIDENCE — measured miss)** |
 | missing-evidence | evidence_completeness.missing_categories | ✓ | negative_space.missing_disposition | REQUEST_EVIDENCE ✓ |
+| conflicting-evidence | evidence_quality.contradictory_dispositions | ✓ | 1× peer_benchmark | INSPECT ✓ |
 
-Action alignment: **4/5 (0.8)**. All expected families were detected
-(recall 1.0); the 7 extra family emissions are cross-detector side
+Action alignment: **5/6 (0.8333)**. All expected families were detected
+(recall 1.0); the 8 extra family emissions are cross-detector side
 effects on fixtures whose catalog does not declare family exclusivity
 (each listed in the results file); the mixed-scenario action mismatch
 is reported as a miss, not explained away.

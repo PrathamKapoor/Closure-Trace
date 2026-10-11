@@ -534,6 +534,81 @@ def _build_mixed() -> tuple[_CSE, list[str]]:
     )
 
 
+def _build_conflicting_evidence() -> tuple[_CSE, list[str]]:
+    """Contradictory dispositions: alert al0 receives both a true_positive
+    and a benign disposition, triggering evidence_quality.contradictory_dispositions.
+
+    Everything else (closure times, investigation depth, escalations) is
+    normal-paced to avoid cross-detector side effects from workers that
+    test different properties.
+    """
+    assets = [_asset("a0", "high"), _asset("a1", "high")]
+    cases = [
+        _case("c0", PERIOD_START + 100, alert_ids=["al0", "al1"]),
+        _case("c1", PERIOD_START + 200, alert_ids=["al2", "al3"]),
+    ]
+    alerts = [
+        _alert(
+            "al0", PERIOD_START + 1000, "high", "c0", "a0",
+            PERIOD_START + 2000, PERIOD_START + 60000,
+        ),
+        _alert(
+            "al1", PERIOD_START + 2000, "high", "c0", "a1",
+            PERIOD_START + 3000, PERIOD_START + 70000,
+        ),
+        _alert(
+            "al2", PERIOD_START + 3000, "medium", "c1", "a0",
+            PERIOD_START + 4000, PERIOD_START + 80000,
+        ),
+        _alert(
+            "al3", PERIOD_START + 4000, "medium", "c1", "a1",
+            PERIOD_START + 5000, PERIOD_START + 90000,
+        ),
+    ]
+    steps = [
+        _step("c0", "triage", PERIOD_START + 12000, 1),
+        _step("c0", "containment", PERIOD_START + 24000, 2),
+        _step("c0", "review", PERIOD_START + 36000, 3),
+        _step("c1", "triage", PERIOD_START + 22000, 1),
+        _step("c1", "eradication", PERIOD_START + 34000, 2),
+        _step("c1", "recovery", PERIOD_START + 46000, 3),
+    ]
+    escalations = [
+        _escalation("al0", "c0", PERIOD_START + 5000),
+        _escalation("al2", "c1", PERIOD_START + 6000),
+    ]
+    # KEY: al0 gets BOTH true_positive AND benign dispositions (contradictory).
+    # All other alerts get consistent single dispositions.
+    dispositions = [
+        _disposition("al0", "c0", PERIOD_START + 80000, outcome="true_positive"),
+        _disposition("al0", "c0", PERIOD_START + 85000, outcome="benign"),
+        _disposition("al1", "c0", PERIOD_START + 80000),
+        _disposition("al2", "c1", PERIOD_START + 100000),
+        _disposition("al3", "c1", PERIOD_START + 100000),
+    ]
+    return (
+        _CSE(
+            name="SCEN-conflicting-evidence",
+            sector="defence",
+            environment="on-prem",
+            assets=assets,
+            alerts=alerts,
+            cases=cases,
+            steps=steps,
+            escalations=escalations,
+            dispositions=dispositions,
+        ),
+        [
+            "alerts",
+            "cases",
+            "investigation_steps",
+            "escalations",
+            "dispositions",
+            "assets",
+        ],
+    )
+
+
 # Executable scenarios (single-entity fixtures that deterministically
 # trigger the expected signal family and are reproducible without
 # multi-period or multi-entity fixtures).
@@ -543,6 +618,7 @@ SCENARIO_MAP: dict[str, tuple] = {
     "ns-missing-investigation": _build_missing_investigation,
     "mixed": _build_mixed,
     "missing-evidence": _build_missing_evidence,
+    "conflicting-evidence": _build_conflicting_evidence,
 }
 
 NOT_EXECUTABLE_REASON: dict[str, str] = {
@@ -553,9 +629,8 @@ NOT_EXECUTABLE_REASON: dict[str, str] = {
     "borderline": (
         "Threshold-edge scenario; the detector's signal/no_signal boundary is intentionally non-deterministic under small statistical perturbation."),
     "noisy": (
-        "Requires multi-source conflicting submission evidence not modeled by the canonical single-submission data layer."),
-    "conflicting-evidence": (
-        "Requires contradictory evidence sources within the same assessment (multi-source conflict) which the normalization layer collapses."),
+        "The expected action SATSA_DEFER requires a REVIEW_METRIC_DEFINITION recommendation, which no current detector family emits. "
+        "A deterministic noise-resilience fixture also requires controlled statistical properties that single-entity construction cannot guarantee."),
 }
 
 

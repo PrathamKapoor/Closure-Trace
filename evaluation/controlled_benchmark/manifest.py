@@ -16,7 +16,7 @@ from pathlib import Path
 from satsa import __version__ as SATSA_VERSION
 
 BENCHMARK_NAME = "satsa-controlled-supervisory-benchmark"
-BENCHMARK_VERSION = "1.0.0"
+BENCHMARK_VERSION = "1.1.0"
 
 # The single authoritative label source. The runner asserts that this
 # catalog is what actually drives scoring — labels are never derived
@@ -43,8 +43,8 @@ LIMITATIONS = [
     "hand-built single-entity fixture or a seeded synthetic generator "
     "population. This benchmark is NOT real SOC/CSE/NCIIPC validation "
     "and is not equivalent to real SOC operations.",
-    "Five catalog scenarios (anomaly-rate, peer-deviation, borderline, "
-    "noisy, conflicting-evidence) cannot be produced deterministically "
+    "Four catalog scenarios (anomaly-rate, peer-deviation, borderline, "
+    "noisy) cannot be produced deterministically "
     "in a single-entity fixture and are reported as not_executed with "
     "their documented reasons — never scored as zero.",
     "The catalog declares expected signal families; it does not assert "

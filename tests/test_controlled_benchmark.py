@@ -58,16 +58,16 @@ def test_validate_manifest_rejects_label_edits_and_bad_provenance():
 
 
 def test_not_executable_scenarios_carry_reasons_not_results():
-    """The five scenarios a single-entity fixture cannot reproduce must
+    """The four scenarios a single-entity fixture cannot reproduce must
     be declared honestly (not_executable with a reason) — never scored
     as if they had run."""
     manifest = build_manifest()
     not_exec = [s for s in manifest["scenarios"] if not s["executable"]]
-    assert len(not_exec) == 5
+    assert len(not_exec) == 4
     for entry in not_exec:
         assert entry["not_executable_reason"].strip()
     executable = [s for s in manifest["scenarios"] if s["executable"]]
-    assert len(executable) == 5
+    assert len(executable) == 6
 
 
 # ---------------------------------------------------------------------------
@@ -137,7 +137,7 @@ def test_runner_executes_real_pipeline_and_reports_provenance(
     # Real pipeline evidence: every executed scenario has a run id, a
     # non-empty submission-digest set, and the declared label source.
     per = corpus["per_scenario"]
-    assert len(per) == 5
+    assert len(per) == 6
     for s in per:
         assert s["declared_labels"]["source"] == (
             "satsa.analysis.validate.synthetic_ground_truth")
